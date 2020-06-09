@@ -25,6 +25,16 @@ android {
         targetCompatibility = 1.8
     }
 
+//    buildFeatues {
+//        dataBinding true
+//    }
+    dataBinding {
+        enabled true
+    }
+    viewBinding {
+        enabled true
+    }
+
 }
 
 dependencies {

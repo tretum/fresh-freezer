@@ -1,96 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Hähnchen" />
+    <data>
 
-    <TextView
-        android:id="@+id/tv_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/tv_title"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title"
-        tools:text="2 pcs" />
+    </data>
 
-    <TextView
-        android:id="@+id/tv_date_frozen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/tv_best_before_date"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/tv_frozen_date_title"
-        app:layout_constraintTop_toTopOf="@+id/tv_frozen_date_title"
-        tools:text="2020-04-16" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_frozen_date_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Frozen at:"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/tv_amount"
-        app:layout_constraintTop_toBottomOf="@+id/tv_amount" />
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Hähnchen" />
 
-    <Button
-        android:id="@+id/bt_delete"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="Delete"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_best_before_title"
-        app:layout_constraintEnd_toEndOf="@+id/bt_take"
-        app:layout_constraintStart_toStartOf="@+id/bt_take"
-        app:layout_constraintTop_toBottomOf="@+id/bt_take"
-        app:layout_constraintVertical_bias="1.0" />
+        <TextView
+            android:id="@+id/tv_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/tv_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            tools:text="2 pcs" />
 
-    <Button
-        android:id="@+id/bt_take"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="16dp"
-        android:text="Take"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/bt_delete"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_date_frozen"
-        app:layout_constraintTop_toTopOf="@+id/tv_title" />
+        <TextView
+            android:id="@+id/tv_date_frozen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_best_before_date"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/tv_frozen_date_title"
+            app:layout_constraintTop_toTopOf="@+id/tv_frozen_date_title"
+            tools:text="2020-04-16" />
 
-    <TextView
-        android:id="@+id/tv_best_before_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Best before:"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/tv_frozen_date_title"
-        app:layout_constraintTop_toBottomOf="@+id/tv_frozen_date_title" />
+        <TextView
+            android:id="@+id/tv_frozen_date_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Frozen at:"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/tv_amount"
+            app:layout_constraintTop_toBottomOf="@+id/tv_amount" />
 
-    <TextView
-        android:id="@+id/tv_best_before_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/tv_best_before_title"
-        app:layout_constraintTop_toTopOf="@+id/tv_best_before_title"
-        tools:text="2020-08-12" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/bt_delete"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="Delete"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_best_before_title"
+            app:layout_constraintEnd_toEndOf="@+id/bt_take"
+            app:layout_constraintStart_toStartOf="@+id/bt_take"
+            app:layout_constraintTop_toBottomOf="@+id/bt_take"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <Button
+            android:id="@+id/bt_take"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="16dp"
+            android:text="Take"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/bt_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_date_frozen"
+            app:layout_constraintTop_toTopOf="@+id/tv_title" />
+
+        <TextView
+            android:id="@+id/tv_best_before_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Best before:"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/tv_frozen_date_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_frozen_date_title" />
+
+        <TextView
+            android:id="@+id/tv_best_before_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/tv_best_before_title"
+            app:layout_constraintTop_toTopOf="@+id/tv_best_before_title"
+            tools:text="2020-08-12" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
