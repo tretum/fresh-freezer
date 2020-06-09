@@ -1,5 +1,6 @@
 package com.mmutert.freshfreezer.data;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -12,11 +13,11 @@ import java.util.Date;
 public class FrozenItem {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    @NonNull
+    private long id;
 
     private String name;
     private int amount;
-    private String description;
 
     @ColumnInfo(name = "frozen_date")
     @TypeConverters(value = {DateConverter.class})
@@ -26,6 +27,18 @@ public class FrozenItem {
     @TypeConverters(value = {DateConverter.class})
     private Date bestBeforeDate;
 
+
+    public FrozenItem() {
+
+    }
+
+    public FrozenItem(@NonNull long id, String name, int amount, Date frozenDate, Date bestBeforeDate) {
+        this.id = id;
+        this.name = name;
+        this.amount = amount;
+        this.frozenDate = frozenDate;
+        this.bestBeforeDate = bestBeforeDate;
+    }
 
     public static class DateConverter {
 
@@ -40,19 +53,13 @@ public class FrozenItem {
         }
     }
 
-    public String getDescription() {
-        return description;
-    }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(@NonNull long id) {
         this.id = id;
     }
 

@@ -23,7 +23,8 @@ public class ItemRepository {
 
     public void insertItem(final FrozenItem itemToInsert) {
         ItemDatabase.databaseWriteExecutor.execute(() -> {
-            mItemDao.insertItem(itemToInsert);
+            long rowId = mItemDao.insertItem(itemToInsert);
+            itemToInsert.setId(rowId);
         });
     }
 }

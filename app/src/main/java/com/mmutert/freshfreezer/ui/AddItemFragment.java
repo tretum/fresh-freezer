@@ -1,4 +1,4 @@
-package com.mmutert.freshfreezer;
+package com.mmutert.freshfreezer.ui;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -9,14 +9,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.mmutert.freshfreezer.data.FrozenItem;
-import com.mmutert.freshfreezer.data.FrozenItemViewModel;
+import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 import com.mmutert.freshfreezer.databinding.FragmentAddItemBinding;
 
 import java.util.Calendar;
@@ -38,7 +37,7 @@ public class AddItemFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mBinding = FragmentAddItemBinding.inflate(inflater, container, false);
@@ -62,13 +61,16 @@ public class AddItemFragment extends Fragment {
         int currentYear = c.get(Calendar.YEAR);
         int currentMonth = c.get(Calendar.MONTH);
         int currentDay = c.get(Calendar.DAY_OF_MONTH);
+        newItem.setFrozenDate(c.getTime());
+        newItem.setBestBeforeDate(c.getTime());
+
         mBinding.etAddItemFrozenDate.setInputType(InputType.TYPE_NULL);
         mBinding.etAddItemFrozenDate.setText(String.format(Locale.getDefault(), "%d-%d-%d", currentYear, currentMonth + 1, currentDay));
         mBinding.etAddItemBestBefore.setInputType(InputType.TYPE_NULL);
         mBinding.etAddItemBestBefore.setText(String.format(Locale.getDefault(), "%d-%d-%d", currentYear, currentMonth + 1, currentDay));
 
         mBinding.etAddItemFrozenDate.setOnClickListener(v -> {
-            new DatePickerDialog(requireActivity(), (DatePickerDialog.OnDateSetListener) (view, year, month, dayOfMonth) -> {
+            new DatePickerDialog(requireActivity(), (view, year, month, dayOfMonth) -> {
                 Calendar c2 = Calendar.getInstance();
                 c2.set(year, month + 1, dayOfMonth, 0, 0);
                 Date selectedFrozenDate = c2.getTime();
@@ -78,7 +80,7 @@ public class AddItemFragment extends Fragment {
         });
 
         mBinding.etAddItemBestBefore.setOnClickListener(v -> {
-            new DatePickerDialog(requireActivity(), (DatePickerDialog.OnDateSetListener) (view, year, month, dayOfMonth) -> {
+            new DatePickerDialog(requireActivity(), (view, year, month, dayOfMonth) -> {
                 Calendar c2 = Calendar.getInstance();
                 c2.set(year, month + 1, dayOfMonth, 0, 0);
                 Date selectedBestBeforeDate = c2.getTime();
@@ -90,17 +92,16 @@ public class AddItemFragment extends Fragment {
 
     private void setupConfirmButton(){
         mBinding.btAddItemConfirm.setOnClickListener(v -> {
-            FrozenItem frozenItem = new FrozenItem();
-            frozenItem.setName(mBinding.etAddItemTitle.getText().toString());
-            frozenItem.setDescription(mBinding.etAddItemDescription.getText().toString());
-            // TODO Finish
+            // TODO Check validity of inputs
+            // TODO Use the data binding newItem variable
+            Log.d("", "Clicked on Save button");
+
+            newItem.setName(mBinding.etAddItemTitle.getText().toString());
+            newItem.setId(0);
+
+            frozenItemViewModel.insert(newItem);
         });
 
     }
 
-    public static AddItemFragment createAddItemFragment() {
-        AddItemFragment addItemFragment = new AddItemFragment();
-
-        return addItemFragment;
-    }
 }

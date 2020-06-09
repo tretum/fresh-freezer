@@ -32,4 +32,12 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="list_item_delete_button_label">Delete</string>
+    <string name="list_item_frozen_at_title">Frozen at:</string>
+    <string name="list_item_take_button_label">Take</string>
+    <string name="list_item_best_before_title">Best before:</string>
+    <string name="add_item_amount_title">Amount</string>
+    <string name="add_item_amount_hint">e.g. 500g, 5pcs</string>
+    <string name="add_item_save_button_label">Save</string>
+    <string name="add_item_discard_button_label">Discard</string>
 </resources>

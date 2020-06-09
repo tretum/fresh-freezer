@@ -2,22 +2,16 @@ package com.mmutert.freshfreezer;
 
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.mmutert.freshfreezer.data.FrozenItemViewModel;
+import com.mmutert.freshfreezer.data.FrozenItem;
+import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavHostController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,5 +52,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    /**
+     * TODO Start the detail view for the clicked item
+     */
+    public void show(FrozenItem item) {
+
     }
 }

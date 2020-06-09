@@ -13,7 +13,7 @@ import java.util.List;
 public abstract class ItemDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract void insertItem(FrozenItem item);
+    public abstract long insertItem(FrozenItem item);
 
     @Query("SELECT * FROM items")
     public abstract LiveData<List<FrozenItem>> getAllItems();
@@ -21,8 +21,8 @@ public abstract class ItemDao {
     @Query("SELECT * FROM items WHERE name = :name")
     public abstract LiveData<List<FrozenItem>> getAllItemsWithName(String name);
 
-    @Query("SELECT * FROM items ORDER BY best_before_date ASC LIMIT :amount")
-    public abstract LiveData<List<FrozenItem>> getClosestBestBefore(int amount);
+    @Query("SELECT * FROM items ORDER BY best_before_date ASC LIMIT :numResults")
+    public abstract LiveData<List<FrozenItem>> getClosestBestBefore(int numResults);
 
     @Delete
     public abstract void deleteItem(FrozenItem item);
