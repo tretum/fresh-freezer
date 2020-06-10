@@ -102,7 +102,7 @@ public class AddItemFragment extends Fragment {
     }
 
     private void setUpButtons(){
-        mBinding.btAddItemConfirm.setOnClickListener(v -> {
+        mBinding.floatingActionButton.setOnClickListener(v -> {
             // TODO Check validity of inputs
             // TODO Use the data binding newItem variable
             Log.d("AddItem", "Clicked on Save button");
@@ -113,12 +113,6 @@ public class AddItemFragment extends Fragment {
             frozenItemViewModel.insert(newItem);
 
             Navigation.findNavController(v).navigate(R.id.action_new_item_save);
-        });
-
-        mBinding.btAddItemDiscard.setOnClickListener(v -> {
-            Log.d("AddItem", "Clicked on Discard button.");
-
-            Navigation.findNavController(v).navigate(R.id.action_new_item_discard);
         });
     }
 
