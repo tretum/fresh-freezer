@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import android.text.InputType;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 import com.mmutert.freshfreezer.databinding.FragmentAddItemBinding;
@@ -61,6 +63,7 @@ public class AddItemFragment extends Fragment {
         int currentYear = c.get(Calendar.YEAR);
         int currentMonth = c.get(Calendar.MONTH);
         int currentDay = c.get(Calendar.DAY_OF_MONTH);
+        c.set(currentYear, currentMonth, currentDay, 0, 0);
         newItem.setFrozenDate(c.getTime());
         newItem.setBestBeforeDate(c.getTime());
 
@@ -100,6 +103,8 @@ public class AddItemFragment extends Fragment {
             newItem.setId(0);
 
             frozenItemViewModel.insert(newItem);
+
+            Navigation.findNavController(v).navigate(R.id.action_new_item_save);
         });
 
     }

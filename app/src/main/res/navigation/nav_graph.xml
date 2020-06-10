@@ -35,6 +35,14 @@
             app:destination="@id/settingsFragment"
             app:enterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_new_item_save"
+            app:destination="@id/item_list"
+            app:popUpTo="@id/item_list" />
+        <action
+            android:id="@+id/action_new_item_discard"
+            app:destination="@id/item_list"
+            app:popUpTo="@id/item_list" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
