@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.FrozenItem;
@@ -34,6 +35,8 @@ public class AddItemFragment extends Fragment {
     private FrozenItem newItem;
     private FragmentAddItemBinding mBinding;
 
+    private Toast mToast;
+
     public AddItemFragment() {
         // Required empty public constructor
         newItem = new FrozenItem();
@@ -44,6 +47,7 @@ public class AddItemFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mBinding = FragmentAddItemBinding.inflate(inflater, container, false);
+        mBinding.setNewItem(newItem);
 
         return mBinding.getRoot();
     }
@@ -103,20 +107,25 @@ public class AddItemFragment extends Fragment {
         });
     }
 
-    private void setUpButtons(){
+    private void setUpButtons() {
         mBinding.floatingActionButton.setOnClickListener(v -> {
             // TODO Check validity of inputs
-            // TODO Use the data binding newItem variable
             Log.d("AddItem", "Clicked on Save button");
 
-            newItem.setName(mBinding.etAddItemTitle.getText().toString());
             newItem.setId(0);
 
-            frozenItemViewModel.insert(newItem);
-
+            if (mBinding.getNewItem().getName() == null || mBinding.getNewItem().getName().isEmpty()) {
+                if(this.mToast != null) {
+                    this.mToast.cancel();
+                    this.mToast = null;
+                }
+                this.mToast = Toast.makeText(getContext(), "Saving failed. A new entry requires a name!", Toast.LENGTH_SHORT);
+                this.mToast.show();
+            } else {
+                frozenItemViewModel.insert(newItem);
+                Navigation.findNavController(v).navigate(R.id.action_new_item_save);
+            }
             Keyboard.hideKeyboardFrom(getContext(), v);
-
-            Navigation.findNavController(v).navigate(R.id.action_new_item_save);
         });
     }
 
