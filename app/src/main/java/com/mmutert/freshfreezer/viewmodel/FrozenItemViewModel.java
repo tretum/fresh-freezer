@@ -31,4 +31,8 @@ public class FrozenItemViewModel extends AndroidViewModel {
     public void insert(FrozenItem item) {
         mItemRepository.insertItem(item);
     }
+
+    public void delete(FrozenItem item) {
+        mItemRepository.deleteItem(item);
+    }
 }

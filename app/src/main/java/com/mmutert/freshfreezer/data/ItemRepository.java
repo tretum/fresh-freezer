@@ -27,4 +27,10 @@ public class ItemRepository {
             itemToInsert.setId(rowId);
         });
     }
+
+    public void deleteItem(FrozenItem itemToDelete) {
+        ItemDatabase.databaseWriteExecutor.execute(() -> {
+            mItemDao.deleteItem(itemToDelete);
+        });
+    }
 }
