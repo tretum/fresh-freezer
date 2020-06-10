@@ -23,11 +23,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-
-        FrozenItemViewModel viewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
-        viewModel.getFrozenItems().observe(this, frozenItems -> {
-
-        });
     }
 
     @Override
