@@ -1,18 +1,27 @@
 <resources>
     <string name="app_name">Fresh Freezer</string>
     <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="add_item_name_title">Name of the item</string>
+    <!--  Add item fragment  -->
+    <string name="fragment_add_item_label">Add Item Fragment</string>
+    <string name="add_item_name_title">Name:</string>
     <string name="add_item_title_hint">e.g. Chicken breast</string>
-    <string name="add_item_description_title">Add description</string>
+    <string name="add_item_description_title">Add description:</string>
     <string name="add_item_description_hint">e.g. Chopped Chicken breast</string>
     <string name="add_item_frozen_date_title">Freezing Date:</string>
     <string name="add_item_best_before_date_title">Best Before:</string>
+    <string name="add_item_amount_title">Amount:</string>
+    <string name="add_item_amount_hint">e.g. 500g, 5pcs</string>
+    <string name="add_item_save_button_label">Save</string>
+    <string name="add_item_discard_button_label">Discard</string>
+
+    <!-- List item -->
+    <string name="list_item_delete_button_label">Delete</string>
+    <string name="list_item_frozen_at_title">Frozen at:</string>
+    <string name="list_item_take_button_label">Take</string>
+    <string name="list_item_best_before_title">Best before:</string>
+    <string name="fragment_item_list_label">Item List</string>
+
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
@@ -27,14 +36,5 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="list_item_delete_button_label">Delete</string>
-    <string name="list_item_frozen_at_title">Frozen at:</string>
-    <string name="list_item_take_button_label">Take</string>
-    <string name="list_item_best_before_title">Best before:</string>
-    <string name="add_item_amount_title">Amount</string>
-    <string name="add_item_amount_hint">e.g. 500g, 5pcs</string>
-    <string name="add_item_save_button_label">Save</string>
-    <string name="add_item_discard_button_label">Discard</string>
-    <string name="fragment_item_list_label">Item List</string>
-    <string name="fragment_add_item_label">Add Item Fragment</string>
+
 </resources>

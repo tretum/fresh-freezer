@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.FrozenItem;
+import com.mmutert.freshfreezer.util.Keyboard;
 import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 import com.mmutert.freshfreezer.databinding.FragmentAddItemBinding;
 
@@ -53,6 +54,7 @@ public class AddItemFragment extends Fragment {
 
         setUpButtons();
         setupDatePickers();
+
 
         this.frozenItemViewModel = new ViewModelProvider(requireActivity()).get(FrozenItemViewModel.class);
     }
@@ -111,6 +113,8 @@ public class AddItemFragment extends Fragment {
             newItem.setId(0);
 
             frozenItemViewModel.insert(newItem);
+
+            Keyboard.hideKeyboardFrom(getContext(), v);
 
             Navigation.findNavController(v).navigate(R.id.action_new_item_save);
         });
