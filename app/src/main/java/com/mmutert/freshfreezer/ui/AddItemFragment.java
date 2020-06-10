@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.AmountUnit;
 import com.mmutert.freshfreezer.data.FrozenItem;
@@ -103,29 +104,37 @@ public class AddItemFragment extends Fragment {
         mBinding.etAddItemBestBefore.setText(curDateFormatted);
 
         mBinding.etAddItemFrozenDate.setOnClickListener(v -> {
-            new DatePickerDialog(requireActivity(), (view, year, month, dayOfMonth) -> {
-                Calendar c2 = Calendar.getInstance();
-                c2.set(year, month, dayOfMonth, 0, 0);
-                Date selectedFrozenDate = c2.getTime();
-                newItem.setFrozenDate(selectedFrozenDate);
+            MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
+            builder.setTitleText("Select Freeze Date");
+            builder.setSelection(newItem.getFrozenDate().getTime());
+            MaterialDatePicker<Long> picker = builder.build();
 
+            picker.addOnPositiveButtonClickListener(selection -> {
+                Date date = new Date(selection);
+                newItem.setFrozenDate(date);
                 String selectedFrozenDateFormatted =
-                        DateFormat.format("yyyy-MM-dd", selectedFrozenDate).toString();
+                        DateFormat.format("yyyy-MM-dd", date).toString();
                 mBinding.etAddItemFrozenDate.setText(selectedFrozenDateFormatted);
-            }, currentYear, currentMonth, currentDay).show();
+            });
+
+            picker.show(getParentFragmentManager(), picker.toString());
         });
 
         mBinding.etAddItemBestBefore.setOnClickListener(v -> {
-            new DatePickerDialog(requireActivity(), (view, year, month, dayOfMonth) -> {
-                Calendar c2 = Calendar.getInstance();
-                c2.set(year, month, dayOfMonth, 0, 0);
-                Date selectedBestBeforeDate = c2.getTime();
-                newItem.setBestBeforeDate(selectedBestBeforeDate);
+            MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
+            builder.setTitleText("Best Before Date");
+            builder.setSelection(newItem.getBestBeforeDate().getTime());
+            MaterialDatePicker<Long> picker = builder.build();
 
-                String selectedBestBeforeFormatted =
-                        DateFormat.format("yyyy-MM-dd", selectedBestBeforeDate).toString();
-                mBinding.etAddItemBestBefore.setText(selectedBestBeforeFormatted);
-            }, currentYear, currentMonth, currentDay).show();
+            picker.addOnPositiveButtonClickListener(selection -> {
+                Date date = new Date(selection);
+                newItem.setBestBeforeDate(date);
+                String selectedFrozenDateFormatted =
+                        DateFormat.format("yyyy-MM-dd", date).toString();
+                mBinding.etAddItemBestBefore.setText(selectedFrozenDateFormatted);
+            });
+
+            picker.show(getParentFragmentManager(), picker.toString());
         });
     }
 
