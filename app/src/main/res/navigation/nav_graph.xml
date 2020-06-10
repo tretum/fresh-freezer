@@ -8,15 +8,16 @@
     <fragment
         android:id="@+id/item_list"
         android:name="com.mmutert.freshfreezer.ui.FrozenItemListFragment"
-        android:label="@string/first_fragment_label"
+        android:label="@string/fragment_item_list_label"
         tools:layout="@layout/fragment_frozen_item_list">
         <action
             android:id="@+id/action_FirstFragment_to_addItemFragment"
             app:destination="@id/addItemFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/item_list" />
         <action
             android:id="@+id/action_settings"
             app:destination="@id/settingsFragment"
@@ -27,7 +28,7 @@
     <fragment
         android:id="@+id/addItemFragment"
         android:name="com.mmutert.freshfreezer.ui.AddItemFragment"
-        android:label="fragment_add_item"
+        android:label="@string/fragment_add_item_label"
         tools:layout="@layout/fragment_add_item" >
         <action
             android:id="@+id/action_settings"
