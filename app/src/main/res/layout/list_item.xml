@@ -42,7 +42,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="@{item.frozenDate.toString()}"
             app:layout_constraintEnd_toEndOf="@+id/tv_best_before_date"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/tv_frozen_date_title"
@@ -99,7 +98,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:textSize="18sp"
-            android:text="@{item.bestBeforeDate.toString()}"
             app:layout_constraintStart_toEndOf="@+id/tv_best_before_title"
             app:layout_constraintTop_toTopOf="@+id/tv_best_before_title"
             tools:text="2020-08-12" />

@@ -3,6 +3,8 @@ package com.mmutert.freshfreezer.ui;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import android.text.format.DateFormat;
+
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
@@ -13,6 +15,10 @@ import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.databinding.ListItemBinding;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemListAdapterViewHolder> {
@@ -48,6 +54,14 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         FrozenItem itemForPosition = getItemForPosition(position);
 
         binding.setItem(itemForPosition);
+
+        Date bestBeforeDate = itemForPosition.getBestBeforeDate();
+        String bestBeforeFormatted = DateFormat.format("yyyy-MM-dd", bestBeforeDate).toString();
+        Date frozenDate = itemForPosition.getFrozenDate();
+        String frozenFormatted = DateFormat.format("yyyy-MM-dd", frozenDate).toString();
+
+        binding.tvBestBeforeDate.setText(bestBeforeFormatted);
+        binding.tvDateFrozen.setText(frozenFormatted);
     }
 
     @Override
