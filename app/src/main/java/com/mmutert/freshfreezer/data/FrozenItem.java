@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
+
+import com.mmutert.freshfreezer.data.converters.AmountUnitConverter;
+import com.mmutert.freshfreezer.data.converters.DateConverter;
 
 import java.util.Date;
 
@@ -16,8 +18,12 @@ public class FrozenItem {
     @NonNull
     private long id;
 
+    @NonNull
     private String name;
     private int amount;
+
+    @TypeConverters(value = {AmountUnitConverter.class})
+    private AmountUnit unit;
 
     @ColumnInfo(name = "frozen_date")
     @TypeConverters(value = {DateConverter.class})
@@ -27,33 +33,19 @@ public class FrozenItem {
     @TypeConverters(value = {DateConverter.class})
     private Date bestBeforeDate;
 
+    private String notes;
 
     public FrozenItem() {
 
     }
 
-    public FrozenItem(@NonNull long id, String name, int amount, Date frozenDate, Date bestBeforeDate) {
-        this.id = id;
-        this.name = name;
-        this.amount = amount;
-        this.frozenDate = frozenDate;
-        this.bestBeforeDate = bestBeforeDate;
+    public AmountUnit getUnit() {
+        return unit;
     }
 
-    public static class DateConverter {
-
-        @TypeConverter
-        public static Date toDate(Long dateLong){
-            return dateLong == null ? null: new Date(dateLong);
-        }
-
-        @TypeConverter
-        public static Long fromDate(Date date){
-            return date == null ? null : date.getTime();
-        }
+    public void setUnit(AmountUnit unit) {
+        this.unit = unit;
     }
-
-
 
     public long getId() {
         return id;
@@ -67,7 +59,7 @@ public class FrozenItem {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@NonNull String name) {
         this.name = name;
     }
 
@@ -93,5 +85,13 @@ public class FrozenItem {
 
     public void setBestBeforeDate(Date bestBeforeDate) {
         this.bestBeforeDate = bestBeforeDate;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

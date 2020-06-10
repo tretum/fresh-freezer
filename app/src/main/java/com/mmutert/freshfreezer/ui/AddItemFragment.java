@@ -15,9 +15,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.mmutert.freshfreezer.R;
+import com.mmutert.freshfreezer.data.AmountUnit;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.util.Keyboard;
 import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
@@ -59,6 +63,24 @@ public class AddItemFragment extends Fragment {
         setUpButtons();
         setupDatePickers();
 
+        mBinding.spAddItemsUnitSelection.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, AmountUnit.values()));
+        mBinding.spAddItemsUnitSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Object itemAtPosition = parent.getItemAtPosition(position);
+                if (itemAtPosition instanceof AmountUnit) {
+                    AmountUnit atPosition = (AmountUnit) itemAtPosition;
+                    newItem.setUnit(atPosition);
+                } else {
+                    Log.d("Selected item", "Selected item is not a AmountUnit");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                newItem.setUnit(AmountUnit.GRAMS);
+            }
+        });
 
         this.frozenItemViewModel = new ViewModelProvider(requireActivity()).get(FrozenItemViewModel.class);
     }
