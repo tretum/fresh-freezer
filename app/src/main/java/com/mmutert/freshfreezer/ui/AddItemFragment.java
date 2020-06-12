@@ -15,6 +15,8 @@ import android.text.InputType;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -51,17 +53,17 @@ public class AddItemFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mBinding = FragmentAddItemBinding.inflate(inflater, container, false);
         mBinding.setNewItem(newItem);
-
-        Toolbar toolbar = mBinding.toolbarAddItem;
-
-        toolbar.setNavigationOnClickListener(v -> {
-            Navigation.findNavController(v).popBackStack();
-        });
 
         return mBinding.getRoot();
     }
@@ -97,14 +99,11 @@ public class AddItemFragment extends Fragment {
 
     private void setupDatePickers() {
         // Set up the date pickers for the best before and frozen date fields
-        final Calendar c = Calendar.getInstance();
-        int currentYear = c.get(Calendar.YEAR);
-        int currentMonth = c.get(Calendar.MONTH);
-        int currentDay = c.get(Calendar.DAY_OF_MONTH);
-        String curDateFormatted = DateFormat.format("yyyy-MM-dd", c.getTime()).toString();
+        Date currentTime = Calendar.getInstance().getTime();
+        String curDateFormatted = DateFormat.format("yyyy-MM-dd", currentTime).toString();
 
-        newItem.setFrozenDate(c.getTime());
-        newItem.setBestBeforeDate(c.getTime());
+        newItem.setFrozenDate(currentTime);
+        newItem.setBestBeforeDate(currentTime);
 
         mBinding.etAddItemFrozenDate.setInputType(InputType.TYPE_NULL);
         mBinding.etAddItemFrozenDate.setText(curDateFormatted);

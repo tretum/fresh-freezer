@@ -3,6 +3,8 @@ package com.mmutert.freshfreezer.ui;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,6 +31,8 @@ public class FrozenItemListFragment extends Fragment implements ListItemClickedC
     ) {
         // Inflate the layout for this fragment
         mBinding = FragmentFrozenItemListBinding.inflate(inflater, container, false);
+        setHasOptionsMenu(true);
+
         return mBinding.getRoot();
     }
 
@@ -46,13 +50,18 @@ public class FrozenItemListFragment extends Fragment implements ListItemClickedC
         FrozenItemViewModel viewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
         viewModel.getFrozenItems().observe(getViewLifecycleOwner(), itemListAdapter::setItems);
 
-        // TODO Get the viewmodel for new entries
-
         mBinding.fab.setOnClickListener(view2 -> {
             mBinding.fab.setVisibility(View.GONE);
             Navigation.findNavController(view).navigate(R.id.action_FirstFragment_to_addItemFragment);
             Log.d("", "Clicked FAB");
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+
+        inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

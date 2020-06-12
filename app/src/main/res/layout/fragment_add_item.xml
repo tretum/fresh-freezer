@@ -11,25 +11,7 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbarlayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            app:liftOnScroll="true">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar_add_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:elevation="4dp"
-                android:theme="@style/AppTheme.AppBarOverlay"
-                app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
-                app:title="Add a new item" />
-        </com.google.android.material.appbar.AppBarLayout>
+        android:layout_height="match_parent">
 
         <ScrollView
             android:layout_width="match_parent"

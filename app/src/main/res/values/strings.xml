@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
 
     <!--  Add item fragment  -->
-    <string name="fragment_add_item_label">Add Item Fragment</string>
+    <string name="fragment_add_item_label">Add Item</string>
     <string name="add_item_name_title">Name:</string>
     <string name="add_item_title_hint">e.g. Chicken breast</string>
     <string name="add_item_description_title">Add description:</string>
