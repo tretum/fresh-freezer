@@ -20,7 +20,7 @@ public class FrozenItem {
 
     @NonNull
     private String name;
-    private int amount;
+    private float amount;
 
     @TypeConverters(value = {AmountUnitConverter.class})
     private AmountUnit unit;
@@ -63,11 +63,11 @@ public class FrozenItem {
         this.name = name;
     }
 
-    public int getAmount() {
+    public float getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(float amount) {
         this.amount = amount;
     }
 
