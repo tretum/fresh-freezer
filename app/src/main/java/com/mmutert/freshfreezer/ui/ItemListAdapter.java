@@ -1,34 +1,28 @@
 package com.mmutert.freshfreezer.ui;
 
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import android.text.format.DateFormat;
-
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
-import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.databinding.ListItemBinding;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemListAdapterViewHolder> {
 
     private final ListItemClickedCallback callback;
+    private ListItemDeleteClickedCallback deleteClickedCallback;
     private List<FrozenItem> mItems;
 
 
-    public ItemListAdapter(ListItemClickedCallback callback) {
+    public ItemListAdapter(ListItemClickedCallback callback, ListItemDeleteClickedCallback deleteClickedCallback) {
         this.callback = callback;
+        this.deleteClickedCallback = deleteClickedCallback;
     }
 
 
@@ -62,6 +56,11 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
         binding.tvBestBeforeDate.setText(bestBeforeFormatted);
         binding.tvDateFrozen.setText(frozenFormatted);
+
+        // Set up the delete button
+        binding.btDelete.setOnClickListener(v -> {
+            deleteClickedCallback.onDeleteClicked(getItemForPosition(position));
+        });
     }
 
     @Override
@@ -77,6 +76,10 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         return mItems.get(position);
     }
 
+
+    /**
+     *
+     */
     public static class ItemListAdapterViewHolder extends RecyclerView.ViewHolder {
 
         private final ListItemBinding binding;

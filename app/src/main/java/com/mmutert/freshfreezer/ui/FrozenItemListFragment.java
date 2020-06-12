@@ -19,7 +19,7 @@ import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.databinding.FragmentFrozenItemListBinding;
 import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 
-public class FrozenItemListFragment extends Fragment implements ListItemClickedCallback{
+public class FrozenItemListFragment extends Fragment implements ListItemClickedCallback, ListItemDeleteClickedCallback{
 
     private FragmentFrozenItemListBinding mBinding;
 
@@ -44,7 +44,7 @@ public class FrozenItemListFragment extends Fragment implements ListItemClickedC
                 new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
         mBinding.rvFrozenItemList.setLayoutManager(layoutManager);
 
-        ItemListAdapter itemListAdapter = new ItemListAdapter(this);
+        ItemListAdapter itemListAdapter = new ItemListAdapter(this, this);
         mBinding.rvFrozenItemList.setAdapter(itemListAdapter);
 
         FrozenItemViewModel viewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
@@ -67,5 +67,11 @@ public class FrozenItemListFragment extends Fragment implements ListItemClickedC
     @Override
     public void onClick(FrozenItem item) {
 
+    }
+
+    @Override
+    public void onDeleteClicked(FrozenItem itemToDelete) {
+        FrozenItemViewModel viewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
+        viewModel.delete(itemToDelete);
     }
 }
