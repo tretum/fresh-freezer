@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -21,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.mmutert.freshfreezer.MainActivity;
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.AmountUnit;
 import com.mmutert.freshfreezer.data.FrozenItem;
@@ -53,6 +56,12 @@ public class AddItemFragment extends Fragment {
         // Inflate the layout for this fragment
         mBinding = FragmentAddItemBinding.inflate(inflater, container, false);
         mBinding.setNewItem(newItem);
+
+        Toolbar toolbar = mBinding.toolbarAddItem;
+
+        toolbar.setNavigationOnClickListener(v -> {
+            Navigation.findNavController(v).popBackStack();
+        });
 
         return mBinding.getRoot();
     }
