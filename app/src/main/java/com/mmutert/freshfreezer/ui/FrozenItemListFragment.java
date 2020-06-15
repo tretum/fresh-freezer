@@ -19,14 +19,15 @@ import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.databinding.FragmentFrozenItemListBinding;
 import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 
-public class FrozenItemListFragment extends Fragment implements ListItemClickedCallback, ListItemDeleteClickedCallback{
+public class FrozenItemListFragment extends Fragment
+        implements ListItemClickedCallback, ListItemDeleteClickedCallback{
 
     private FragmentFrozenItemListBinding mBinding;
 
 
     @Override
     public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
+            @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
         // Inflate the layout for this fragment
@@ -52,7 +53,7 @@ public class FrozenItemListFragment extends Fragment implements ListItemClickedC
 
         mBinding.fab.setOnClickListener(view2 -> {
             mBinding.fab.setVisibility(View.GONE);
-            Navigation.findNavController(view).navigate(R.id.action_FirstFragment_to_addItemFragment);
+            Navigation.findNavController(view).navigate(R.id.action_item_list_to_add_item);
             Log.d("", "Clicked FAB");
         });
     }
