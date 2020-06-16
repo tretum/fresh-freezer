@@ -22,6 +22,9 @@
     <string name="list_item_best_before_title">Best before:</string>
     <string name="fragment_item_list_label">Item List</string>
 
+    <string name="notification_channel_title">Best Before Date Updates</string>
+    <string name="notification_channel_description">Notifications for items in your freezer with a best before date that is coming up soon.</string>
+
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>

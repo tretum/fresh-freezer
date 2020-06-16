@@ -1,6 +1,7 @@
 package com.mmutert.freshfreezer.ui;
 
 import android.app.DatePickerDialog;
+import android.app.NotificationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import android.text.InputType;
 import android.text.format.DateFormat;
@@ -29,12 +34,16 @@ import com.mmutert.freshfreezer.MainActivity;
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.AmountUnit;
 import com.mmutert.freshfreezer.data.FrozenItem;
+import com.mmutert.freshfreezer.notification.NotificationConstants;
+import com.mmutert.freshfreezer.notification.NotificationWorker;
 import com.mmutert.freshfreezer.util.Keyboard;
 import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 import com.mmutert.freshfreezer.databinding.FragmentAddItemBinding;
 
+import java.time.Duration;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 
 public class AddItemFragment extends Fragment {
@@ -163,9 +172,46 @@ public class AddItemFragment extends Fragment {
             } else {
                 frozenItemViewModel.insert(newItem);
                 Navigation.findNavController(v).navigate(R.id.action_new_item_save);
+
+                // TODO Schedule notification
+                scheduleNotification(newItem);
             }
             Keyboard.hideKeyboardFrom(getContext(), v);
         });
+    }
+
+    private void scheduleNotification(FrozenItem item) {
+        // TODO Set correct values
+//        TimeUnit notificationOffsetUnit = TimeUnit.DAYS;
+//        long notificationOffset = calculateOffset(item);
+        TimeUnit notificationOffsetUnit = TimeUnit.SECONDS;
+        long notificationOffset = 10;
+
+        OneTimeWorkRequest notificationRequest =
+                new OneTimeWorkRequest.Builder(NotificationWorker.class)
+                        .setInputData(createInputDataForItem(item))
+                        .setConstraints(new Constraints.Builder().setRequiresBatteryNotLow(true).build())
+                        .setInitialDelay(notificationOffset, notificationOffsetUnit)
+                        .build();
+        WorkManager.getInstance(getActivity()).enqueue(notificationRequest);
+    }
+
+    private long calculateOffset(FrozenItem item) {
+        long notificationTimeOffset = TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS);
+
+        Date bestBeforeDate = item.getBestBeforeDate();
+        long bestBeforeInMillis = bestBeforeDate.getTime();
+        long currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
+        return TimeUnit.DAYS.convert(Math.abs((bestBeforeInMillis - notificationTimeOffset) - currentTimeInMillis), TimeUnit.MILLISECONDS);
+    }
+
+    private Data createInputDataForItem(FrozenItem item) {
+        return new Data.Builder()
+                .putString(NotificationConstants.KEY_ITEM_NAME, item.getName())
+                .putFloat(NotificationConstants.KEY_ITEM_AMOUNT, item.getAmount())
+                .putInt(NotificationConstants.KEY_ITEM_ID, (int) item.getId())
+                .putString(NotificationConstants.KEY_ITEM_AMOUNT_UNIT, item.getUnit().toString())
+                .build();
     }
 
 }

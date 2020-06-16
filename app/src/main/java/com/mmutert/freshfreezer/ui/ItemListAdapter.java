@@ -15,14 +15,19 @@ import java.util.List;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemListAdapterViewHolder> {
 
-    private final ListItemClickedCallback callback;
+    private final ListItemClickedCallback itemClickedCallback;
     private ListItemDeleteClickedCallback deleteClickedCallback;
+    private ListItemTakeClickedCallback takeClickedCallback;
     private List<FrozenItem> mItems;
 
 
-    public ItemListAdapter(ListItemClickedCallback callback, ListItemDeleteClickedCallback deleteClickedCallback) {
-        this.callback = callback;
+    public ItemListAdapter(
+            ListItemClickedCallback itemClickedCallback,
+            ListItemDeleteClickedCallback deleteClickedCallback,
+            ListItemTakeClickedCallback takeClickedCallback) {
+        this.itemClickedCallback = itemClickedCallback;
         this.deleteClickedCallback = deleteClickedCallback;
+        this.takeClickedCallback = takeClickedCallback;
     }
 
 
@@ -59,7 +64,15 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
         // Set up the delete button
         binding.btDelete.setOnClickListener(v -> {
-            deleteClickedCallback.onDeleteClicked(getItemForPosition(position));
+            deleteClickedCallback.onDeleteClicked(itemForPosition);
+        });
+
+        binding.btTake.setOnClickListener(v -> {
+            takeClickedCallback.onTakeButtonClicked(itemForPosition);
+        });
+
+        binding.getRoot().setOnClickListener(v -> {
+            itemClickedCallback.onClick(itemForPosition);
         });
     }
 
