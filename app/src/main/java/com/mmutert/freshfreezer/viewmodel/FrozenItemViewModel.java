@@ -20,7 +20,7 @@ public class FrozenItemViewModel extends AndroidViewModel {
     public FrozenItemViewModel(@NonNull Application application) {
         super(application);
         mItemRepository = new ItemRepository(application);
-        mFrozenItems = mItemRepository.getAllFrozenItems();
+        mFrozenItems = mItemRepository.getAllActiveFrozenItems();
     }
 
 
@@ -34,5 +34,13 @@ public class FrozenItemViewModel extends AndroidViewModel {
 
     public void delete(FrozenItem item) {
         mItemRepository.deleteItem(item);
+    }
+
+    public void archive(FrozenItem item) {
+        mItemRepository.archiveItem(item);
+    }
+
+    public void restore(FrozenItem item) {
+        mItemRepository.restoreItem(item);
     }
 }

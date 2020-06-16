@@ -16,8 +16,12 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.databinding.FragmentFrozenItemListBinding;
@@ -25,11 +29,13 @@ import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 
 import static com.mmutert.freshfreezer.notification.NotificationConstants.CHANNEL_ID;
 
+
 public class FrozenItemListFragment extends Fragment
-        implements ListItemClickedCallback, ListItemDeleteClickedCallback, ListItemTakeClickedCallback{
+        implements ListItemClickedCallback, ListItemDeleteClickedCallback, ListItemTakeClickedCallback {
 
     private FragmentFrozenItemListBinding mBinding;
     private FrozenItemViewModel mViewModel;
+    private ItemListAdapter mItemListAdapter;
 
 
     @Override
@@ -52,11 +58,29 @@ public class FrozenItemListFragment extends Fragment
                 new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
         mBinding.rvFrozenItemList.setLayoutManager(layoutManager);
 
-        ItemListAdapter itemListAdapter = new ItemListAdapter(this, this, this);
-        mBinding.rvFrozenItemList.setAdapter(itemListAdapter);
+        mItemListAdapter = new ItemListAdapter(this, this, this);
+        mBinding.rvFrozenItemList.setAdapter(mItemListAdapter);
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(
+                    @NonNull final RecyclerView recyclerView,
+                    @NonNull final RecyclerView.ViewHolder viewHolder,
+                    @NonNull final RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, final int direction) {
+                // Delete the item
+                int pos = viewHolder.getAdapterPosition();
+                archiveItem(mItemListAdapter.getItemAtPosition(pos), pos);
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(mBinding.rvFrozenItemList);
 
         mViewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
-        mViewModel.getFrozenItems().observe(getViewLifecycleOwner(), itemListAdapter::setItems);
+        mViewModel.getFrozenItems().observe(getViewLifecycleOwner(), mItemListAdapter::setItems);
 
         mBinding.fab.setOnClickListener(view2 -> {
             mBinding.fab.setVisibility(View.GONE);
@@ -76,10 +100,28 @@ public class FrozenItemListFragment extends Fragment
         Log.d("ListFragment", "Clicked on item " + item.getName());
     }
 
-    @Override
-    public void onDeleteClicked(FrozenItem itemToDelete) {
+
+    private void archiveItem(FrozenItem itemToArchive, int position) {
+        mItemListAdapter.notifyItemRemoved(position);
+
         FrozenItemViewModel viewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
-        viewModel.delete(itemToDelete);
+        Snackbar snackbar = Snackbar.make(
+                mBinding.itemListCoordinatorLayout,
+                "Deleted item " + itemToArchive.getName(),
+                Snackbar.LENGTH_LONG
+        );
+        snackbar.setAction("Undo", v -> {
+            viewModel.restore(itemToArchive);
+            mItemListAdapter.notifyItemRangeInserted(position, 1);
+        });
+        snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_SLIDE);
+        snackbar.show();
+        viewModel.archive(itemToArchive);
+    }
+
+    @Override
+    public void onDeleteClicked(FrozenItem itemToDelete, int position) {
+        archiveItem(itemToDelete, position);
     }
 
     @Override

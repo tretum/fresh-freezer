@@ -50,7 +50,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
     @Override
     public void onBindViewHolder(@NonNull ItemListAdapterViewHolder holder, int position) {
         ListItemBinding binding = holder.binding;
-        FrozenItem itemForPosition = getItemForPosition(position);
+        FrozenItem itemForPosition = getItemAtPosition(position);
 
         binding.setItem(itemForPosition);
 
@@ -64,7 +64,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
         // Set up the delete button
         binding.btDelete.setOnClickListener(v -> {
-            deleteClickedCallback.onDeleteClicked(itemForPosition);
+            deleteClickedCallback.onDeleteClicked(itemForPosition, position);
         });
 
         binding.btTake.setOnClickListener(v -> {
@@ -85,7 +85,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         }
     }
 
-    private FrozenItem getItemForPosition(int position) {
+    public FrozenItem getItemAtPosition(int position) {
         return mItems.get(position);
     }
 

@@ -6,6 +6,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/item_list_coordinator_layout"
         android:orientation="vertical"
         tools:context=".ui.FrozenItemListFragment">
 

@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
+import androidx.room.Update;
 
 import com.mmutert.freshfreezer.data.converters.ItemAndNotifications;
 
@@ -15,20 +16,34 @@ import java.util.List;
 @Dao
 public abstract class ItemDao {
 
+    public static final int TRUE = 1;
+    public static final int FALSE = 0;
+
+    // ============================== Items ====================================
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract long insertItem(FrozenItem item);
 
-    @Query("SELECT * FROM items")
-    public abstract LiveData<List<FrozenItem>> getAllItems();
+    @Query("SELECT * FROM items where archived IS 0")
+    public abstract LiveData<List<FrozenItem>> getAllActiveItems();
 
-    @Query("SELECT * FROM items WHERE name = :name")
-    public abstract LiveData<List<FrozenItem>> getAllItemsWithName(String name);
+    @Query("SELECT * FROM items WHERE name = :name AND archived is 0")
+    public abstract LiveData<List<FrozenItem>> getAllActiveItemsWithName(String name);
 
-    @Query("SELECT * FROM items ORDER BY best_before_date ASC LIMIT :numResults")
+    @Query("SELECT * FROM items where archived is 0 ORDER BY best_before_date ASC LIMIT :numResults")
     public abstract LiveData<List<FrozenItem>> getClosestBestBefore(int numResults);
+
+    @Query("SELECT * FROM items Where archived IS 1")
+    public abstract LiveData<List<FrozenItem>> getArchivedItems();
 
     @Delete
     public abstract void deleteItem(FrozenItem item);
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void updateFrozenItem(FrozenItem item);
+
+
+    // ============================ Notifications =================================
 
     @Query("Select * from notifications")
     public abstract LiveData<List<ItemNotification>> getAllNotifications();
@@ -45,6 +60,9 @@ public abstract class ItemDao {
 
     @Delete
     public abstract void deleteNotification(ItemNotification notification);
+
+
+    // ========================= Combined Items and Notifications ============================
 
     @Transaction
     @Query("Select * from items where id = :id")

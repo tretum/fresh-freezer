@@ -35,6 +35,10 @@ public class FrozenItem {
 
     private String notes;
 
+
+    @ColumnInfo(defaultValue = "false")
+    private boolean archived;
+
     public FrozenItem() {
 
     }
@@ -93,5 +97,13 @@ public class FrozenItem {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(final boolean archived) {
+        this.archived = archived;
     }
 }

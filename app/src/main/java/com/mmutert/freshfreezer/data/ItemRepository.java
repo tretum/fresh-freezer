@@ -9,16 +9,18 @@ import java.util.List;
 public class ItemRepository {
 
     private ItemDao mItemDao;
-    private LiveData<List<FrozenItem>> mAllFrozenItems;
+    private LiveData<List<FrozenItem>> mAllActiveFrozenItems;
+    private LiveData<List<FrozenItem>> mAllArchivedFrozenItems;
 
     public ItemRepository(Application app) {
         ItemDatabase database = ItemDatabase.getDatabase(app);
-        mItemDao = database.itemDao();
-        mAllFrozenItems = mItemDao.getAllItems();
+        mItemDao              = database.itemDao();
+        mAllActiveFrozenItems = mItemDao.getAllActiveItems();
+        mAllArchivedFrozenItems = mItemDao.getArchivedItems();
     }
 
-    public LiveData<List<FrozenItem>> getAllFrozenItems() {
-        return mAllFrozenItems;
+    public LiveData<List<FrozenItem>> getAllActiveFrozenItems() {
+        return mAllActiveFrozenItems;
     }
 
     public void insertItem(final FrozenItem itemToInsert) {
@@ -32,6 +34,26 @@ public class ItemRepository {
         ItemDatabase.databaseWriteExecutor.execute(() -> {
             mItemDao.deleteItem(itemToDelete);
         });
+    }
+
+    public void archiveItem(FrozenItem itemToArchive) {
+        if(!itemToArchive.isArchived()) {
+            itemToArchive.setArchived(true);
+
+            ItemDatabase.databaseWriteExecutor.execute(() -> {
+                mItemDao.updateFrozenItem(itemToArchive);
+            });
+        }
+    }
+
+    public void restoreItem(FrozenItem itemToRestore){
+        if(itemToRestore.isArchived()){
+            itemToRestore.setArchived(false);
+
+            ItemDatabase.databaseWriteExecutor.execute(() -> {
+                mItemDao.updateFrozenItem(itemToRestore);
+            });
+        }
     }
 
     public LiveData<List<ItemNotification>> getNotifications(){
@@ -51,5 +73,9 @@ public class ItemRepository {
         ItemDatabase.databaseWriteExecutor.execute(() -> {
             mItemDao.deleteNotification(notification);
         });
+    }
+
+    public LiveData<List<FrozenItem>> getmAllArchivedFrozenItems() {
+        return mAllArchivedFrozenItems;
     }
 }
