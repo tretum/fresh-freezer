@@ -26,4 +26,20 @@ public abstract class ItemDao {
 
     @Delete
     public abstract void deleteItem(FrozenItem item);
+
+    @Query("Select * from notifications")
+    public abstract LiveData<List<ItemNotification>> getAllNotifications();
+
+    @Query("Select * from notifications where item_id = :itemId")
+    public abstract LiveData<List<ItemNotification>> getAllNotifications(long itemId);
+
+    public LiveData<List<ItemNotification>> getAllNotifications(FrozenItem item) {
+        return getAllNotifications(item.getId());
+    }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void addNotification(ItemNotification notification);
+
+    @Delete
+    public abstract void deleteNotification(ItemNotification notification);
 }

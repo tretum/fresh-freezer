@@ -33,4 +33,23 @@ public class ItemRepository {
             mItemDao.deleteItem(itemToDelete);
         });
     }
+
+    public LiveData<List<ItemNotification>> getNotifications(){
+        return mItemDao.getAllNotifications();
+    }
+
+    public LiveData<List<ItemNotification>> getAllNotifications(FrozenItem item) {
+        return mItemDao.getAllNotifications(item);
+    }
+
+    public void addNotification(final ItemNotification notification) {
+        ItemDatabase.databaseWriteExecutor.execute(() -> {
+            mItemDao.addNotification(notification);
+        });
+    }
+    public void deleteNotification(ItemNotification notification) {
+        ItemDatabase.databaseWriteExecutor.execute(() -> {
+            mItemDao.deleteNotification(notification);
+        });
+    }
 }
