@@ -68,8 +68,7 @@ public class AddItemFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mBinding = FragmentAddItemBinding.inflate(inflater, container, false);
         mBinding.setNewItem(newItem);
@@ -84,7 +83,11 @@ public class AddItemFragment extends Fragment {
         setUpButtons();
         setupDatePickers();
 
-        mBinding.spAddItemsUnitSelection.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, AmountUnit.values()));
+        mBinding.spAddItemsUnitSelection.setAdapter(new ArrayAdapter<>(
+                getContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                AmountUnit.values()
+        ));
         mBinding.spAddItemsUnitSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -129,8 +132,7 @@ public class AddItemFragment extends Fragment {
             picker.addOnPositiveButtonClickListener(selection -> {
                 Date date = new Date(selection);
                 newItem.setFrozenDate(date);
-                String selectedFrozenDateFormatted =
-                        DateFormat.format("yyyy-MM-dd", date).toString();
+                String selectedFrozenDateFormatted = DateFormat.format("yyyy-MM-dd", date).toString();
                 mBinding.etAddItemFrozenDate.setText(selectedFrozenDateFormatted);
             });
 
@@ -146,8 +148,7 @@ public class AddItemFragment extends Fragment {
             picker.addOnPositiveButtonClickListener(selection -> {
                 Date date = new Date(selection);
                 newItem.setBestBeforeDate(date);
-                String selectedFrozenDateFormatted =
-                        DateFormat.format("yyyy-MM-dd", date).toString();
+                String selectedFrozenDateFormatted = DateFormat.format("yyyy-MM-dd", date).toString();
                 mBinding.etAddItemBestBefore.setText(selectedFrozenDateFormatted);
             });
 
@@ -163,24 +164,31 @@ public class AddItemFragment extends Fragment {
             newItem.setId(0);
 
             if (mBinding.getNewItem().getName() == null || mBinding.getNewItem().getName().isEmpty()) {
-                if(this.mToast != null) {
+                if (this.mToast != null) {
                     this.mToast.cancel();
                     this.mToast = null;
                 }
-                this.mToast = Toast.makeText(getContext(), "Saving failed. A new entry requires a name!", Toast.LENGTH_SHORT);
+                this.mToast = Toast.makeText(
+                        getContext(),
+                        "Saving failed. A new entry requires a name!",
+                        Toast.LENGTH_SHORT
+                );
                 this.mToast.show();
             } else {
                 frozenItemViewModel.insert(newItem);
                 Navigation.findNavController(v).navigate(R.id.action_new_item_save);
 
                 // TODO Schedule notification
-                scheduleNotification(newItem);
+                String notificationUUID = scheduleNotification(newItem);
+                // TODO Save notification to database
+
+
+                Keyboard.hideKeyboardFrom(getContext(), v);
             }
-            Keyboard.hideKeyboardFrom(getContext(), v);
         });
     }
 
-    private void scheduleNotification(FrozenItem item) {
+    private String scheduleNotification(FrozenItem item) {
         // TODO Set correct values
 //        TimeUnit notificationOffsetUnit = TimeUnit.DAYS;
 //        long notificationOffset = calculateOffset(item);
@@ -190,10 +198,18 @@ public class AddItemFragment extends Fragment {
         OneTimeWorkRequest notificationRequest =
                 new OneTimeWorkRequest.Builder(NotificationWorker.class)
                         .setInputData(createInputDataForItem(item))
-                        .setConstraints(new Constraints.Builder().setRequiresBatteryNotLow(true).build())
-                        .setInitialDelay(notificationOffset, notificationOffsetUnit)
+                        .setConstraints(
+                                new Constraints.Builder()
+                                        .setRequiresBatteryNotLow(true)
+                                        .build())
+                        .setInitialDelay(
+                                notificationOffset,
+                                notificationOffsetUnit
+                        )
                         .build();
+
         WorkManager.getInstance(getActivity()).enqueue(notificationRequest);
+        return notificationRequest.getId().toString();
     }
 
     private long calculateOffset(FrozenItem item) {
@@ -202,7 +218,10 @@ public class AddItemFragment extends Fragment {
         Date bestBeforeDate = item.getBestBeforeDate();
         long bestBeforeInMillis = bestBeforeDate.getTime();
         long currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
-        return TimeUnit.DAYS.convert(Math.abs((bestBeforeInMillis - notificationTimeOffset) - currentTimeInMillis), TimeUnit.MILLISECONDS);
+        return TimeUnit.DAYS.convert(
+                Math.abs((bestBeforeInMillis - notificationTimeOffset) - currentTimeInMillis),
+                TimeUnit.MILLISECONDS
+        );
     }
 
     private Data createInputDataForItem(FrozenItem item) {

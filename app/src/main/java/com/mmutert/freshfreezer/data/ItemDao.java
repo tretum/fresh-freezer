@@ -6,6 +6,9 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
+
+import com.mmutert.freshfreezer.data.converters.ItemAndNotifications;
 
 import java.util.List;
 
@@ -42,4 +45,12 @@ public abstract class ItemDao {
 
     @Delete
     public abstract void deleteNotification(ItemNotification notification);
+
+    @Transaction
+    @Query("Select * from items where id = :id")
+    public abstract LiveData<ItemAndNotifications> getItemAndNotifications(long id);
+
+    @Transaction
+    @Query("Select * from items")
+    public abstract LiveData<List<ItemAndNotifications>> getItemAndNotificationsList();
 }
