@@ -5,13 +5,13 @@
     <!--  Add item fragment  -->
     <string name="fragment_add_item_label">Add Item</string>
     <string name="add_item_name_title">Name:</string>
-    <string name="add_item_title_hint">e.g. Chicken breast</string>
+    <string name="add_item_title_hint">Name of the item</string>
     <string name="add_item_description_title">Add description:</string>
-    <string name="add_item_description_hint">e.g. Chopped Chicken breast</string>
+    <string name="add_item_description_hint">Add description</string>
     <string name="add_item_frozen_date_title">Freezing Date:</string>
     <string name="add_item_best_before_date_title">Best Before:</string>
     <string name="add_item_amount_title">Amount:</string>
-    <string name="add_item_amount_hint">e.g. 500g, 5pcs</string>
+    <string name="add_item_amount_hint">Amount</string>
     <string name="add_item_save_button_label">Save</string>
     <string name="add_item_discard_button_label">Discard</string>
 

@@ -16,29 +16,18 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="8dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/tv_add_item_name_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:paddingLeft="@dimen/add_item_pad_left"
-                    android:paddingTop="@dimen/add_item_pad_title_top"
-                    android:paddingRight="@dimen/add_item_pad_left"
-                    android:text="@string/add_item_name_title"
-                    android:textSize="@dimen/add_item_title_size"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
                 <EditText
                     android:id="@+id/et_add_item_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
                     android:ems="10"
                     android:hint="@string/add_item_title_hint"
@@ -47,27 +36,56 @@
                     android:paddingLeft="@dimen/add_item_pad_left"
                     android:paddingRight="@dimen/add_item_pad_left"
                     android:text="@={newItem.name}"
+                    android:textSize="24sp"
+                    android:focusedByDefault="true"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/tv_add_item_name_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_add_item_name_title" />
+                    app:layout_constraintStart_toStartOf="@+id/tv_add_frozen_date_title"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:background="?android:attr/listDivider"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_add_item_title" />
+
+                <ImageView
+                    android:id="@+id/iv_frozen_date_cal_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_calendar_today_24px"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_add_frozen_date_title"
+                    app:layout_constraintEnd_toStartOf="@id/tv_add_frozen_date_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_add_frozen_date_title" />
+
 
                 <TextView
                     android:id="@+id/tv_add_frozen_date_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:gravity="center_vertical"
                     android:labelFor="@id/et_add_item_frozen_date"
                     android:paddingLeft="@dimen/add_item_pad_left"
                     android:paddingTop="@dimen/add_item_pad_title_top"
                     android:paddingRight="@dimen/add_item_pad_left"
                     android:text="@string/add_item_frozen_date_title"
                     android:textSize="@dimen/add_item_title_size"
-                    app:layout_constraintStart_toStartOf="@+id/et_add_item_title"
-                    app:layout_constraintTop_toBottomOf="@id/et_add_item_title" />
+                    app:layout_constraintBottom_toBottomOf="@+id/et_add_item_frozen_date"
+                    app:layout_constraintStart_toEndOf="@+id/iv_frozen_date_cal_icon"
+                    app:layout_constraintTop_toTopOf="@+id/et_add_item_frozen_date" />
 
                 <EditText
                     android:id="@+id/et_add_item_frozen_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:focusable="false"
                     android:inputType="none"
                     android:paddingLeft="@dimen/add_item_pad_left"
@@ -78,13 +96,14 @@
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/tv_add_frozen_date_title"
-                    app:layout_constraintTop_toTopOf="@+id/tv_add_frozen_date_title"
+                    app:layout_constraintTop_toBottomOf="@+id/divider"
                     tools:text="2020-06-01" />
 
                 <TextView
                     android:id="@+id/tv_add_best_before_date_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:labelFor="@id/et_add_item_best_before"
                     android:paddingLeft="@dimen/add_item_pad_left"
                     android:paddingTop="@dimen/add_item_pad_title_top"
@@ -93,12 +112,13 @@
                     android:textSize="@dimen/add_item_title_size"
                     app:layout_constraintBottom_toBottomOf="@+id/et_add_item_best_before"
                     app:layout_constraintStart_toStartOf="@+id/tv_add_frozen_date_title"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_add_frozen_date_title" />
+                    app:layout_constraintTop_toTopOf="@+id/et_add_item_best_before" />
 
                 <EditText
                     android:id="@+id/et_add_item_best_before"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:focusable="false"
                     android:inputType="none"
                     android:paddingLeft="@dimen/add_item_pad_left"
@@ -108,29 +128,26 @@
                     android:textAlignment="center"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="@+id/et_add_item_frozen_date"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toEndOf="@+id/tv_add_frozen_date_title"
+                    app:layout_constraintStart_toStartOf="@+id/et_add_item_frozen_date"
                     app:layout_constraintTop_toBottomOf="@+id/et_add_item_frozen_date"
                     tools:text="2020-06-01" />
 
-                <TextView
-                    android:id="@+id/tv_add_amount_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:labelFor="@id/et_add_item_amount"
-                    android:paddingLeft="@dimen/add_item_pad_left"
-                    android:paddingTop="@dimen/add_item_pad_title_top"
-                    android:paddingRight="@dimen/add_item_pad_left"
-                    android:text="@string/add_item_amount_title"
-                    android:textSize="@dimen/add_item_title_size"
-                    app:layout_constraintStart_toStartOf="@+id/tv_add_best_before_date_title"
-                    app:layout_constraintTop_toTopOf="@+id/et_add_item_amount" />
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:background="?android:attr/listDivider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_add_item_best_before" />
+
 
                 <EditText
                     android:id="@+id/et_add_item_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
                     android:ems="10"
                     android:hint="@string/add_item_amount_hint"
                     android:inputType="number"
@@ -139,37 +156,8 @@
                     android:selectAllOnFocus="true"
                     android:text="@={`` + newItem.amount}"
                     android:textAlignment="textEnd"
-                    app:layout_constraintStart_toEndOf="@+id/tv_add_amount_title"
-                    app:layout_constraintTop_toBottomOf="@+id/et_add_item_best_before" />
-
-                <TextView
-                    android:id="@+id/tv_add_item_description_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/add_item_pad_left"
-                    android:paddingTop="@dimen/add_item_pad_title_top"
-                    android:paddingRight="@dimen/add_item_pad_left"
-                    android:text="@string/add_item_description_title"
-                    android:textSize="@dimen/add_item_title_size"
-                    app:layout_constraintStart_toStartOf="@+id/tv_add_amount_title"
-                    app:layout_constraintTop_toBottomOf="@+id/et_add_item_amount" />
-
-                <EditText
-                    android:id="@+id/et_add_item_description"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:ems="10"
-                    android:hint="@string/add_item_description_hint"
-                    android:inputType="textMultiLine"
-                    android:paddingStart="@dimen/add_item_pad_left"
-                    android:paddingLeft="@dimen/add_item_pad_left"
-                    android:paddingEnd="@dimen/add_item_pad_left"
-                    android:paddingRight="@dimen/add_item_pad_left"
-                    android:text="@={newItem.notes}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/tv_add_item_description_title"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_add_item_description_title" />
+                    app:layout_constraintStart_toStartOf="@+id/tv_add_best_before_date_title"
+                    app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
                 <Spinner
                     android:id="@+id/sp_add_items_unit_selection"
@@ -180,6 +168,95 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/et_add_item_amount"
                     app:layout_constraintTop_toTopOf="@+id/et_add_item_amount" />
+
+                <View
+                    android:id="@+id/divider3"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:background="?android:attr/listDivider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_add_item_amount" />
+
+                <ImageView
+                    android:id="@+id/iv_description_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_description_24px"
+                    app:layout_constraintBottom_toBottomOf="@id/et_add_item_description"
+                    app:layout_constraintEnd_toEndOf="@+id/iv_frozen_date_cal_icon"
+                    app:layout_constraintStart_toStartOf="@+id/iv_frozen_date_cal_icon"
+                    app:layout_constraintTop_toTopOf="@id/et_add_item_description" />
+
+                <EditText
+                    android:id="@+id/et_add_item_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:ems="10"
+                    android:hint="@string/add_item_description_hint"
+                    android:inputType="textMultiLine"
+                    android:paddingStart="@dimen/add_item_pad_left"
+                    android:paddingLeft="@dimen/add_item_pad_left"
+                    android:paddingEnd="@dimen/add_item_pad_left"
+                    android:paddingRight="@dimen/add_item_pad_left"
+                    android:text="@={newItem.notes}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/et_add_item_amount"
+                    app:layout_constraintTop_toBottomOf="@+id/divider3" />
+
+                <View
+                    android:id="@+id/divider4"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:background="?android:attr/listDivider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_add_item_description" />
+
+
+                <ImageView
+                    android:id="@+id/iv_notification_bell_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_notifications_none_24px"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_add_notification_1"
+                    app:layout_constraintEnd_toEndOf="@+id/iv_frozen_date_cal_icon"
+                    app:layout_constraintStart_toStartOf="@+id/iv_frozen_date_cal_icon"
+                    app:layout_constraintTop_toTopOf="@id/tv_add_notification_1" />
+
+                <TextView
+                    android:id="@+id/tv_add_notification_1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="@dimen/add_item_pad_left"
+                    android:paddingLeft="@dimen/add_item_pad_title_top"
+                    android:paddingTop="@dimen/add_item_pad_title_top"
+                    android:paddingRight="@dimen/add_item_pad_title_top"
+                    android:text="Add notification"
+                    android:background="@android:color/transparent"
+                    android:textSize="@dimen/add_item_title_size"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_remove_notification_1_icon"
+                    app:layout_constraintStart_toStartOf="@+id/et_add_item_description"
+                    app:layout_constraintTop_toTopOf="@id/divider4" />
+
+                <ImageView
+                    android:id="@+id/iv_remove_notification_1_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_close_24px"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_add_notification_1"
+                    app:layout_constraintEnd_toEndOf="@+id/et_add_item_description"
+                    app:layout_constraintStart_toEndOf="@+id/tv_add_notification_1"
+                    app:layout_constraintTop_toTopOf="@id/tv_add_notification_1"
+                    tools:visibility="visible" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
@@ -191,7 +268,6 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             android:clickable="true"
-            android:focusable="true"
             app:srcCompat="@drawable/ic_done_24px" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
