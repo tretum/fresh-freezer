@@ -6,6 +6,11 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.mmutert.freshfreezer.data.converters.UUIDConverter;
+
+import java.util.UUID;
 
 
 @Entity(tableName = "notifications",
@@ -19,18 +24,19 @@ public class ItemNotification {
     @PrimaryKey()
     @NonNull
     @ColumnInfo(name = "notification_id")
-    private String notificationId;
+    @TypeConverters(UUIDConverter.class)
+    private UUID notificationId;
 
     @ColumnInfo(name = "item_id")
     private long itemId;
 
-    public ItemNotification(@NonNull final String notificationId, final long itemId) {
+    public ItemNotification(@NonNull final UUID notificationId, final long itemId) {
         this.notificationId = notificationId;
         this.itemId = itemId;
     }
 
     @NonNull
-    public String getNotificationId() {
+    public UUID getNotificationId() {
         return notificationId;
     }
 
