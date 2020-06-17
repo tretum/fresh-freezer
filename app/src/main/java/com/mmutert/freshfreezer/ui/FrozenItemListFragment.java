@@ -61,7 +61,10 @@ public class FrozenItemListFragment extends Fragment
         mItemListAdapter = new ItemListAdapter(this, this, this);
         mBinding.rvFrozenItemList.setAdapter(mItemListAdapter);
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+                0,
+                ItemTouchHelper.RIGHT
+        ) {
             @Override
             public boolean onMove(
                     @NonNull final RecyclerView recyclerView,
