@@ -46,12 +46,19 @@ public abstract class ItemDao {
     // ============================ Notifications =================================
 
     @Query("Select * from notifications")
-    public abstract LiveData<List<ItemNotification>> getAllNotifications();
+    public abstract LiveData<List<ItemNotification>> getAllNotificationsLiveData();
 
     @Query("Select * from notifications where item_id = :itemId")
-    public abstract LiveData<List<ItemNotification>> getAllNotifications(long itemId);
+    public abstract LiveData<List<ItemNotification>> getAllNotificationsLiveData(long itemId);
 
-    public LiveData<List<ItemNotification>> getAllNotifications(FrozenItem item) {
+    @Query("Select * from notifications where item_id = :itemId")
+    public abstract List<ItemNotification> getAllNotifications(long itemId);
+
+    public LiveData<List<ItemNotification>> getAllNotificationsLiveData(FrozenItem item) {
+        return getAllNotificationsLiveData(item.getId());
+    }
+
+    public List<ItemNotification> getAllNotifications(FrozenItem item) {
         return getAllNotifications(item.getId());
     }
 

@@ -1,8 +1,6 @@
 package com.mmutert.freshfreezer.ui;
 
-import android.app.Notification;
 import android.os.Bundle;
-import android.renderscript.RenderScript;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,23 +9,30 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.WorkManager;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.FrozenItem;
+import com.mmutert.freshfreezer.data.ItemNotification;
 import com.mmutert.freshfreezer.databinding.FragmentFrozenItemListBinding;
+import com.mmutert.freshfreezer.notification.NotificationConstants;
+import com.mmutert.freshfreezer.notification.NotificationHelper;
 import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 
-import static com.mmutert.freshfreezer.notification.NotificationConstants.CHANNEL_ID;
+import org.joda.time.LocalDateTime;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class FrozenItemListFragment extends Fragment
@@ -113,13 +118,39 @@ public class FrozenItemListFragment extends Fragment
                 "Deleted item " + itemToArchive.getName(),
                 Snackbar.LENGTH_LONG
         );
-        snackbar.setAction("Undo", v -> {
-            viewModel.restore(itemToArchive);
-            mItemListAdapter.notifyItemRangeInserted(position, 1);
+
+        // TODO Warning: Hack, better change this
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            List<ItemNotification> allNotifications = viewModel.getAllNotifications(itemToArchive);
+
+            // Cancel all notifications
+            WorkManager workManager = WorkManager.getInstance(getContext());
+            for (ItemNotification notification : allNotifications) {
+                workManager.cancelWorkById(notification.getNotificationId());
+            }
+
+            snackbar.setAction("Undo", v -> {
+                viewModel.restore(itemToArchive);
+                mItemListAdapter.notifyItemRangeInserted(position, 1);
+
+                // TODO Create new workers for notitifications
+                for (ItemNotification notification : allNotifications) {
+                    LocalDateTime notifyOn = notification.getNotifyOn();
+                    UUID uuid = NotificationHelper.scheduleNotification(
+                            getContext(),
+                            itemToArchive,
+                            NotificationConstants.NOTIFICATION_OFFSET_TIMEUNIT,
+                            notifyOn
+                    );
+                    viewModel.addNotification(itemToArchive, uuid, notifyOn);
+                    viewModel.deleteNotification(notification);
+                }
+            });
+            snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_SLIDE);
+            snackbar.show();
+            viewModel.archive(itemToArchive);
         });
-        snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_SLIDE);
-        snackbar.show();
-        viewModel.archive(itemToArchive);
     }
 
     @Override

@@ -8,7 +8,10 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
+import com.mmutert.freshfreezer.data.converters.LocalDateTimeConverter;
 import com.mmutert.freshfreezer.data.converters.UUIDConverter;
+
+import org.joda.time.LocalDateTime;
 
 import java.util.UUID;
 
@@ -30,9 +33,14 @@ public class ItemNotification {
     @ColumnInfo(name = "item_id")
     private long itemId;
 
-    public ItemNotification(@NonNull final UUID notificationId, final long itemId) {
+    @TypeConverters(LocalDateTimeConverter.class)
+    @ColumnInfo(name = "notify_on")
+    private LocalDateTime notifyOn;
+
+    public ItemNotification(@NonNull final UUID notificationId, final long itemId, final LocalDateTime notifyOn) {
         this.notificationId = notificationId;
-        this.itemId = itemId;
+        this.itemId         = itemId;
+        this.notifyOn       = notifyOn;
     }
 
     @NonNull
@@ -42,5 +50,9 @@ public class ItemNotification {
 
     public long getItemId() {
         return itemId;
+    }
+
+    public LocalDateTime getNotifyOn() {
+        return notifyOn;
     }
 }

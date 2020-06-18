@@ -10,7 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.databinding.ListItemBinding;
 
-import java.util.Date;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
+
 import java.util.List;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemListAdapterViewHolder> {
@@ -54,10 +58,11 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
         binding.setItem(itemForPosition);
 
-        Date bestBeforeDate = itemForPosition.getBestBeforeDate();
-        String bestBeforeFormatted = DateFormat.format("yyyy-MM-dd", bestBeforeDate).toString();
-        Date frozenDate = itemForPosition.getFrozenDate();
-        String frozenFormatted = DateFormat.format("yyyy-MM-dd", frozenDate).toString();
+        LocalDate bestBeforeDate = itemForPosition.getBestBeforeDate();
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+        String bestBeforeFormatted = formatter.print(bestBeforeDate);
+        LocalDate frozenDate = itemForPosition.getFrozenDate();
+        String frozenFormatted = formatter.print(frozenDate);
 
         binding.tvBestBeforeDate.setText(bestBeforeFormatted);
         binding.tvDateFrozen.setText(frozenFormatted);

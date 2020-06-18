@@ -2,7 +2,6 @@ package com.mmutert.freshfreezer.ui;
 
 import android.os.Bundle;
 import android.text.InputType;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -10,39 +9,41 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.work.Constraints;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.AmountUnit;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.databinding.FragmentAddItemBinding;
-import com.mmutert.freshfreezer.notification.NotificationConstants;
-import com.mmutert.freshfreezer.notification.NotificationWorker;
+import com.mmutert.freshfreezer.notification.NotificationHelper;
 import com.mmutert.freshfreezer.util.Keyboard;
 import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import static com.mmutert.freshfreezer.notification.NotificationConstants.NOTIFICATION_OFFSET_TIMEUNIT;
 
 
 public class AddItemFragment extends Fragment {
@@ -113,15 +114,19 @@ public class AddItemFragment extends Fragment {
     private void setUpAddNotificationButton() {
         TextView tvAddNotification = mBinding.tvAddNotification;
         tvAddNotification.setOnClickListener(v -> {
-            // TODO Handle click on Add notification
 
-            // Schedule notification
+            // Add pending notification to local list
             // TODO Set values to selection
-            Notification notification = new Notification(5 + notifications.size() * 5, TimeUnit.SECONDS);
-            // Save notification to DB
+            // TODO Add dialogs that allow selecting a notification offset or actual time
+            Notification notification = new Notification(0, 0, 15);
             notifications.add(notification);
 
-            TextView notificationTextView = (TextView) getLayoutInflater().inflate(R.layout.notification_entry, mBinding.addItemNotificationLayout, false);
+            // Add the entry to the notifications list
+            TextView notificationTextView = (TextView) getLayoutInflater().inflate(
+                    R.layout.notification_entry,
+                    mBinding.addItemNotificationLayout,
+                    false
+            );
 
             // TODO Better text
             notificationTextView.setText(String.format(Locale.getDefault(), "Notification %d", notifications.size()));
@@ -129,17 +134,21 @@ public class AddItemFragment extends Fragment {
             int id = ViewCompat.generateViewId();
             notificationTextView.setId(id);
 
-            mBinding.addItemNotificationLayout.addView(notificationTextView, mBinding.addItemNotificationLayout.getChildCount() - 1);
+            mBinding.addItemNotificationLayout.addView(
+                    notificationTextView,
+                    mBinding.addItemNotificationLayout.getChildCount() - 1
+            );
 
-            // Add the delete button for the notification
+            // Add the delete button for the notification in the list
             notificationTextView.setOnTouchListener((v1, event) -> {
                 final int DRAWABLE_LEFT = 0;
                 final int DRAWABLE_TOP = 1;
                 final int DRAWABLE_RIGHT = 2;
                 final int DRAWABLE_BOTTOM = 3;
 
-                if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if(event.getRawX() >= (notificationTextView.getRight() - notificationTextView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (event.getRawX() >= (notificationTextView.getRight()
+                            - notificationTextView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         // Remove notification from list
                         notifications.remove(notification);
                         mBinding.addItemNotificationLayout.removeView(notificationTextView);
@@ -153,11 +162,12 @@ public class AddItemFragment extends Fragment {
 
     private void setupDatePickers() {
         // Set up the date pickers for the best before and frozen date fields
-        Date currentTime = Calendar.getInstance().getTime();
-        String curDateFormatted = DateFormat.format("yyyy-MM-dd", currentTime).toString();
 
-        newItem.setFrozenDate(currentTime);
-        newItem.setBestBeforeDate(currentTime);
+        LocalDate currentDate = LocalDate.now();
+        newItem.setFrozenDate(currentDate);
+        newItem.setBestBeforeDate(currentDate);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+        String curDateFormatted = dateTimeFormatter.print(currentDate);
 
         mBinding.etAddItemFrozenDate.setInputType(InputType.TYPE_NULL);
         mBinding.etAddItemFrozenDate.setText(curDateFormatted);
@@ -168,13 +178,13 @@ public class AddItemFragment extends Fragment {
         mBinding.etAddItemFrozenDate.setOnClickListener(v -> {
             MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
             builder.setTitleText("Select Freeze Date");
-            builder.setSelection(newItem.getFrozenDate().getTime());
+            builder.setSelection(newItem.getFrozenDate().toDate().getTime());
             MaterialDatePicker<Long> picker = builder.build();
 
             picker.addOnPositiveButtonClickListener(selection -> {
-                Date date = new Date(selection);
+                LocalDate date = LocalDate.fromDateFields(new Date(selection));
                 newItem.setFrozenDate(date);
-                String selectedFrozenDateFormatted = DateFormat.format("yyyy-MM-dd", date).toString();
+                String selectedFrozenDateFormatted = dateTimeFormatter.print(date);
                 mBinding.etAddItemFrozenDate.setText(selectedFrozenDateFormatted);
             });
 
@@ -184,13 +194,13 @@ public class AddItemFragment extends Fragment {
         mBinding.etAddItemBestBefore.setOnClickListener(v -> {
             MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
             builder.setTitleText("Best Before Date");
-            builder.setSelection(newItem.getBestBeforeDate().getTime());
+            builder.setSelection(newItem.getFrozenDate().toDate().getTime());
             MaterialDatePicker<Long> picker = builder.build();
 
             picker.addOnPositiveButtonClickListener(selection -> {
-                Date date = new Date(selection);
-                newItem.setBestBeforeDate(date);
-                String selectedFrozenDateFormatted = DateFormat.format("yyyy-MM-dd", date).toString();
+                LocalDate date = LocalDate.fromDateFields(new Date(selection));
+                newItem.setFrozenDate(date);
+                String selectedFrozenDateFormatted = dateTimeFormatter.print(date);
                 mBinding.etAddItemBestBefore.setText(selectedFrozenDateFormatted);
             });
 
@@ -220,13 +230,23 @@ public class AddItemFragment extends Fragment {
                 frozenItemViewModel.insert(newItem);
                 Navigation.findNavController(v).navigate(R.id.action_new_item_save);
 
-                // TODO Save notifications from the list to DB on click save
-                // TODO Actually schedule the notifications
                 // TODO Check for possible race conditions where id for the item might not be set yet
                 for (Notification notification : notifications) {
                     Log.d("AddItemFragment", "Scheduling notification");
-                    UUID uuid = scheduleNotification(newItem, notification.time, notification.timeUnit);
-                    frozenItemViewModel.addNotification(newItem, uuid);
+                    LocalDateTime scheduledOn = newItem
+                            .getBestBeforeDate()
+                            .minusDays(notification.getOffsetDays())
+                            .toLocalDateTime(
+                                    LocalTime.now(DateTimeZone.forTimeZone(TimeZone.getDefault())))
+                            .plusMinutes(notification.getOffsetMinutes())
+                            .plusSeconds(notification.getOffsetSeconds());
+                    UUID uuid = NotificationHelper.scheduleNotification(
+                            getContext(),
+                            newItem,
+                            NOTIFICATION_OFFSET_TIMEUNIT,
+                            scheduledOn
+                    );
+                    frozenItemViewModel.addNotification(newItem, uuid, scheduledOn);
                 }
 
                 Keyboard.hideKeyboardFrom(getContext(), v);
@@ -234,64 +254,28 @@ public class AddItemFragment extends Fragment {
         });
     }
 
-    private UUID scheduleNotification(FrozenItem item, long timeOffset, TimeUnit timeUnit) {
-        // TODO Set correct values
-//        TimeUnit notificationOffsetUnit = TimeUnit.DAYS;
-//        long notificationOffset = calculateOffset(item);
-
-        OneTimeWorkRequest notificationRequest =
-                new OneTimeWorkRequest.Builder(NotificationWorker.class)
-                        .setInputData(createInputDataForItem(item))
-                        .setConstraints(
-                                new Constraints.Builder()
-                                        .setRequiresBatteryNotLow(true)
-                                        .build())
-                        .setInitialDelay(
-                                timeOffset,
-                                timeUnit
-                        )
-                        .build();
-
-        WorkManager.getInstance(getActivity()).enqueue(notificationRequest);
-        return notificationRequest.getId();
-    }
-
-    private long calculateOffset(FrozenItem item) {
-        long notificationTimeOffset = TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS);
-
-        Date bestBeforeDate = item.getBestBeforeDate();
-        long bestBeforeInMillis = bestBeforeDate.getTime();
-        long currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
-        return TimeUnit.DAYS.convert(
-                Math.abs((bestBeforeInMillis - notificationTimeOffset) - currentTimeInMillis),
-                TimeUnit.MILLISECONDS
-        );
-    }
-
-    private Data createInputDataForItem(FrozenItem item) {
-        return new Data.Builder()
-                .putString(NotificationConstants.KEY_ITEM_NAME, item.getName())
-                .putFloat(NotificationConstants.KEY_ITEM_AMOUNT, item.getAmount())
-                .putInt(NotificationConstants.KEY_ITEM_ID, (int) item.getId())
-                .putString(NotificationConstants.KEY_ITEM_AMOUNT_UNIT, item.getUnit().toString())
-                .build();
-    }
-
     private static class Notification {
-        private final long time;
-        private final TimeUnit timeUnit;
+        //        private final LocalDateTime scheduledOn;
+        private final int offsetDays;
+        private int offsetMinutes;
+        private int offsetSeconds;
 
-        public Notification(long time, TimeUnit timeUnit) {
-            this.time = time;
-            this.timeUnit = timeUnit;
+        public Notification(final int offsetDays, final int offsetMinutes, final int offsetSeconds) {
+            this.offsetDays    = offsetDays;
+            this.offsetMinutes = offsetMinutes;
+            this.offsetSeconds = offsetSeconds;
         }
 
-        public TimeUnit getTimeUnit() {
-            return timeUnit;
+        public int getOffsetDays() {
+            return offsetDays;
         }
 
-        public long getTime() {
-            return time;
+        public int getOffsetMinutes() {
+            return offsetMinutes;
+        }
+
+        public int getOffsetSeconds() {
+            return offsetSeconds;
         }
     }
 

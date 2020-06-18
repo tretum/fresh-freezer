@@ -16,9 +16,9 @@ public abstract class ItemDatabase extends RoomDatabase {
 
     public abstract ItemDao itemDao();
 
-    private static final int NUMBER_OF_THREADS = 4;
+    private static final int NUMBER_OF_WRITE_THREADS = 1;
     static final ExecutorService databaseWriteExecutor =
-            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+            Executors.newFixedThreadPool(NUMBER_OF_WRITE_THREADS);
 
     static ItemDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {

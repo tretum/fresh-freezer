@@ -10,6 +10,8 @@ import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.data.ItemNotification;
 import com.mmutert.freshfreezer.data.ItemRepository;
 
+import org.joda.time.LocalDateTime;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -47,14 +49,19 @@ public class FrozenItemViewModel extends AndroidViewModel {
         mItemRepository.restoreItem(item);
     }
 
-    public void addNotification(FrozenItem item, UUID uuid ){
-        ItemNotification notification = new ItemNotification(uuid, item.getId());
+    public void addNotification(FrozenItem item, UUID uuid, LocalDateTime notifyOn){
+        ItemNotification notification = new ItemNotification(uuid, item.getId(), notifyOn);
         mItemRepository.addNotification(notification);
     }
 
-    public void addNotifications(FrozenItem item, List<UUID> ids) {
-        for (UUID id : ids) {
-            addNotification(item, id);
-        }
+    public LiveData<List<ItemNotification>> getAllNotificationsLiveData(FrozenItem item) {
+        return mItemRepository.getAllNotificationsLiveData(item);
+    }
+    public List<ItemNotification> getAllNotifications(FrozenItem item) {
+        return mItemRepository.getAllNotifications(item);
+    }
+
+    public void deleteNotification(ItemNotification notification) {
+        mItemRepository.deleteNotification(notification);
     }
 }

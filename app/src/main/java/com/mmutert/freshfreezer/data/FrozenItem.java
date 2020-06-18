@@ -7,9 +7,10 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.mmutert.freshfreezer.data.converters.AmountUnitConverter;
-import com.mmutert.freshfreezer.data.converters.DateConverter;
+import com.mmutert.freshfreezer.data.converters.LocalDateConverter;
 
-import java.util.Date;
+import org.joda.time.LocalDate;
+
 
 @Entity(tableName = "items")
 public class FrozenItem {
@@ -26,12 +27,12 @@ public class FrozenItem {
     private AmountUnit unit;
 
     @ColumnInfo(name = "frozen_date")
-    @TypeConverters(value = {DateConverter.class})
-    private Date frozenDate;
+    @TypeConverters(value = {LocalDateConverter.class})
+    private LocalDate frozenDate;
 
     @ColumnInfo(name = "best_before_date")
-    @TypeConverters(value = {DateConverter.class})
-    private Date bestBeforeDate;
+    @TypeConverters(value = {LocalDateConverter.class})
+    private LocalDate bestBeforeDate;
 
     private String notes;
 
@@ -75,19 +76,19 @@ public class FrozenItem {
         this.amount = amount;
     }
 
-    public Date getFrozenDate() {
+    public LocalDate getFrozenDate() {
         return frozenDate;
     }
 
-    public void setFrozenDate(Date frozenDate) {
+    public void setFrozenDate(LocalDate frozenDate) {
         this.frozenDate = frozenDate;
     }
 
-    public Date getBestBeforeDate() {
+    public LocalDate getBestBeforeDate() {
         return bestBeforeDate;
     }
 
-    public void setBestBeforeDate(Date bestBeforeDate) {
+    public void setBestBeforeDate(LocalDate bestBeforeDate) {
         this.bestBeforeDate = bestBeforeDate;
     }
 

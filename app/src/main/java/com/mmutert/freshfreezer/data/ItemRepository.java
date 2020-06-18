@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemRepository {
@@ -31,9 +32,15 @@ public class ItemRepository {
     }
 
     public void deleteItem(FrozenItem itemToDelete) {
+        List<ItemNotification> allNotifications = getAllNotificationsLiveData(itemToDelete).getValue();
+
         ItemDatabase.databaseWriteExecutor.execute(() -> {
             mItemDao.deleteItem(itemToDelete);
         });
+
+        for (ItemNotification allNotification : allNotifications) {
+            deleteNotification(allNotification);
+        }
     }
 
     public void archiveItem(FrozenItem itemToArchive) {
@@ -57,10 +64,13 @@ public class ItemRepository {
     }
 
     public LiveData<List<ItemNotification>> getNotifications(){
-        return mItemDao.getAllNotifications();
+        return mItemDao.getAllNotificationsLiveData();
     }
 
-    public LiveData<List<ItemNotification>> getAllNotifications(FrozenItem item) {
+    public LiveData<List<ItemNotification>> getAllNotificationsLiveData(FrozenItem item) {
+        return mItemDao.getAllNotificationsLiveData(item);
+    }
+    public List<ItemNotification> getAllNotifications(FrozenItem item) {
         return mItemDao.getAllNotifications(item);
     }
 
@@ -75,7 +85,7 @@ public class ItemRepository {
         });
     }
 
-    public LiveData<List<FrozenItem>> getmAllArchivedFrozenItems() {
+    public LiveData<List<FrozenItem>> getAllArchivedFrozenItems() {
         return mAllArchivedFrozenItems;
     }
 }
