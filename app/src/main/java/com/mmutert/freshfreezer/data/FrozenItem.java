@@ -16,11 +16,11 @@ import org.joda.time.LocalDate;
 public class FrozenItem {
 
     @PrimaryKey(autoGenerate = true)
-    @NonNull
     private long id;
 
     @NonNull
     private String name;
+
     private float amount;
 
     @TypeConverters(value = {AmountUnitConverter.class})
@@ -28,7 +28,7 @@ public class FrozenItem {
 
     @ColumnInfo(name = "frozen_date")
     @TypeConverters(value = {LocalDateConverter.class})
-    private LocalDate frozenDate;
+    private LocalDate frozenAtDate;
 
     @ColumnInfo(name = "best_before_date")
     @TypeConverters(value = {LocalDateConverter.class})
@@ -41,7 +41,7 @@ public class FrozenItem {
     private boolean archived;
 
     public FrozenItem() {
-
+        name = "";
     }
 
     public AmountUnit getUnit() {
@@ -56,10 +56,11 @@ public class FrozenItem {
         return id;
     }
 
-    public void setId(@NonNull long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
+    @NonNull
     public String getName() {
         return name;
     }
@@ -76,12 +77,12 @@ public class FrozenItem {
         this.amount = amount;
     }
 
-    public LocalDate getFrozenDate() {
-        return frozenDate;
+    public LocalDate getFrozenAtDate() {
+        return frozenAtDate;
     }
 
-    public void setFrozenDate(LocalDate frozenDate) {
-        this.frozenDate = frozenDate;
+    public void setFrozenAtDate(LocalDate frozenDate) {
+        this.frozenAtDate = frozenDate;
     }
 
     public LocalDate getBestBeforeDate() {

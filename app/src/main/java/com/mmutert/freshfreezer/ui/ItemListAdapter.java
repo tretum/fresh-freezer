@@ -1,6 +1,5 @@
 package com.mmutert.freshfreezer.ui;
 
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -13,7 +12,6 @@ import com.mmutert.freshfreezer.databinding.ListItemBinding;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
 
 import java.util.List;
 
@@ -61,7 +59,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         LocalDate bestBeforeDate = itemForPosition.getBestBeforeDate();
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         String bestBeforeFormatted = formatter.print(bestBeforeDate);
-        LocalDate frozenDate = itemForPosition.getFrozenDate();
+        LocalDate frozenDate = itemForPosition.getFrozenAtDate();
         String frozenFormatted = formatter.print(frozenDate);
 
         binding.tvBestBeforeDate.setText(bestBeforeFormatted);

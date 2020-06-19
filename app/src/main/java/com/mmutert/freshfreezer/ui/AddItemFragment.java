@@ -48,6 +48,8 @@ import static com.mmutert.freshfreezer.notification.NotificationConstants.NOTIFI
 
 public class AddItemFragment extends Fragment {
 
+    public static final String TAG = AddItemFragment.class.getName();
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
     private FrozenItemViewModel frozenItemViewModel;
 
 
@@ -98,7 +100,7 @@ public class AddItemFragment extends Fragment {
                     AmountUnit atPosition = (AmountUnit) itemAtPosition;
                     newItem.setUnit(atPosition);
                 } else {
-                    Log.d("Selected item", "Selected item is not a AmountUnit");
+                    Log.d(TAG, "Selected item is not a AmountUnit");
                 }
             }
 
@@ -164,9 +166,9 @@ public class AddItemFragment extends Fragment {
         // Set up the date pickers for the best before and frozen date fields
 
         LocalDate currentDate = LocalDate.now();
-        newItem.setFrozenDate(currentDate);
+        newItem.setFrozenAtDate(currentDate);
         newItem.setBestBeforeDate(currentDate);
-        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(DATE_FORMAT);
         String curDateFormatted = dateTimeFormatter.print(currentDate);
 
         mBinding.etAddItemFrozenDate.setInputType(InputType.TYPE_NULL);
@@ -177,13 +179,13 @@ public class AddItemFragment extends Fragment {
 
         mBinding.etAddItemFrozenDate.setOnClickListener(v -> {
             MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
-            builder.setTitleText("Select Freeze Date");
-            builder.setSelection(newItem.getFrozenDate().toDate().getTime());
+            builder.setTitleText(getResources().getString(R.string.add_item_frozen_at_date_picker_title_text));
+            builder.setSelection(newItem.getFrozenAtDate().toDate().getTime());
             MaterialDatePicker<Long> picker = builder.build();
 
             picker.addOnPositiveButtonClickListener(selection -> {
                 LocalDate date = LocalDate.fromDateFields(new Date(selection));
-                newItem.setFrozenDate(date);
+                newItem.setFrozenAtDate(date);
                 String selectedFrozenDateFormatted = dateTimeFormatter.print(date);
                 mBinding.etAddItemFrozenDate.setText(selectedFrozenDateFormatted);
             });
@@ -193,13 +195,13 @@ public class AddItemFragment extends Fragment {
 
         mBinding.etAddItemBestBefore.setOnClickListener(v -> {
             MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
-            builder.setTitleText("Best Before Date");
-            builder.setSelection(newItem.getFrozenDate().toDate().getTime());
+            builder.setTitleText(getResources().getString(R.string.add_item_best_before_date_picker_title_text));
+            builder.setSelection(newItem.getFrozenAtDate().toDate().getTime());
             MaterialDatePicker<Long> picker = builder.build();
 
             picker.addOnPositiveButtonClickListener(selection -> {
                 LocalDate date = LocalDate.fromDateFields(new Date(selection));
-                newItem.setFrozenDate(date);
+                newItem.setFrozenAtDate(date);
                 String selectedFrozenDateFormatted = dateTimeFormatter.print(date);
                 mBinding.etAddItemBestBefore.setText(selectedFrozenDateFormatted);
             });
@@ -215,14 +217,15 @@ public class AddItemFragment extends Fragment {
 
             newItem.setId(0);
 
-            if (mBinding.getNewItem().getName() == null || mBinding.getNewItem().getName().isEmpty()) {
+            mBinding.getNewItem();
+            if (mBinding.getNewItem().getName().isEmpty()) {
                 if (this.mToast != null) {
                     this.mToast.cancel();
                     this.mToast = null;
                 }
                 this.mToast = Toast.makeText(
                         getContext(),
-                        "Saving failed. A new entry requires a name!",
+                        getResources().getString(R.string.add_item_saving_failed_text),
                         Toast.LENGTH_SHORT
                 );
                 this.mToast.show();
