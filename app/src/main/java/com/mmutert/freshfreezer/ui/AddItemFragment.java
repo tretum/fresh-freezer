@@ -1,5 +1,6 @@
 package com.mmutert.freshfreezer.ui;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -20,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.snackbar.Snackbar;
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.AmountUnit;
 import com.mmutert.freshfreezer.data.FrozenItem;
@@ -41,7 +43,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import static com.mmutert.freshfreezer.notification.NotificationConstants.NOTIFICATION_OFFSET_TIMEUNIT;
 
@@ -55,7 +56,7 @@ public class AddItemFragment extends Fragment {
 
     private FrozenItem newItem;
     private FragmentAddItemBinding mBinding;
-    private List<Notification> notifications = new ArrayList<>();
+    private List<PendingNotification> notifications = new ArrayList<>();
 
     private Snackbar mSnackbar;
 
@@ -113,6 +114,7 @@ public class AddItemFragment extends Fragment {
         this.frozenItemViewModel = new ViewModelProvider(requireActivity()).get(FrozenItemViewModel.class);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setUpAddNotificationButton() {
         TextView tvAddNotification = mBinding.tvAddNotification;
         tvAddNotification.setOnClickListener(v -> {
@@ -120,8 +122,7 @@ public class AddItemFragment extends Fragment {
             // Add pending notification to local list
             // TODO Set values to selection
             // TODO Add dialogs that allow selecting a notification offset or actual time
-            Notification notification = new Notification(0, 0, 15);
-            notifications.add(notification);
+            PendingNotification notification = new PendingNotification();
 
             // Add the entry to the notifications list
             TextView notificationTextView = (TextView) getLayoutInflater().inflate(
@@ -129,9 +130,6 @@ public class AddItemFragment extends Fragment {
                     mBinding.addItemNotificationLayout,
                     false
             );
-
-            // TODO Better text
-            notificationTextView.setText(String.format(Locale.getDefault(), "Notification %d", notifications.size()));
 
             int id = ViewCompat.generateViewId();
             notificationTextView.setId(id);
@@ -159,6 +157,29 @@ public class AddItemFragment extends Fragment {
                 }
                 return false;
             });
+
+
+            // Open notification dialog
+            new NotificationOffsetDialogFragment(dialog -> {
+                Log.d(TAG, "Selected notification offset from dialog.");
+
+                PendingNotification.OffsetAmount offSetAmount = dialog.getOffSetAmount();
+                int enteredOffset = dialog.getEnteredOffset();
+
+                Log.d(TAG, "Selected Offset: " + enteredOffset);
+                Log.d(TAG, "Selected Unit: " + offSetAmount);
+
+                notification.setOffsetAmount(enteredOffset);
+                notification.setTimeUnit(offSetAmount);
+                notifications.add(notification);
+
+                notificationTextView.setText(String.format(
+                        Locale.getDefault(),
+                        "%d %s before",
+                        enteredOffset,
+                        offSetAmount.toString()
+                ));
+            }).show(getParentFragmentManager(), "add notification");
         });
     }
 
@@ -234,52 +255,42 @@ public class AddItemFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_new_item_save);
 
                 // TODO Check for possible race conditions where id for the item might not be set yet
-                for (Notification notification : notifications) {
-                    Log.d("AddItemFragment", "Scheduling notification");
+                for (PendingNotification notification : notifications) {
+                    Log.d(TAG, "Scheduling notification");
+
+                    LocalTime notificationTime = LocalTime.now(DateTimeZone.forTimeZone(TimeZone.getDefault()));
+                    // TODO Set notification time to the one saved in the pending notification object, otherwise used preference
+
                     LocalDateTime scheduledOn = newItem
                             .getBestBeforeDate()
-                            .minusDays(notification.getOffsetDays())
-                            .toLocalDateTime(
-                                    LocalTime.now(DateTimeZone.forTimeZone(TimeZone.getDefault())))
-                            .plusMinutes(notification.getOffsetMinutes())
-                            .plusSeconds(notification.getOffsetSeconds());
-                    UUID uuid = NotificationHelper.scheduleNotification(
-                            getContext(),
-                            newItem,
-                            NOTIFICATION_OFFSET_TIMEUNIT,
-                            scheduledOn
-                    );
-                    frozenItemViewModel.addNotification(newItem, uuid, scheduledOn);
+                            .toLocalDateTime(notificationTime);
+
+                    switch (notification.getTimeUnit()) {
+                        case DAYS:
+                            scheduledOn = scheduledOn.minusDays(notification.getOffsetAmount());
+                            break;
+                        case WEEKS:
+                            scheduledOn = scheduledOn.minusWeeks(notification.getOffsetAmount());
+                            break;
+                        case MONTHS:
+                            scheduledOn = scheduledOn.minusMonths(notification.getOffsetAmount());
+                            break;
+                    }
+                    
+                    if(!LocalDateTime.now().isBefore(scheduledOn)){
+                        UUID uuid = NotificationHelper.scheduleNotification(
+                                getContext(),
+                                newItem,
+                                NOTIFICATION_OFFSET_TIMEUNIT,
+                                scheduledOn
+                        );
+                        frozenItemViewModel.addNotification(newItem, uuid, scheduledOn);
+                    }
                 }
 
                 Keyboard.hideKeyboardFrom(getContext(), v);
             }
         });
-    }
-
-    private static class Notification {
-        //        private final LocalDateTime scheduledOn;
-        private final int offsetDays;
-        private int offsetMinutes;
-        private int offsetSeconds;
-
-        public Notification(final int offsetDays, final int offsetMinutes, final int offsetSeconds) {
-            this.offsetDays    = offsetDays;
-            this.offsetMinutes = offsetMinutes;
-            this.offsetSeconds = offsetSeconds;
-        }
-
-        public int getOffsetDays() {
-            return offsetDays;
-        }
-
-        public int getOffsetMinutes() {
-            return offsetMinutes;
-        }
-
-        public int getOffsetSeconds() {
-            return offsetSeconds;
-        }
     }
 
 }

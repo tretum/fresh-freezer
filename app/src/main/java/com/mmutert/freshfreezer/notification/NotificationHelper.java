@@ -28,7 +28,9 @@ public class NotificationHelper {
             FrozenItem item,
             TimeUnit timeUnit,
             LocalDateTime scheduledOn) {
-        // TODO Implement
+
+        Log.d(TAG, "Scheduling Notification for item " + item.getName());
+        Log.d(TAG, "Scheduled date is " + scheduledOn.toString());
 
         long offset = calculateOffset(timeUnit, LocalDateTime.now().toDate(), scheduledOn.toDate());
 
@@ -36,7 +38,8 @@ public class NotificationHelper {
     }
 
     public static UUID scheduleNotification(Context context, FrozenItem item, long timeOffset, TimeUnit timeUnit) {
-        Log.d(TAG, "Scheduling with offset " + timeOffset + " and unit " + timeUnit.name());
+        Log.d(TAG, "Creating workrequest for item " + item.getName());
+        Log.d(TAG, "Offset is " + timeOffset + " and unit " + timeUnit.name());
         OneTimeWorkRequest notificationRequest =
                 new OneTimeWorkRequest.Builder(NotificationWorker.class)
                         .setInputData(NotificationHelper.createInputDataForItem(item))

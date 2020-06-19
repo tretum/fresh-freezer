@@ -20,6 +20,11 @@
     <string name="add_item_best_before_date_picker_title_text">Select Best Before Date</string>
     <string name="add_item_frozen_at_date_picker_title_text">Select Frozen At Date</string>
 
+    <!-- Add notification dialog fragment-->
+    <string name="add_notification_enter_amount_hint">Enter amount</string>
+    <string name="add_notification_amount_default_value">1</string>
+    <string name="add_notification_fragment_title">Add notification</string>
+
     <!-- List item -->
     <string name="list_item_delete_button_label">Delete</string>
     <string name="list_item_frozen_at_title">Frozen at:</string>
