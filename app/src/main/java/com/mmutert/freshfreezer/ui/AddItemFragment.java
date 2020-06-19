@@ -57,7 +57,7 @@ public class AddItemFragment extends Fragment {
     private FragmentAddItemBinding mBinding;
     private List<Notification> notifications = new ArrayList<>();
 
-    private Toast mToast;
+    private Snackbar mSnackbar;
 
     public AddItemFragment() {
         // Required empty public constructor
@@ -219,16 +219,16 @@ public class AddItemFragment extends Fragment {
 
             mBinding.getNewItem();
             if (mBinding.getNewItem().getName().isEmpty()) {
-                if (this.mToast != null) {
-                    this.mToast.cancel();
-                    this.mToast = null;
+                if (this.mSnackbar != null) {
+                    this.mSnackbar.dismiss();
+                    this.mSnackbar = null;
                 }
-                this.mToast = Toast.makeText(
-                        getContext(),
+                this.mSnackbar = Snackbar.make(
+                        v,
                         getResources().getString(R.string.add_item_saving_failed_text),
-                        Toast.LENGTH_SHORT
+                        Snackbar.LENGTH_SHORT
                 );
-                this.mToast.show();
+                this.mSnackbar.show();
             } else {
                 frozenItemViewModel.insert(newItem);
                 Navigation.findNavController(v).navigate(R.id.action_new_item_save);
