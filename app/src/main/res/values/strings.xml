@@ -36,4 +36,20 @@
     <string name="notification_channel_description">
         Notifications for items in your freezer with a best before date that is coming up soon.
     </string>
+
+    <!-- Time units -->
+    <string name="days">days</string>
+    <string name="day">day</string>
+    <string name="days_capitalized">Days</string>
+    <string name="day_capitalized">Day</string>
+
+    <string name="weeks">weeks</string>
+    <string name="week">week</string>
+    <string name="weeks_capitalized">Weeks</string>
+    <string name="week_capitalized">Week</string>
+
+    <string name="month">month</string>
+    <string name="months">months</string>
+    <string name="month_capitalized">Month</string>
+    <string name="months_capitalized">Months</string>
 </resources>

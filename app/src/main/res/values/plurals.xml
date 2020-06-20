@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="days_plural">
+        <item quantity="one">@string/day</item>
+        <item quantity="other">@string/days</item>
+    </plurals>
+    <plurals name="days_capitalized_plural">
+        <item quantity="one">@string/day_capitalized</item>
+        <item quantity="other">@string/days_capitalized</item>
+    </plurals>
+    
+    <plurals name="weeks_plural">
+        <item quantity="one">@string/week</item>
+        <item quantity="other">@string/weeks</item>
+    </plurals>
+    <plurals name="weeks_capitalized_plural">
+        <item quantity="one">@string/week_capitalized</item>
+        <item quantity="other">@string/weeks_capitalized</item>
+    </plurals>
+    
+    <plurals name="months_plural">
+        <item quantity="one">@string/month</item>
+        <item quantity="other">@string/months</item>
+    </plurals>
+    <plurals name="months_capitalized_plural">
+        <item quantity="one">@string/month_capitalized</item>
+        <item quantity="other">@string/months_capitalized</item>
+    </plurals>
+</resources>
