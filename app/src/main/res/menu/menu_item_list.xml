@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mmutert.freshfreezer.MainActivity">
     <item
+        android:id="@+id/app_bar_filter"
+        android:icon="@drawable/ic_baseline_filter_list_24"
+        android:title="@string/menu_item_filter"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"

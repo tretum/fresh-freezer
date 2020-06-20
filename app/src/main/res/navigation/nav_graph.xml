@@ -23,6 +23,7 @@
             app:destination="@id/settingsFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
     </fragment>
     <fragment
@@ -30,11 +31,6 @@
         android:name="com.mmutert.freshfreezer.ui.AddItemFragment"
         android:label="@string/fragment_add_item_label"
         tools:layout="@layout/fragment_add_item" >
-        <action
-            android:id="@+id/action_settings"
-            app:destination="@id/settingsFragment"
-            app:enterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out" />
         <action
             android:id="@+id/action_new_item_save"
             app:destination="@id/item_list"
