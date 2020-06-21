@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            app:cardCornerRadius="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="vertical">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/MaterialAlertDialog.MaterialComponents.Title.Text.CenterStacked"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sort by"
+                    android:textSize="22sp" />
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+
+                    <RadioButton
+                        android:id="@+id/rb_sort_option_best_before"
+                        style="@style/DialogRadioButton"
+                        android:text="Best Before Date" />
+
+                    <RadioButton
+                        android:id="@+id/rb_sort_option_frozen_at"
+                        style="@style/DialogRadioButton"
+                        android:text="Frozen At Date" />
+
+                    <RadioButton
+                        android:id="@+id/rb_sort_option_added_date"
+                        style="@style/DialogRadioButton"
+                        android:text="Added At" />
+
+                    <RadioButton
+                        android:id="@+id/rb_sort_option_name"
+                        style="@style/DialogRadioButton"
+                        android:text="Name" />
+
+                </RadioGroup>
+
+                <View
+                    android:id="@+id/divider5"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/MaterialAlertDialog.MaterialComponents.Title.Text.CenterStacked"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Order"
+                    android:textSize="22sp" />
+
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+
+                    <RadioButton
+                        android:id="@+id/rb_sort_order_ascending"
+                        style="@style/DialogRadioButton"
+                        android:text="Ascending" />
+
+                    <RadioButton
+                        android:id="@+id/rb_sort_order_descending"
+                        style="@style/DialogRadioButton"
+                        android:text="Descending" />
+
+                </RadioGroup>
+
+<!--                <Switch-->
+<!--                    android:id="@+id/sw_sorting_order"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="8dp"-->
+<!--                    android:buttonTint="#D1C4E9"-->
+<!--                    android:paddingTop="8dp"-->
+<!--                    android:paddingBottom="8dp"-->
+<!--                    android:text="Order"-->
+<!--                    android:textOff="Descending"-->
+<!--                    android:textOn="Ascending"-->
+<!--                    android:textSize="18sp" />-->
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
+</layout>

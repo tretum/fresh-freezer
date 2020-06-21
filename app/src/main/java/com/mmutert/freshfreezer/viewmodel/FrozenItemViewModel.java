@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.data.ItemNotification;
 import com.mmutert.freshfreezer.data.ItemRepository;
+import com.mmutert.freshfreezer.util.SortingOption;
 
 import org.joda.time.LocalDateTime;
 
@@ -21,6 +22,9 @@ public class FrozenItemViewModel extends AndroidViewModel {
     private ItemRepository mItemRepository;
 
     private LiveData<List<FrozenItem>> mFrozenItems;
+
+    private SortingOption.SortingOrder sortingOrder = SortingOption.SortingOrder.DESCENDING;
+    private SortingOption sortingOption = SortingOption.NAME;
 
     public FrozenItemViewModel(@NonNull Application application) {
         super(application);
@@ -63,5 +67,22 @@ public class FrozenItemViewModel extends AndroidViewModel {
 
     public void deleteNotification(ItemNotification notification) {
         mItemRepository.deleteNotification(notification);
+    }
+
+
+    public SortingOption.SortingOrder getSortingOrder() {
+        return sortingOrder;
+    }
+
+    public void setSortingOrder(final SortingOption.SortingOrder sortingOrder) {
+        this.sortingOrder = sortingOrder;
+    }
+
+    public SortingOption getSortingOption() {
+        return sortingOption;
+    }
+
+    public void setSortingOption(final SortingOption sortingOption) {
+        this.sortingOption = sortingOption;
     }
 }

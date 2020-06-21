@@ -114,6 +114,28 @@ public class FrozenItemListFragment extends Fragment
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+//            NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+//                    .findFragmentById(R.id.nav_host_fragment);
+//            navHostFragment.getNavController().navigate(R.id.action_settings);
+            return true;
+        } else if (id == R.id.app_bar_filter) {
+            new ListSortingDialogFragment(getContext(), (selectedSortingOption, sortingOrder) -> {
+                mViewModel.setSortingOption(selectedSortingOption);
+                mViewModel.setSortingOrder(sortingOrder);
+            }).show(getParentFragmentManager(), "set sorting option");
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onClick(FrozenItem item) {
         Log.d("ListFragment", "Clicked on item " + item.getName());
     }
@@ -144,7 +166,7 @@ public class FrozenItemListFragment extends Fragment
                 viewModel.restore(itemToArchive);
                 mItemListAdapter.notifyItemRangeInserted(position, 1);
 
-                // TODO Create new workers for notitifications
+                // TODO Create new workers for notifications
                 for (ItemNotification notification : allNotifications) {
                     LocalDateTime notifyOn = notification.getNotifyOn();
                     UUID uuid = NotificationHelper.scheduleNotification(
