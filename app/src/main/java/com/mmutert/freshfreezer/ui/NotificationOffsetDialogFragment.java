@@ -2,7 +2,9 @@ package com.mmutert.freshfreezer.ui;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import androidx.annotation.Nullable;
@@ -45,16 +47,19 @@ public class NotificationOffsetDialogFragment extends DialogFragment {
             if (isChecked) {
                 mOffsetAmount = PendingNotification.OffsetAmount.DAYS;
             }
+            setBeforeText(buttonView, isChecked);
         });
         dialogBinding.radioButtonWeeks.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 mOffsetAmount = PendingNotification.OffsetAmount.WEEKS;
             }
+            setBeforeText(buttonView, isChecked);
         });
         dialogBinding.radioButtonMonths.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 mOffsetAmount = PendingNotification.OffsetAmount.MONTHS;
             }
+            setBeforeText(buttonView, isChecked);
         });
 
         mNotificationOffsetEditText = dialogBinding.etAddNotificationOffsetAmount;
@@ -66,6 +71,18 @@ public class NotificationOffsetDialogFragment extends DialogFragment {
                 })
                 .create();
         return alertDialog;
+    }
+
+    private void setBeforeText(CompoundButton rb, boolean isChecked) {
+        String text = rb.getText().toString();
+        if (isChecked) {
+            rb.setText(text + " before");
+        } else {
+            int index = text.indexOf(" before");
+            if (index != -1) {
+                rb.setText(text.substring(0, index));
+            }
+        }
     }
 
     public int getEnteredOffset() {
