@@ -57,32 +57,18 @@
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/radio_button_days"
-                        style="?attr/radioButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:text="Days"
-                        android:textSize="18sp" />
+                        style="@style/DialogRadioButton"
+                        android:text="Days"/>
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/radio_button_weeks"
-                        style="@android:style/Widget.Material.CompoundButton.RadioButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:text="Weeks"
-                        android:textSize="18sp" />
+                        style="@style/DialogRadioButton"
+                        android:text="Weeks" />
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/radio_button_months"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:text="Months"
-                        android:textSize="18sp" />
+                        style="@style/DialogRadioButton"
+                        android:text="Months"/>
                 </RadioGroup>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
