@@ -67,11 +67,19 @@ public class FrozenItemListFragment extends Fragment
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // RecyclerView setup
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
         mBinding.rvFrozenItemList.setLayoutManager(layoutManager);
 
-        mItemListAdapter = new ItemListAdapter(this, this, this);
+        mViewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
+
+        mItemListAdapter = new ItemListAdapter(mViewModel, this, this, this);
+
+        // Observe the items in the database that have to get added to the database
+        mViewModel.getFrozenItems().observe(getViewLifecycleOwner(), mItemListAdapter::setItems);
+
+
         mBinding.rvFrozenItemList.setAdapter(mItemListAdapter);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
@@ -95,8 +103,6 @@ public class FrozenItemListFragment extends Fragment
         });
         itemTouchHelper.attachToRecyclerView(mBinding.rvFrozenItemList);
 
-        mViewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
-        mViewModel.getFrozenItems().observe(getViewLifecycleOwner(), mItemListAdapter::setItems);
 
         mBinding.fab.setOnClickListener(view2 -> {
             mBinding.fab.setVisibility(View.GONE);
@@ -126,10 +132,13 @@ public class FrozenItemListFragment extends Fragment
 //            navHostFragment.getNavController().navigate(R.id.action_settings);
             return true;
         } else if (id == R.id.app_bar_filter) {
-            new ListSortingDialogFragment(getContext(), (selectedSortingOption, sortingOrder) -> {
-                mViewModel.setSortingOption(selectedSortingOption);
-                mViewModel.setSortingOrder(sortingOrder);
-            }).show(getParentFragmentManager(), "set sorting option");
+            ListSortingDialogFragment listSortingDialogFragment = new ListSortingDialogFragment(
+                    getContext(),
+                    mViewModel.getSortingOption(),
+                    mViewModel.getSortingOrder(),
+                    mItemListAdapter
+            );
+            listSortingDialogFragment.show(getParentFragmentManager(), "set sorting option");
         }
 
         return super.onOptionsItemSelected(item);

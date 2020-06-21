@@ -8,33 +8,44 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.databinding.ListItemBinding;
+import com.mmutert.freshfreezer.util.SortingOption;
+import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 
 import org.joda.time.LocalDate;
+import org.joda.time.ReadablePartial;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemListAdapterViewHolder> {
+
+public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemListAdapterViewHolder> implements
+        ListSortingDialogFragment.ListSortingChangedListener {
 
     private final ListItemClickedCallback itemClickedCallback;
     private ListItemDeleteClickedCallback deleteClickedCallback;
     private ListItemTakeClickedCallback takeClickedCallback;
     private List<FrozenItem> mItems;
+    private FrozenItemViewModel mViewModel;
 
 
     public ItemListAdapter(
+            final FrozenItemViewModel viewModel,
             ListItemClickedCallback itemClickedCallback,
             ListItemDeleteClickedCallback deleteClickedCallback,
             ListItemTakeClickedCallback takeClickedCallback) {
-        this.itemClickedCallback = itemClickedCallback;
+        this.mViewModel            = viewModel;
+        this.itemClickedCallback   = itemClickedCallback;
         this.deleteClickedCallback = deleteClickedCallback;
-        this.takeClickedCallback = takeClickedCallback;
+        this.takeClickedCallback   = takeClickedCallback;
     }
 
 
     public void setItems(List<FrozenItem> items) {
         this.mItems = items;
+        sortItems();
         notifyDataSetChanged();
     }
 
@@ -81,7 +92,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
     @Override
     public int getItemCount() {
-        if(mItems == null) {
+        if (mItems == null) {
             return 0;
         } else {
             return mItems.size();
@@ -90,6 +101,57 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
     public FrozenItem getItemAtPosition(int position) {
         return mItems.get(position);
+    }
+
+    @Override
+    public void listOptionClicked(
+            final SortingOption selectedSortingOption, final SortingOption.SortingOrder sortingOrder) {
+        mViewModel.setSortingOption(selectedSortingOption);
+        mViewModel.setSortingOrder(sortingOrder);
+
+        // TODO Re-Sort list of items
+        sortItems();
+    }
+
+    private void sortItems() {
+        if (mItems.size() > 0) {
+            switch (mViewModel.getSortingOption()) {
+                // TODO Add sorting for added date
+//                case DATE_ADDED:
+//                    break;
+                case DATE_FROZEN_AT:
+                    Collections.sort(mItems, (item1, item2) -> {
+                        int result = item1.getFrozenAtDate().compareTo(item2.getFrozenAtDate());
+                        if(mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)){
+                            return result;
+                        } else {
+                            return result * (-1);
+                        }
+                    });
+                    break;
+                case DATE_BEST_BEFORE:
+                    Collections.sort(mItems, (item1, item2) -> {
+                        int result = item1.getBestBeforeDate().compareTo(item2.getBestBeforeDate());
+                        if(mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)){
+                            return result;
+                        } else {
+                            return result * (-1);
+                        }
+                    });
+                    break;
+                case NAME:
+                    Collections.sort(mItems, (item1, item2) -> {
+                        int result = item1.getName().compareTo(item2.getName());
+                        if(mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)){
+                            return result;
+                        } else {
+                            return result * (-1);
+                        }
+                    });
+                    break;
+            }
+        }
+        notifyDataSetChanged();
     }
 
 

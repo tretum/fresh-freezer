@@ -19,17 +19,23 @@ public class ListSortingDialogFragment extends DialogFragment {
 
     private Context context;
     private ListSortingChangedListener listener;
-    private SortingOption.SortingOrder currentOrder = SortingOption.SortingOrder.DESCENDING;
-    private SortingOption currentOption = SortingOption.DATE_ADDED;
+    private SortingOption.SortingOrder currentOrder;
+    private SortingOption currentOption;
 
 
     public interface ListSortingChangedListener {
         void listOptionClicked(SortingOption selectedSortingOption, SortingOption.SortingOrder sortingOrder);
     }
 
-    public ListSortingDialogFragment(Context context, ListSortingChangedListener listener) {
-        this.context  = context;
-        this.listener = listener;
+    public ListSortingDialogFragment(
+            Context context,
+            SortingOption option,
+            SortingOption.SortingOrder order,
+            ListSortingChangedListener listener) {
+        this.context       = context;
+        this.currentOption = option;
+        this.currentOrder  = order;
+        this.listener      = listener;
     }
 
     @NonNull
@@ -52,9 +58,9 @@ public class ListSortingDialogFragment extends DialogFragment {
         }
 
         switch (currentOption) {
-            case DATE_ADDED:
-                binging.rbSortOptionAddedDate.setChecked(true);
-                break;
+//            case DATE_ADDED:
+//                binging.rbSortOptionAddedDate.setChecked(true);
+//                break;
             case DATE_FROZEN_AT:
                 binging.rbSortOptionFrozenAt.setChecked(true);
                 break;
@@ -72,22 +78,30 @@ public class ListSortingDialogFragment extends DialogFragment {
             }
         });
         binging.rbSortOrderDescending.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(isChecked) {
+            if (isChecked) {
                 currentOrder = SortingOption.SortingOrder.DESCENDING;
             }
         });
 
         binging.rbSortOptionName.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            currentOption = SortingOption.NAME;
+            if (isChecked) {
+                currentOption = SortingOption.NAME;
+            }
         });
-        binging.rbSortOptionAddedDate.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            currentOption = SortingOption.DATE_ADDED;
-        });
+//        binging.rbSortOptionAddedDate.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            if (isChecked) {
+//                currentOption = SortingOption.DATE_ADDED;
+//            }
+//        });
         binging.rbSortOptionBestBefore.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            currentOption = SortingOption.DATE_BEST_BEFORE;
+            if (isChecked) {
+                currentOption = SortingOption.DATE_BEST_BEFORE;
+            }
         });
         binging.rbSortOptionFrozenAt.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            currentOption = SortingOption.DATE_FROZEN_AT;
+            if (isChecked) {
+                currentOption = SortingOption.DATE_FROZEN_AT;
+            }
         });
 
         return new AlertDialog.Builder(context)
