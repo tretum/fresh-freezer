@@ -38,7 +38,10 @@ import java.util.concurrent.Executors;
 
 
 public class FrozenItemListFragment extends Fragment
-        implements ListItemClickedCallback, ListItemDeleteClickedCallback, ListItemTakeClickedCallback {
+        implements ListItemClickedCallback,
+        ListItemDeleteClickedCallback,
+        ListItemTakeClickedCallback,
+        TakeOutDialogFragment.TakeOutDialogClickListener {
 
     private FragmentFrozenItemListBinding mBinding;
     private FrozenItemViewModel mViewModel;
@@ -113,7 +116,7 @@ public class FrozenItemListFragment extends Fragment
             public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, final int direction) {
                 // Delete the item
                 int pos = viewHolder.getAdapterPosition();
-                archiveItem(mItemListAdapter.getItemAtPosition(pos), pos);
+                archiveItem(mItemListAdapter.getItemAtPosition(pos));
             }
         });
     }
@@ -157,8 +160,7 @@ public class FrozenItemListFragment extends Fragment
     }
 
 
-    private void archiveItem(FrozenItem itemToArchive, int position) {
-//        mItemListAdapter.notifyItemRemoved(position);
+    private void archiveItem(FrozenItem itemToArchive) {
 
         FrozenItemViewModel viewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
         Snackbar snackbar = Snackbar.make(
@@ -180,7 +182,6 @@ public class FrozenItemListFragment extends Fragment
 
             snackbar.setAction("Undo", v -> {
                 viewModel.restore(itemToArchive);
-//                mItemListAdapter.notifyItemRangeInserted(position, 1);
 
                 // TODO Create new workers for notifications
                 for (ItemNotification notification : allNotifications) {
@@ -203,11 +204,25 @@ public class FrozenItemListFragment extends Fragment
 
     @Override
     public void onDeleteClicked(FrozenItem itemToDelete, int position) {
-        archiveItem(itemToDelete, position);
+        archiveItem(itemToDelete);
     }
 
     @Override
     public void onTakeButtonClicked(FrozenItem item) {
-
+        new TakeOutDialogFragment(this, item).show(getParentFragmentManager(), "take out");
     }
+
+    @Override
+    public void onPositiveClick(final TakeOutDialogFragment dialog) {
+        // Update the item from which the things were taken
+        float amount = dialog.getSelectionAmount();
+        FrozenItem item = dialog.getItem();
+        mViewModel.updateItem(item, amount);
+    }
+
+    @Override
+    public void onNeutralClick(final TakeOutDialogFragment dialog) {
+        mViewModel.updateItem(dialog.getItem(), dialog.getItem().getAmount());
+    }
+
 }

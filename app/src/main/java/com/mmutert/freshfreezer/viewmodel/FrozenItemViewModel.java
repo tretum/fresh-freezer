@@ -41,6 +41,13 @@ public class FrozenItemViewModel extends AndroidViewModel {
         mItemRepository.insertItem(item);
     }
 
+    public void updateItem(FrozenItem item, float newAmount) {
+        // TODO Check for possible side effects and possibly create copy of item first
+        float max = Math.max(0.0F, item.getAmount() - newAmount);
+        item.setAmount(max);
+        mItemRepository.updateItem(item);
+    }
+
     public void delete(FrozenItem item) {
         mItemRepository.deleteItem(item);
     }

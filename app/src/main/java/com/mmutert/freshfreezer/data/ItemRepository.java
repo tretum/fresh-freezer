@@ -43,13 +43,15 @@ public class ItemRepository {
         }
     }
 
+    public void updateItem(final FrozenItem item) {
+        ItemDatabase.databaseWriteExecutor.execute(() -> mItemDao.updateFrozenItem(item));
+    }
+
     public void archiveItem(FrozenItem itemToArchive) {
         if(!itemToArchive.isArchived()) {
             itemToArchive.setArchived(true);
 
-            ItemDatabase.databaseWriteExecutor.execute(() -> {
-                mItemDao.updateFrozenItem(itemToArchive);
-            });
+            ItemDatabase.databaseWriteExecutor.execute(() -> mItemDao.updateFrozenItem(itemToArchive));
         }
     }
 
@@ -57,9 +59,7 @@ public class ItemRepository {
         if(itemToRestore.isArchived()){
             itemToRestore.setArchived(false);
 
-            ItemDatabase.databaseWriteExecutor.execute(() -> {
-                mItemDao.updateFrozenItem(itemToRestore);
-            });
+            ItemDatabase.databaseWriteExecutor.execute(() -> mItemDao.updateFrozenItem(itemToRestore));
         }
     }
 
@@ -88,4 +88,5 @@ public class ItemRepository {
     public LiveData<List<FrozenItem>> getAllArchivedFrozenItems() {
         return mAllArchivedFrozenItems;
     }
+
 }

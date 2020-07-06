@@ -9,7 +9,7 @@ public class AmountBindingConverter {
 
     @InverseMethod("stringToFloat")
     public static String floatToString(float newValue) {
-        return String.format(Locale.getDefault(), "%f", newValue);
+        return String.valueOf(newValue);
     }
 
     public static float stringToFloat(String newValue) {
