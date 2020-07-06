@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -84,7 +83,7 @@ public class AddItemFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setUpButtons();
+        setUpFloatingActionButton();
         setupDatePickers();
         setUpAddNotificationButton();
 
@@ -183,6 +182,9 @@ public class AddItemFragment extends Fragment {
         });
     }
 
+    /**
+     * Sets up the date picker dialogs for the date of freezing the item and the best before date.
+     */
     private void setupDatePickers() {
         // Set up the date pickers for the best before and frozen date fields
 
@@ -231,15 +233,23 @@ public class AddItemFragment extends Fragment {
         });
     }
 
-    private void setUpButtons() {
+    /**
+     * Adds remaining item properties and inserts the items into the database using the view model.
+     */
+    private void insertItem() {
+        newItem.setId(0);
+        newItem.setItemCreationDate(LocalDateTime.now());
+        newItem.setLastChangedAtDate(LocalDateTime.now());
+        frozenItemViewModel.insert(newItem);
+    }
+
+    private void setUpFloatingActionButton() {
         mBinding.floatingActionButton.setOnClickListener(v -> {
             // TODO Check validity of inputs
             Log.d("AddItem", "Clicked on Save button");
 
-            newItem.setId(0);
 
-            mBinding.getNewItem();
-            if (mBinding.getNewItem().getName().isEmpty()) {
+            if (newItem.getName().isEmpty()) {
                 if (this.mSnackbar != null) {
                     this.mSnackbar.dismiss();
                     this.mSnackbar = null;
@@ -251,7 +261,8 @@ public class AddItemFragment extends Fragment {
                 );
                 this.mSnackbar.show();
             } else {
-                frozenItemViewModel.insert(newItem);
+                insertItem();
+
                 Navigation.findNavController(v).navigate(R.id.action_new_item_save);
 
                 // TODO Check for possible race conditions where id for the item might not be set yet

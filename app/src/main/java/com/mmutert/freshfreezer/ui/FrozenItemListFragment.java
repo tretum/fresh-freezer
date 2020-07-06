@@ -82,7 +82,23 @@ public class FrozenItemListFragment extends Fragment
 
         mBinding.rvFrozenItemList.setAdapter(mItemListAdapter);
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+        ItemTouchHelper itemTouchHelper = createSwipeHelper();
+        itemTouchHelper.attachToRecyclerView(mBinding.rvFrozenItemList);
+
+
+        mBinding.fab.setOnClickListener(view2 -> {
+            mBinding.fab.setVisibility(View.GONE);
+            Navigation.findNavController(view).navigate(R.id.action_item_list_to_add_item);
+            Log.d("", "Clicked FAB");
+        });
+    }
+
+    /**
+     * Creates the ItemTouchHelper that archives items in the item list on swipe to the right.
+     * @return The item touch helper
+     */
+    private ItemTouchHelper createSwipeHelper() {
+        return new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
                 0,
                 ItemTouchHelper.RIGHT
         ) {
@@ -100,14 +116,6 @@ public class FrozenItemListFragment extends Fragment
                 int pos = viewHolder.getAdapterPosition();
                 archiveItem(mItemListAdapter.getItemAtPosition(pos), pos);
             }
-        });
-        itemTouchHelper.attachToRecyclerView(mBinding.rvFrozenItemList);
-
-
-        mBinding.fab.setOnClickListener(view2 -> {
-            mBinding.fab.setVisibility(View.GONE);
-            Navigation.findNavController(view).navigate(R.id.action_item_list_to_add_item);
-            Log.d("", "Clicked FAB");
         });
     }
 

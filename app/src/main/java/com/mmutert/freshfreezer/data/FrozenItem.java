@@ -8,8 +8,10 @@ import androidx.room.TypeConverters;
 
 import com.mmutert.freshfreezer.data.converters.AmountUnitConverter;
 import com.mmutert.freshfreezer.data.converters.LocalDateConverter;
+import com.mmutert.freshfreezer.data.converters.LocalDateTimeConverter;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import java.util.Objects;
 
@@ -35,6 +37,16 @@ public class FrozenItem {
     @ColumnInfo(name = "best_before_date")
     @TypeConverters(value = {LocalDateConverter.class})
     private LocalDate bestBeforeDate;
+
+    @ColumnInfo(name = "item_creation_date")
+    @TypeConverters(value = {LocalDateTimeConverter.class})
+    @NonNull
+    private LocalDateTime itemCreationDate;
+
+    @ColumnInfo(name = "last_changed_at_date")
+    @TypeConverters(value = {LocalDateTimeConverter.class})
+    @NonNull
+    private LocalDateTime lastChangedAtDate;
 
     private String notes;
 
@@ -111,6 +123,24 @@ public class FrozenItem {
         this.archived = archived;
     }
 
+    @NonNull
+    public LocalDateTime getItemCreationDate() {
+        return itemCreationDate;
+    }
+
+    public void setItemCreationDate(@NonNull final LocalDateTime itemCreationDate) {
+        this.itemCreationDate = itemCreationDate;
+    }
+
+    @NonNull
+    public LocalDateTime getLastChangedAtDate() {
+        return lastChangedAtDate;
+    }
+
+    public void setLastChangedAtDate(@NonNull final LocalDateTime lastChangedAtDate) {
+        this.lastChangedAtDate = lastChangedAtDate;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -127,11 +157,24 @@ public class FrozenItem {
                 unit == that.unit &&
                 Objects.equals(frozenAtDate, that.frozenAtDate) &&
                 Objects.equals(bestBeforeDate, that.bestBeforeDate) &&
+                itemCreationDate.equals(that.itemCreationDate) &&
+                lastChangedAtDate.equals(that.lastChangedAtDate) &&
                 Objects.equals(notes, that.notes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, amount, unit, frozenAtDate, bestBeforeDate, notes, archived);
+        return Objects.hash(
+                id,
+                name,
+                amount,
+                unit,
+                frozenAtDate,
+                bestBeforeDate,
+                itemCreationDate,
+                lastChangedAtDate,
+                notes,
+                archived
+        );
     }
 }

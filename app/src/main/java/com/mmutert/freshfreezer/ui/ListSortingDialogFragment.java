@@ -58,9 +58,12 @@ public class ListSortingDialogFragment extends DialogFragment {
         }
 
         switch (currentOption) {
-//            case DATE_ADDED:
-//                binging.rbSortOptionAddedDate.setChecked(true);
-//                break;
+            case DATE_ADDED:
+                binging.rbSortOptionAddedDate.setChecked(true);
+                break;
+            case DATE_CHANGED:
+                binging.rbSortOptionLastChangedDate.setChecked(true);
+                break;
             case DATE_FROZEN_AT:
                 binging.rbSortOptionFrozenAt.setChecked(true);
                 break;
@@ -77,6 +80,7 @@ public class ListSortingDialogFragment extends DialogFragment {
                 currentOrder = SortingOption.SortingOrder.ASCENDING;
             }
         });
+
         binging.rbSortOrderDescending.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 currentOrder = SortingOption.SortingOrder.DESCENDING;
@@ -88,16 +92,25 @@ public class ListSortingDialogFragment extends DialogFragment {
                 currentOption = SortingOption.NAME;
             }
         });
-//        binging.rbSortOptionAddedDate.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//            if (isChecked) {
-//                currentOption = SortingOption.DATE_ADDED;
-//            }
-//        });
+
+        binging.rbSortOptionAddedDate.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                currentOption = SortingOption.DATE_ADDED;
+            }
+        });
+
+        binging.rbSortOptionLastChangedDate.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                currentOption = SortingOption.DATE_CHANGED;
+            }
+        });
+
         binging.rbSortOptionBestBefore.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 currentOption = SortingOption.DATE_BEST_BEFORE;
             }
         });
+        
         binging.rbSortOptionFrozenAt.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 currentOption = SortingOption.DATE_FROZEN_AT;

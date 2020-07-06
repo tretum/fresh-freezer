@@ -113,9 +113,26 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
     private void sortItems() {
         if (mItems.size() > 0) {
             switch (mViewModel.getSortingOption()) {
-                // TODO Add sorting for added date
-//                case DATE_ADDED:
-//                    break;
+                case DATE_CHANGED:
+                    Collections.sort(mItems, (item1, item2) -> {
+                        int result = item1.getLastChangedAtDate().compareTo(item2.getLastChangedAtDate());
+                        if (mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)) {
+                            return result;
+                        } else {
+                            return result * (-1);
+                        }
+                    });
+                    break;
+                case DATE_ADDED:
+                    Collections.sort(mItems, (item1, item2) -> {
+                        int result = item1.getItemCreationDate().compareTo(item2.getItemCreationDate());
+                        if (mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)) {
+                            return result;
+                        } else {
+                            return result * (-1);
+                        }
+                    });
+                    break;
                 case DATE_FROZEN_AT:
                     Collections.sort(mItems, (item1, item2) -> {
                         int result = item1.getFrozenAtDate().compareTo(item2.getFrozenAtDate());
@@ -146,6 +163,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                         }
                     });
                     break;
+
             }
         }
         notifyDataSetChanged();

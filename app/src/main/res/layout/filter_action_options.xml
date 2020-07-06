@@ -45,11 +45,15 @@
                         style="@style/DialogRadioButton"
                         android:text="Frozen At Date" />
 
-<!--                    TODO Readd with the corresponding DB field-->
-<!--                    <RadioButton-->
-<!--                        android:id="@+id/rb_sort_option_added_date"-->
-<!--                        style="@style/DialogRadioButton"-->
-<!--                        android:text="Added At" />-->
+                    <RadioButton
+                        android:id="@+id/rb_sort_option_added_date"
+                        style="@style/DialogRadioButton"
+                        android:text="Added At Date" />
+
+                    <RadioButton
+                        android:id="@+id/rb_sort_option_last_changed_date"
+                        style="@style/DialogRadioButton"
+                        android:text="Last Changed At Date" />
 
                     <RadioButton
                         android:id="@+id/rb_sort_option_name"
