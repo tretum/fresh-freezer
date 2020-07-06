@@ -11,6 +11,8 @@ import com.mmutert.freshfreezer.data.converters.LocalDateConverter;
 
 import org.joda.time.LocalDate;
 
+import java.util.Objects;
+
 
 @Entity(tableName = "items")
 public class FrozenItem {
@@ -107,5 +109,29 @@ public class FrozenItem {
 
     public void setArchived(final boolean archived) {
         this.archived = archived;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        FrozenItem that = (FrozenItem) o;
+        return id == that.id &&
+                Float.compare(that.amount, amount) == 0 &&
+                archived == that.archived &&
+                name.equals(that.name) &&
+                unit == that.unit &&
+                Objects.equals(frozenAtDate, that.frozenAtDate) &&
+                Objects.equals(bestBeforeDate, that.bestBeforeDate) &&
+                Objects.equals(notes, that.notes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, amount, unit, frozenAtDate, bestBeforeDate, notes, archived);
     }
 }

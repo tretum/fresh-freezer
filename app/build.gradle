@@ -64,6 +64,9 @@ dependencies {
     // Database
     implementation "androidx.room:room-runtime:$room_version"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    // optional - RxJava support for Room
+    implementation "androidx.room:room-rxjava2:$room_version"
+
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])

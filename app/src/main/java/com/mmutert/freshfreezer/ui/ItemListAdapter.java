@@ -12,12 +12,10 @@ import com.mmutert.freshfreezer.util.SortingOption;
 import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 
 import org.joda.time.LocalDate;
-import org.joda.time.ReadablePartial;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -109,7 +107,6 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         mViewModel.setSortingOption(selectedSortingOption);
         mViewModel.setSortingOrder(sortingOrder);
 
-        // TODO Re-Sort list of items
         sortItems();
     }
 
