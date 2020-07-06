@@ -30,7 +30,6 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
     private final ListItemClickedCallback itemClickedCallback;
     private ListItemDeleteClickedCallback deleteClickedCallback;
     private ListItemTakeClickedCallback takeClickedCallback;
-    private List<FrozenItem> mItems;
     private FrozenItemViewModel mViewModel;
 
 
@@ -170,6 +169,9 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         }
     }
 
+    /**
+     * The Callback for the DiffUtil.
+     */
     private static final DiffUtil.ItemCallback<FrozenItem> DIFF_CALLBACK
             = new DiffUtil.ItemCallback<FrozenItem>() {
         @Override
@@ -189,7 +191,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
 
     /**
-     *
+     * The view holder for the &
      */
     public static class ItemListAdapterViewHolder extends RecyclerView.ViewHolder {
 

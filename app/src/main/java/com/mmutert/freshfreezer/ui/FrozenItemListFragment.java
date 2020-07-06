@@ -159,7 +159,7 @@ public class FrozenItemListFragment extends Fragment
 
 
     private void archiveItem(FrozenItem itemToArchive, int position) {
-        mItemListAdapter.notifyItemRemoved(position);
+//        mItemListAdapter.notifyItemRemoved(position);
 
         FrozenItemViewModel viewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
         Snackbar snackbar = Snackbar.make(
@@ -181,7 +181,7 @@ public class FrozenItemListFragment extends Fragment
 
             snackbar.setAction("Undo", v -> {
                 viewModel.restore(itemToArchive);
-                mItemListAdapter.notifyItemRangeInserted(position, 1);
+//                mItemListAdapter.notifyItemRangeInserted(position, 1);
 
                 // TODO Create new workers for notifications
                 for (ItemNotification notification : allNotifications) {
