@@ -70,6 +70,12 @@
 
     <!-- Menu Items -->
     <string name="menu_item_filter">Filter</string>
-    
+
+    <!-- Take from item dialog fragment -->
+    <string name="dialog_take_out_title">Take out</string>
+    <string name="dialog_take_out_divider_text">of</string>
+    <string name="dialog_take_from_selected_item_text">Selected Item:</string>
+    <string name="dialog_take_from_default_amount">1</string>
+
     <!-- Unsorted strings -->
 </resources>
