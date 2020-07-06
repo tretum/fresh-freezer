@@ -45,7 +45,6 @@ public class TakeOutDialogFragment extends DialogFragment {
                 false
         );
         binding.setItem(this.item);
-        binding.setSelectedAmount(0.0F);
 
         AlertDialog alertDialog = new MaterialAlertDialogBuilder(getContext())
                 .setView(binding.getRoot())
@@ -60,7 +59,11 @@ public class TakeOutDialogFragment extends DialogFragment {
     }
 
     public float getSelectionAmount() {
-        return binding.getSelectedAmount();
+        try {
+            return Float.parseFloat(binding.etTakeDialogSelectedAmount.getText().toString());
+        } catch (NumberFormatException e) {
+            return 0F;
+        }
     }
 
     public FrozenItem getItem() {

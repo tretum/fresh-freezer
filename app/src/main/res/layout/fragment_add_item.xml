@@ -146,7 +146,7 @@
                     android:layout_marginTop="8dp"
                     android:ems="10"
                     android:hint="@string/add_item_amount_hint"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:paddingLeft="@dimen/add_item_pad_left"
                     android:paddingRight="@dimen/add_item_pad_left"
                     android:selectAllOnFocus="true"

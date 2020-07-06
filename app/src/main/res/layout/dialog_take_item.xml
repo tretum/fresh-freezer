@@ -8,9 +8,6 @@
         <variable
             name="item"
             type="com.mmutert.freshfreezer.data.FrozenItem" />
-        <variable
-            name="selectedAmount"
-            type="Float" />
         <import type="com.mmutert.freshfreezer.ui.databinding.AmountBindingConverter"/>
     </data>
 
@@ -74,10 +71,10 @@
                         android:id="@+id/et_take_dialog_selected_amount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:selectAllOnFocus="true"
-                        android:text="@={AmountBindingConverter.floatToString(selectedAmount)}"
-                        android:textAlignment="textEnd"/>
+                        android:text="@string/dialog_take_from_default_amount"
+                        android:textAlignment="textEnd" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -117,7 +114,6 @@
                     app:layout_constraintStart_toEndOf="@id/take_dialog_divider"
                     app:layout_constraintTop_toTopOf="@id/take_dialog_divider"
                     tools:text="1000 g" />
-
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
