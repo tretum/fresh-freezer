@@ -162,21 +162,21 @@ public class AddItemFragment extends Fragment {
             new NotificationOffsetDialogFragment(dialog -> {
                 Log.d(TAG, "Selected notification offset from dialog.");
 
-                PendingNotification.OffsetAmount offSetAmount = dialog.getOffSetAmount();
+                PendingNotification.OffsetUnit offSetUnit = dialog.getOffSetAmount();
                 int enteredOffset = dialog.getEnteredOffset();
 
                 Log.d(TAG, "Selected Offset: " + enteredOffset);
-                Log.d(TAG, "Selected Unit: " + offSetAmount);
+                Log.d(TAG, "Selected Unit: " + offSetUnit);
 
                 notification.setOffsetAmount(enteredOffset);
-                notification.setTimeUnit(offSetAmount);
+                notification.setTimeUnit(offSetUnit);
                 notifications.add(notification);
 
                 notificationTextView.setText(String.format(
                         Locale.getDefault(),
                         "%d %s before",
                         enteredOffset,
-                        offSetAmount.toString()
+                        offSetUnit.toString()
                 ));
             }).show(getParentFragmentManager(), "add notification");
         });

@@ -5,9 +5,9 @@ import androidx.annotation.NonNull;
 
 class PendingNotification {
     private int offsetAmount;
-    private OffsetAmount timeUnit;
+    private OffsetUnit timeUnit;
 
-    public PendingNotification(final int offsetAmount, final OffsetAmount timeUnit) {
+    public PendingNotification(final int offsetAmount, final OffsetUnit timeUnit) {
         this.offsetAmount  = offsetAmount;
         this.timeUnit      = timeUnit;
     }
@@ -20,7 +20,7 @@ class PendingNotification {
         this.offsetAmount = offsetAmount;
     }
 
-    public void setTimeUnit(final OffsetAmount timeUnit) {
+    public void setTimeUnit(final OffsetUnit timeUnit) {
         this.timeUnit = timeUnit;
     }
 
@@ -28,16 +28,16 @@ class PendingNotification {
         return offsetAmount;
     }
 
-    public OffsetAmount getTimeUnit() {
+    public OffsetUnit getTimeUnit() {
         return timeUnit;
     }
 
-    enum OffsetAmount {
+    enum OffsetUnit {
         DAYS("days"), WEEKS("weeks"), MONTHS("months");
 
         private String name;
 
-        OffsetAmount(String name) {
+        OffsetUnit(String name) {
             this.name = name;
         }
 

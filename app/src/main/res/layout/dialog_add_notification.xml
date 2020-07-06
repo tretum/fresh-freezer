@@ -44,6 +44,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="number"
                         android:text="@string/dialog_add_notification_amount_default_value"
+                        android:selectAllOnFocus="true"
                         android:textSize="18sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -55,6 +56,7 @@
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/radio_button_days"
+                        android:checked="true"
                         style="@style/DialogRadioButton"
                         android:text="@string/dialog_add_notification_days_button_title"/>
 

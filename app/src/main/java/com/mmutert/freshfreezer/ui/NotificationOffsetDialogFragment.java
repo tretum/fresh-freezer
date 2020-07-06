@@ -18,7 +18,7 @@ import com.mmutert.freshfreezer.databinding.DialogAddNotificationBinding;
 public class NotificationOffsetDialogFragment extends DialogFragment {
 
     private EditText mNotificationOffsetEditText;
-    private PendingNotification.OffsetAmount mOffsetAmount;
+    private PendingNotification.OffsetUnit mOffsetUnit = PendingNotification.OffsetUnit.DAYS;
 
 
     public interface NotificationOffsetDialogClickListener {
@@ -43,19 +43,19 @@ public class NotificationOffsetDialogFragment extends DialogFragment {
         );
         dialogBinding.radioButtonDays.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                mOffsetAmount = PendingNotification.OffsetAmount.DAYS;
+                mOffsetUnit = PendingNotification.OffsetUnit.DAYS;
             }
             setBeforeText(buttonView, isChecked);
         });
         dialogBinding.radioButtonWeeks.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                mOffsetAmount = PendingNotification.OffsetAmount.WEEKS;
+                mOffsetUnit = PendingNotification.OffsetUnit.WEEKS;
             }
             setBeforeText(buttonView, isChecked);
         });
         dialogBinding.radioButtonMonths.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                mOffsetAmount = PendingNotification.OffsetAmount.MONTHS;
+                mOffsetUnit = PendingNotification.OffsetUnit.MONTHS;
             }
             setBeforeText(buttonView, isChecked);
         });
@@ -87,7 +87,7 @@ public class NotificationOffsetDialogFragment extends DialogFragment {
         return Integer.parseInt(mNotificationOffsetEditText.getText().toString());
     }
 
-    public PendingNotification.OffsetAmount getOffSetAmount() {
-        return mOffsetAmount;
+    public PendingNotification.OffsetUnit getOffSetAmount() {
+        return mOffsetUnit;
     }
 }
