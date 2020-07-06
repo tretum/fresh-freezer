@@ -28,7 +28,6 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
     private final AsyncListDiffer<FrozenItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
 
     private final ListItemClickedCallback itemClickedCallback;
-    private ListItemDeleteClickedCallback deleteClickedCallback;
     private ListItemTakeClickedCallback takeClickedCallback;
     private FrozenItemViewModel mViewModel;
 
@@ -36,11 +35,9 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
     public ItemListAdapter(
             final FrozenItemViewModel viewModel,
             ListItemClickedCallback itemClickedCallback,
-            ListItemDeleteClickedCallback deleteClickedCallback,
             ListItemTakeClickedCallback takeClickedCallback) {
         this.mViewModel            = viewModel;
         this.itemClickedCallback   = itemClickedCallback;
-        this.deleteClickedCallback = deleteClickedCallback;
         this.takeClickedCallback   = takeClickedCallback;
     }
 
@@ -78,10 +75,6 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         binding.tvBestBeforeDate.setText(bestBeforeFormatted);
         binding.tvDateFrozen.setText(frozenFormatted);
 
-        // Set up the delete button
-        binding.btDelete.setOnClickListener(v -> {
-            deleteClickedCallback.onDeleteClicked(itemForPosition, position);
-        });
 
         binding.btTake.setOnClickListener(v -> {
             takeClickedCallback.onTakeButtonClicked(itemForPosition);

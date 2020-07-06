@@ -3,4 +3,6 @@
     <dimen name="add_item_title_size">18sp</dimen>
     <dimen name="add_item_pad_left">8dp</dimen>
     <dimen name="add_item_pad_title_top">8dp</dimen>
+    <dimen name="list_item_side_margin">16dp</dimen>
+    <dimen name="list_item_vertical_margin">8dp</dimen>
 </resources>

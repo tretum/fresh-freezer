@@ -53,4 +53,5 @@
     <string name="month_capitalized">Month</string>
     <string name="months_capitalized">Months</string>
     <string name="menu_item_filter">Filter</string>
+    <string name="list_item_amount_title">Amount:</string>
 </resources>

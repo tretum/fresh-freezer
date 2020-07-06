@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -74,7 +73,7 @@ public class FrozenItemListFragment extends Fragment
 
         mViewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
 
-        mItemListAdapter = new ItemListAdapter(mViewModel, this, this, this);
+        mItemListAdapter = new ItemListAdapter(mViewModel, this, this);
 
         // Observe the items in the database that have to get added to the database
         mViewModel.getFrozenItems().observe(getViewLifecycleOwner(), mItemListAdapter::setItems);
