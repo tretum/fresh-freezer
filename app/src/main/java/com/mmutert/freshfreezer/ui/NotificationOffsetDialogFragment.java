@@ -4,8 +4,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -14,7 +12,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.mmutert.freshfreezer.R;
-import com.mmutert.freshfreezer.databinding.AddNotificationDialogBinding;
+import com.mmutert.freshfreezer.databinding.DialogAddNotificationBinding;
 
 
 public class NotificationOffsetDialogFragment extends DialogFragment {
@@ -37,9 +35,9 @@ public class NotificationOffsetDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable final Bundle savedInstanceState) {
 
-        AddNotificationDialogBinding dialogBinding = DataBindingUtil.inflate(
+        DialogAddNotificationBinding dialogBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
-                R.layout.add_notification_dialog,
+                R.layout.dialog_add_notification,
                 null,
                 false
         );

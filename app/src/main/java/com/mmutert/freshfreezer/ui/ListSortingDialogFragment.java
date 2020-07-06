@@ -11,7 +11,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
 import com.mmutert.freshfreezer.R;
-import com.mmutert.freshfreezer.databinding.FilterActionOptionsBinding;
+import com.mmutert.freshfreezer.databinding.DialogFilterActionOptionsBinding;
 import com.mmutert.freshfreezer.util.SortingOption;
 
 
@@ -42,9 +42,9 @@ public class ListSortingDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable final Bundle savedInstanceState) {
 
-        FilterActionOptionsBinding binging = DataBindingUtil.inflate(
+        DialogFilterActionOptionsBinding binging = DataBindingUtil.inflate(
                 getLayoutInflater(),
-                R.layout.filter_action_options,
+                R.layout.dialog_filter_action_options,
                 null,
                 false
         );

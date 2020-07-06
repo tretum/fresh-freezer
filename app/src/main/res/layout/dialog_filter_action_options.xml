@@ -14,21 +14,21 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            app:cardCornerRadius="16dp">
+            android:padding="@dimen/dialog_card_padding"
+            app:cardCornerRadius="@dimen/dialog_card_corner_radius">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                style="@style/AppTheme.Dialog.Layout"
                 android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
                     style="@style/MaterialAlertDialog.MaterialComponents.Title.Text.CenterStacked"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Sort by"
-                    android:textSize="22sp" />
+                    android:text="@string/dialog_sorting_options_sort_by_title"
+                    android:textSize="@dimen/dialog_title_text_size" />
 
                 <RadioGroup
                     android:layout_width="match_parent"
@@ -38,27 +38,27 @@
                     <RadioButton
                         android:id="@+id/rb_sort_option_best_before"
                         style="@style/DialogRadioButton"
-                        android:text="Best Before Date" />
+                        android:text="@string/dialog_sorting_options_best_before_button_label" />
 
                     <RadioButton
                         android:id="@+id/rb_sort_option_frozen_at"
                         style="@style/DialogRadioButton"
-                        android:text="Frozen At Date" />
+                        android:text="@string/dialog_sorting_options_frozen_at_button_label" />
 
                     <RadioButton
                         android:id="@+id/rb_sort_option_added_date"
                         style="@style/DialogRadioButton"
-                        android:text="Added At Date" />
+                        android:text="@string/dialog_sorting_options_added_at_button_label" />
 
                     <RadioButton
                         android:id="@+id/rb_sort_option_last_changed_date"
                         style="@style/DialogRadioButton"
-                        android:text="Last Changed At Date" />
+                        android:text="@string/dialog_sorting_options_last_changed_at_button_label" />
 
                     <RadioButton
                         android:id="@+id/rb_sort_option_name"
                         style="@style/DialogRadioButton"
-                        android:text="Name" />
+                        android:text="@string/dialog_sorting_options_name_button_label" />
 
                 </RadioGroup>
 
@@ -73,8 +73,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Order"
-                    android:textSize="22sp" />
+                    android:text="@string/dialog_sorting_options_order_title"
+                    android:textSize="@dimen/dialog_title_text_size" />
 
 
                 <RadioGroup
@@ -85,27 +85,14 @@
                     <RadioButton
                         android:id="@+id/rb_sort_order_ascending"
                         style="@style/DialogRadioButton"
-                        android:text="Ascending" />
+                        android:text="@string/dialog_sorting_options_ascending_button_label" />
 
                     <RadioButton
                         android:id="@+id/rb_sort_order_descending"
                         style="@style/DialogRadioButton"
-                        android:text="Descending" />
-
+                        android:text="@string/dialog_sorting_options_descending_button_label" />
                 </RadioGroup>
 
-<!--                <Switch-->
-<!--                    android:id="@+id/sw_sorting_order"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="8dp"-->
-<!--                    android:buttonTint="#D1C4E9"-->
-<!--                    android:paddingTop="8dp"-->
-<!--                    android:paddingBottom="8dp"-->
-<!--                    android:text="Order"-->
-<!--                    android:textOff="Descending"-->
-<!--                    android:textOn="Ascending"-->
-<!--                    android:textSize="18sp" />-->
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </FrameLayout>
