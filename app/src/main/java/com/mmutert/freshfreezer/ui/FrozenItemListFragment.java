@@ -215,14 +215,22 @@ public class FrozenItemListFragment extends Fragment
     @Override
     public void onPositiveClick(final TakeOutDialogFragment dialog) {
         // Update the item from which the things were taken
+        FrozenItemViewModel viewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
         float amount = dialog.getSelectionAmount();
         FrozenItem item = dialog.getItem();
-        mViewModel.updateItem(item, amount);
+        viewModel.updateItem(item, amount);
+
+        // TODO Possibly a hack. The amount was not updated because the current item is changed in the view model.
+        //  Therefore the DiffUtil does not recognize the item as changed and the recycler view will not be notified of changes.
+        //  The same applies for the neutral click
+        mItemListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onNeutralClick(final TakeOutDialogFragment dialog) {
-        mViewModel.updateItem(dialog.getItem(), dialog.getItem().getAmount());
+        FrozenItemViewModel viewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
+        viewModel.updateItem(dialog.getItem(), dialog.getItem().getAmount());
+        mItemListAdapter.notifyDataSetChanged();
     }
 
 }
