@@ -110,7 +110,7 @@ public class ListSortingDialogFragment extends DialogFragment {
                 currentOption = SortingOption.DATE_BEST_BEFORE;
             }
         });
-        
+
         binging.rbSortOptionFrozenAt.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 currentOption = SortingOption.DATE_FROZEN_AT;

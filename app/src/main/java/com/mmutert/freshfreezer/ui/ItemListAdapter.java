@@ -4,6 +4,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.AsyncListDiffer;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mmutert.freshfreezer.data.FrozenItem;
@@ -15,12 +17,15 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemListAdapterViewHolder> implements
         ListSortingDialogFragment.ListSortingChangedListener {
+
+    private final AsyncListDiffer<FrozenItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
 
     private final ListItemClickedCallback itemClickedCallback;
     private ListItemDeleteClickedCallback deleteClickedCallback;
@@ -42,9 +47,9 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
 
     public void setItems(List<FrozenItem> items) {
-        this.mItems = items;
-        sortItems();
-        notifyDataSetChanged();
+        ArrayList<FrozenItem> newItems = new ArrayList<>(items);
+        sortItems(newItems);
+        mDiffer.submitList(newItems);
     }
 
     @NonNull
@@ -90,15 +95,11 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
     @Override
     public int getItemCount() {
-        if (mItems == null) {
-            return 0;
-        } else {
-            return mItems.size();
-        }
+        return mDiffer.getCurrentList().size();
     }
 
     public FrozenItem getItemAtPosition(int position) {
-        return mItems.get(position);
+        return mDiffer.getCurrentList().get(position);
     }
 
     @Override
@@ -107,14 +108,16 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         mViewModel.setSortingOption(selectedSortingOption);
         mViewModel.setSortingOrder(sortingOrder);
 
-        sortItems();
+        ArrayList<FrozenItem> frozenItems = new ArrayList<>(mDiffer.getCurrentList());
+        sortItems(frozenItems);
+        mDiffer.submitList(frozenItems);
     }
 
-    private void sortItems() {
-        if (mItems.size() > 0) {
+    private void sortItems(final List<FrozenItem> items) {
+        if (items.size() > 0) {
             switch (mViewModel.getSortingOption()) {
                 case DATE_CHANGED:
-                    Collections.sort(mItems, (item1, item2) -> {
+                    Collections.sort(items, (item1, item2) -> {
                         int result = item1.getLastChangedAtDate().compareTo(item2.getLastChangedAtDate());
                         if (mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)) {
                             return result;
@@ -124,7 +127,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                     });
                     break;
                 case DATE_ADDED:
-                    Collections.sort(mItems, (item1, item2) -> {
+                    Collections.sort(items, (item1, item2) -> {
                         int result = item1.getItemCreationDate().compareTo(item2.getItemCreationDate());
                         if (mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)) {
                             return result;
@@ -134,7 +137,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                     });
                     break;
                 case DATE_FROZEN_AT:
-                    Collections.sort(mItems, (item1, item2) -> {
+                    Collections.sort(items, (item1, item2) -> {
                         int result = item1.getFrozenAtDate().compareTo(item2.getFrozenAtDate());
                         if(mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)){
                             return result;
@@ -144,7 +147,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                     });
                     break;
                 case DATE_BEST_BEFORE:
-                    Collections.sort(mItems, (item1, item2) -> {
+                    Collections.sort(items, (item1, item2) -> {
                         int result = item1.getBestBeforeDate().compareTo(item2.getBestBeforeDate());
                         if(mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)){
                             return result;
@@ -154,7 +157,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                     });
                     break;
                 case NAME:
-                    Collections.sort(mItems, (item1, item2) -> {
+                    Collections.sort(items, (item1, item2) -> {
                         int result = item1.getName().compareTo(item2.getName());
                         if(mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)){
                             return result;
@@ -163,11 +166,26 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                         }
                     });
                     break;
-
             }
         }
-        notifyDataSetChanged();
     }
+
+    private static final DiffUtil.ItemCallback<FrozenItem> DIFF_CALLBACK
+            = new DiffUtil.ItemCallback<FrozenItem>() {
+        @Override
+        public boolean areItemsTheSame(
+                @NonNull FrozenItem oldFrozenItem, @NonNull FrozenItem newFrozenItem) {
+            // FrozenItem properties may have changed if reloaded from the DB, but ID is fixed
+            return oldFrozenItem.getId() == newFrozenItem.getId();
+        }
+        @Override
+        public boolean areContentsTheSame(
+                @NonNull FrozenItem oldFrozenItem, @NonNull FrozenItem newFrozenItem) {
+            // NOTE: if you use equals, your object must properly override Object#equals()
+            // Incorrectly returning false here will result in too many animations.
+            return oldFrozenItem.equals(newFrozenItem);
+        }
+    };
 
 
     /**
