@@ -1,5 +1,6 @@
 package com.mmutert.freshfreezer.ui;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,14 +26,11 @@ import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.data.ItemNotification;
 import com.mmutert.freshfreezer.databinding.FragmentFrozenItemListBinding;
-import com.mmutert.freshfreezer.notification.NotificationConstants;
-import com.mmutert.freshfreezer.notification.NotificationHelper;
+import com.mmutert.freshfreezer.databinding.ListItemBinding;
 import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 
-import org.joda.time.LocalDateTime;
-
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,7 +38,7 @@ import java.util.concurrent.Executors;
 public class FrozenItemListFragment extends Fragment
         implements ListItemClickedCallback,
         ListItemDeleteClickedCallback,
-        ListItemTakeClickedCallback{
+        ListItemTakeClickedCallback {
 
     private FragmentFrozenItemListBinding mBinding;
     private FrozenItemViewModel mViewModel;
@@ -96,6 +94,7 @@ public class FrozenItemListFragment extends Fragment
 
     /**
      * Creates the ItemTouchHelper that archives items in the item list on swipe to the right.
+     *
      * @return The item touch helper
      */
     private ItemTouchHelper createSwipeHelper() {
@@ -116,13 +115,75 @@ public class FrozenItemListFragment extends Fragment
                 // Delete the item
                 int pos = viewHolder.getAdapterPosition();
                 FrozenItem item = mItemListAdapter.getItemAtPosition(pos);
-                if(direction == ItemTouchHelper.RIGHT) {
-                    archiveItem(item);
-                } else if(direction == ItemTouchHelper.LEFT) {
+                if (direction == ItemTouchHelper.RIGHT) {
+                    archiveItem(item, pos);
+                } else if (direction == ItemTouchHelper.LEFT) {
                     new TakeOutDialogFragment(new TakeListener(), item).show(getParentFragmentManager(), "take out");
+                    mItemListAdapter.notifyItemChanged(pos);
+                }
+
+//                ListItemBinding binding = ((ItemListAdapter.ItemListAdapterViewHolder) viewHolder).binding;
+//                View deleteBackground = binding.listItemDeleteBackground;
+//                View takeBackground = binding.listItemTakeBackground;
+//                deleteBackground.setVisibility(View.INVISIBLE);
+//                takeBackground.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+
+                if (viewHolder != null) {
+                    ListItemBinding binding = ((ItemListAdapter.ItemListAdapterViewHolder) viewHolder).binding;
+                    final View foregroundView = binding.listItemForeground;
+
+                    getDefaultUIUtil().onSelected(foregroundView);
                 }
             }
 
+            @Override
+            public void onChildDrawOver(
+                    @NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                    RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                    int actionState, boolean isCurrentlyActive) {
+
+                ListItemBinding binding = ((ItemListAdapter.ItemListAdapterViewHolder) viewHolder).binding;
+                View deleteBackground = binding.listItemDeleteBackground;
+                View takeBackground = binding.listItemTakeBackground;
+
+                if (dX < 0) {
+                    deleteBackground.setVisibility(View.INVISIBLE);
+                    takeBackground.setVisibility(View.VISIBLE);
+                } else if (dX > 0){
+                    deleteBackground.setVisibility(View.VISIBLE);
+                    takeBackground.setVisibility(View.INVISIBLE);
+                } else {
+                    deleteBackground.setVisibility(View.INVISIBLE);
+                    takeBackground.setVisibility(View.INVISIBLE);
+                }
+
+                final View foregroundView = binding.listItemForeground;
+                getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+            }
+
+            @Override
+            public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+
+                ListItemBinding binding = ((ItemListAdapter.ItemListAdapterViewHolder) viewHolder).binding;
+                final View foregroundView = binding.listItemForeground;
+                getDefaultUIUtil().clearView(foregroundView);
+            }
+
+            @Override
+            public void onChildDraw(
+                    @NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                    @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                    int actionState, boolean isCurrentlyActive) {
+
+                ListItemBinding binding = ((ItemListAdapter.ItemListAdapterViewHolder) viewHolder).binding;
+                final View foregroundView = binding.listItemForeground;
+
+                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+            }
         });
     }
 
@@ -167,53 +228,55 @@ public class FrozenItemListFragment extends Fragment
 
     /**
      * Archives the given item and displays a snackbar that allows undoing the operation.
+     *
      * @param itemToArchive The item to archive.
+     * @param position
      */
-    private void archiveItem(FrozenItem itemToArchive) {
+    private void archiveItem(FrozenItem itemToArchive, final int position) {
 
-        FrozenItemViewModel viewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
         Snackbar snackbar = Snackbar.make(
                 mBinding.itemListCoordinatorLayout,
                 "Deleted item " + itemToArchive.getName(),
                 Snackbar.LENGTH_LONG
         );
 
-        // TODO Warning: Hack, better change this
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            List<ItemNotification> allNotifications = mViewModel.getAllNotifications(itemToArchive);
+        ArrayList<FrozenItem> newList = new ArrayList<>(mItemListAdapter.getItemList());
+        int oldIndex = newList.indexOf(itemToArchive);
+        newList.remove(itemToArchive);
+        mItemListAdapter.setItems(newList);
 
-            // Cancel all notifications
-            WorkManager workManager = WorkManager.getInstance(getContext());
-            for (ItemNotification notification : allNotifications) {
-                workManager.cancelWorkById(notification.getNotificationId());
-            }
-
-            snackbar.setAction("Undo", v -> {
-                mViewModel.restore(itemToArchive);
-
-                // TODO Create new workers for notifications
-                for (ItemNotification notification : allNotifications) {
-                    LocalDateTime notifyOn = notification.getNotifyOn();
-                    UUID uuid = NotificationHelper.scheduleNotification(
-                            getContext(),
-                            itemToArchive,
-                            NotificationConstants.NOTIFICATION_OFFSET_TIMEUNIT,
-                            notifyOn
-                    );
-                    mViewModel.addNotification(itemToArchive, uuid, notifyOn);
-                    mViewModel.deleteNotification(notification);
-                }
-            });
-            snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_SLIDE);
-            snackbar.show();
+        snackbar.setAction("Undo", v -> {
+            newList.add(oldIndex, itemToArchive);
+            mItemListAdapter.setItems(newList);
         });
-        mViewModel.archive(itemToArchive);
+        snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_SLIDE);
+
+        // Adds a callback that finally actually archives the item when the snackbar times out
+        snackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+            @Override
+            public void onDismissed(final Snackbar transientBottomBar, final int event) {
+                if(event == DISMISS_EVENT_TIMEOUT || event == DISMISS_EVENT_CONSECUTIVE || event == DISMISS_EVENT_SWIPE || event == DISMISS_EVENT_MANUAL) {
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    executor.execute(() -> {
+                        List<ItemNotification> allNotifications = mViewModel.getAllNotifications(itemToArchive);
+
+                        // Cancel all notifications
+                        WorkManager workManager = WorkManager.getInstance(getContext());
+                        for (ItemNotification notification : allNotifications) {
+                            workManager.cancelWorkById(notification.getNotificationId());
+                        }
+                    });
+                    mViewModel.archive(itemToArchive);
+                }
+                super.onDismissed(transientBottomBar, event);
+            }
+        });
+        snackbar.show();
     }
 
     @Override
     public void onDeleteClicked(FrozenItem itemToDelete, int position) {
-        archiveItem(itemToDelete);
+        archiveItem(itemToDelete, position);
     }
 
     @Override
@@ -224,7 +287,7 @@ public class FrozenItemListFragment extends Fragment
     /**
      * For the given item take the specified amount and use the view model to update the item in the database.
      *
-     * @param item The item where the amount was taken from
+     * @param item        The item where the amount was taken from
      * @param amountTaken The amount that was taken from the item
      */
     private void takeFromItem(FrozenItem item, float amountTaken) {

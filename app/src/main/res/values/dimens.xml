@@ -11,4 +11,5 @@
     <dimen name="dialog_layout_vertical_margin">8dp</dimen>
     <dimen name="dialog_title_text_size">22sp</dimen>
     <dimen name="take_dialog_text_size">20sp</dimen>
+    <dimen name="list_item_card_vertical_margin">4dp</dimen>
 </resources>

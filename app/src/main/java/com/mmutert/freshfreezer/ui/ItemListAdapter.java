@@ -1,6 +1,7 @@
 package com.mmutert.freshfreezer.ui;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -83,6 +84,9 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         binding.getRoot().setOnClickListener(v -> {
             itemClickedCallback.onClick(itemForPosition);
         });
+
+        binding.listItemDeleteBackground.setVisibility(View.INVISIBLE);
+        binding.listItemTakeBackground.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -182,13 +186,17 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         }
     };
 
+    public List<FrozenItem> getItemList() {
+        return mDiffer.getCurrentList();
+    }
+
 
     /**
      * The view holder for the &
      */
-    public static class ItemListAdapterViewHolder extends RecyclerView.ViewHolder {
+    public class ItemListAdapterViewHolder extends RecyclerView.ViewHolder {
 
-        private final ListItemBinding binding;
+        public final ListItemBinding binding;
 
         public ItemListAdapterViewHolder(ListItemBinding binding) {
             super(binding.getRoot());
