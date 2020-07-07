@@ -99,9 +99,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
                         android:text="@{`` + item.amount}"
                         android:textSize="20sp"
-                        app:layout_constraintStart_toStartOf="@+id/tv_date_frozen"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_amount_unit"
                         app:layout_constraintTop_toBottomOf="@+id/tv_title"
                         tools:text="2" />
 
@@ -109,11 +110,10 @@
                         android:id="@+id/tv_amount_unit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:text="@{item.unit.toString()}"
                         android:textSize="20sp"
-                        app:layout_constraintStart_toEndOf="@+id/tv_amount"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_date_frozen"
                         app:layout_constraintTop_toBottomOf="@+id/tv_title"
                         tools:text="pcs" />
 
@@ -139,21 +139,6 @@
                         app:layout_constraintTop_toBottomOf="@+id/tv_amount"
                         tools:text="2020-04-16" />
 
-                    <Button
-                        android:id="@+id/bt_take"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="@dimen/list_item_side_margin"
-                        android:text="@string/list_item_take_button_label"
-                        android:textSize="18sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_best_before_date"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toEndOf="@+id/tv_best_before_date"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
-
                     <TextView
                         android:id="@+id/tv_best_before_title"
                         android:layout_width="wrap_content"
@@ -168,12 +153,12 @@
                         android:id="@+id/tv_best_before_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/tv_best_before_title"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_date_frozen"
                         tools:text="2020-08-12" />
 

@@ -76,11 +76,6 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         binding.tvBestBeforeDate.setText(bestBeforeFormatted);
         binding.tvDateFrozen.setText(frozenFormatted);
 
-
-        binding.btTake.setOnClickListener(v -> {
-            takeClickedCallback.onTakeButtonClicked(itemForPosition);
-        });
-
         binding.getRoot().setOnClickListener(v -> {
             itemClickedCallback.onClick(itemForPosition);
         });
