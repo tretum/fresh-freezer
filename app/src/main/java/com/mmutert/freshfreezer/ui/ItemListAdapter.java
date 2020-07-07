@@ -67,13 +67,14 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
         binding.setItem(itemForPosition);
 
-        LocalDate bestBeforeDate = itemForPosition.getBestBeforeDate();
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+
+        LocalDate bestBeforeDate = itemForPosition.getBestBeforeDate();
         String bestBeforeFormatted = formatter.print(bestBeforeDate);
+        binding.tvBestBeforeDate.setText(bestBeforeFormatted);
+
         LocalDate frozenDate = itemForPosition.getFrozenAtDate();
         String frozenFormatted = formatter.print(frozenDate);
-
-        binding.tvBestBeforeDate.setText(bestBeforeFormatted);
         binding.tvDateFrozen.setText(frozenFormatted);
 
         binding.getRoot().setOnClickListener(v -> {

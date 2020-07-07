@@ -224,7 +224,7 @@ public class AddItemFragment extends Fragment {
 
             picker.addOnPositiveButtonClickListener(selection -> {
                 LocalDate date = LocalDate.fromDateFields(new Date(selection));
-                newItem.setFrozenAtDate(date);
+                newItem.setBestBeforeDate(date);
                 String selectedFrozenDateFormatted = dateTimeFormatter.print(date);
                 mBinding.etAddItemBestBefore.setText(selectedFrozenDateFormatted);
             });
