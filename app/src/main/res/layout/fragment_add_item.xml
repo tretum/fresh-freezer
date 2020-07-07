@@ -202,7 +202,7 @@
                         android:background="@android:color/transparent"
                         android:padding="@dimen/add_item_pad_left"
                         android:paddingTop="@dimen/add_item_pad_title_top"
-                        android:text="Add notification"
+                        android:text="@string/add_item_add_notification_label"
                         android:textSize="@dimen/add_item_title_size" />
 
                 </LinearLayout>

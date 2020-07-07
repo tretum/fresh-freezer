@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Fresh Freezer</string>
+    <string name="action_settings">Einstellungen</string>
+
+    <!--  Add item fragment  -->
+    <string name="fragment_add_item_label">Neuen Artikel hinzufügen</string>
+    <string name="add_item_title_hint">Name des Artikels</string>
+    <string name="add_item_description_hint">Beschreibung hinzufügen</string>
+    <string name="add_item_frozen_date_title">Einfrierdatum:</string>
+    <string name="add_item_best_before_date_title">Mindesthaltbarkeit:</string>
+    <string name="add_item_amount_hint">Menge</string>
+    <string name="add_item_add_notification_label">Benachrichtigung hinzufügen</string>
+    <string name="add_item_saving_failed_text">
+        Speichern fehlgeschlagen! Bitte einen Namen angeben.
+    </string>
+    <string name="add_item_best_before_date_picker_title_text">MHD auswählen</string>
+    <string name="add_item_frozen_at_date_picker_title_text">Einfrierdatum auswählen</string>
+
+    <!-- Add notification dialog fragment-->
+    <string name="dialog_add_notification_enter_amount_hint">Anzahl angeben</string>
+    <string name="dialog_add_notification_amount_default_value">1</string>
+    <string name="dialog_add_notification_fragment_title">Benachrichtigung hinzufügen</string>
+    <string name="dialog_add_notification_days_button_title">Tage</string>
+    <string name="dialog_add_notification_weeks_button_title">Wochen</string>
+    <string name="dialog_add_notification_months_button_title">Monate</string>
+
+    <!-- Sorting options dialog fragment -->
+    <string name="dialog_sorting_options_sort_by_title">Sortieren nach</string>
+    <string name="dialog_sorting_options_best_before_button_label">Mindesthalbarkeitsdatum</string>
+    <string name="dialog_sorting_options_frozen_at_button_label">Einfrierdatum</string>
+    <string name="dialog_sorting_options_added_at_button_label">Hinzufügedatum des Eintrags</string>
+    <string name="dialog_sorting_options_last_changed_at_button_label">Datum der letzten Änderung</string>
+    <string name="dialog_sorting_options_name_button_label">Name</string>
+    <string name="dialog_sorting_options_order_title">Sortierrichtung</string>
+    <string name="dialog_sorting_options_ascending_button_label">Aufsteigend</string>
+    <string name="dialog_sorting_options_descending_button_label">Absteigend</string>
+
+    <!-- List item -->
+    <string name="list_item_frozen_at_title">Einfrierdatum:</string>
+    <string name="list_item_amount_title">Menge:</string>
+    <string name="list_item_take_button_label">Entnehmen</string>
+    <string name="list_item_best_before_title">MHD:</string>
+    <string name="fragment_item_list_label">Artikelliste</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_title">MHD Benachrichtigungen</string>
+    <string name="notification_channel_description">
+        Benachrichtigungen für Artikel deren MHD in Kürze erreicht wird.
+    </string>
+
+    <!-- Time units -->
+    <string name="days">Tage</string>
+    <string name="day">Tag</string>
+    <string name="days_capitalized">Tage</string>
+    <string name="day_capitalized">Tag</string>
+
+    <string name="weeks">Wochen</string>
+    <string name="week">Woche</string>
+    <string name="weeks_capitalized">Wochen</string>
+    <string name="week_capitalized">Wochen</string>
+
+    <string name="month">Monat</string>
+    <string name="months">Monate</string>
+    <string name="month_capitalized">Monat</string>
+    <string name="months_capitalized">Monate</string>
+</resources>
