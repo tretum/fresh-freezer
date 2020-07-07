@@ -40,8 +40,7 @@ import java.util.concurrent.Executors;
 public class FrozenItemListFragment extends Fragment
         implements ListItemClickedCallback,
         ListItemDeleteClickedCallback,
-        ListItemTakeClickedCallback,
-        TakeOutDialogFragment.TakeOutDialogClickListener {
+        ListItemTakeClickedCallback{
 
     private FragmentFrozenItemListBinding mBinding;
     private FrozenItemViewModel mViewModel;
@@ -102,7 +101,7 @@ public class FrozenItemListFragment extends Fragment
     private ItemTouchHelper createSwipeHelper() {
         return new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
                 0,
-                ItemTouchHelper.RIGHT
+                ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT
         ) {
             @Override
             public boolean onMove(
@@ -116,8 +115,14 @@ public class FrozenItemListFragment extends Fragment
             public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, final int direction) {
                 // Delete the item
                 int pos = viewHolder.getAdapterPosition();
-                archiveItem(mItemListAdapter.getItemAtPosition(pos));
+                FrozenItem item = mItemListAdapter.getItemAtPosition(pos);
+                if(direction == ItemTouchHelper.RIGHT) {
+                    archiveItem(item);
+                } else if(direction == ItemTouchHelper.LEFT) {
+                    new TakeOutDialogFragment(new TakeListener(), item).show(getParentFragmentManager(), "take out");
+                }
             }
+
         });
     }
 
@@ -160,6 +165,10 @@ public class FrozenItemListFragment extends Fragment
     }
 
 
+    /**
+     * Archives the given item and displays a snackbar that allows undoing the operation.
+     * @param itemToArchive The item to archive.
+     */
     private void archiveItem(FrozenItem itemToArchive) {
 
         FrozenItemViewModel viewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
@@ -172,7 +181,7 @@ public class FrozenItemListFragment extends Fragment
         // TODO Warning: Hack, better change this
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            List<ItemNotification> allNotifications = viewModel.getAllNotifications(itemToArchive);
+            List<ItemNotification> allNotifications = mViewModel.getAllNotifications(itemToArchive);
 
             // Cancel all notifications
             WorkManager workManager = WorkManager.getInstance(getContext());
@@ -181,7 +190,7 @@ public class FrozenItemListFragment extends Fragment
             }
 
             snackbar.setAction("Undo", v -> {
-                viewModel.restore(itemToArchive);
+                mViewModel.restore(itemToArchive);
 
                 // TODO Create new workers for notifications
                 for (ItemNotification notification : allNotifications) {
@@ -192,14 +201,14 @@ public class FrozenItemListFragment extends Fragment
                             NotificationConstants.NOTIFICATION_OFFSET_TIMEUNIT,
                             notifyOn
                     );
-                    viewModel.addNotification(itemToArchive, uuid, notifyOn);
-                    viewModel.deleteNotification(notification);
+                    mViewModel.addNotification(itemToArchive, uuid, notifyOn);
+                    mViewModel.deleteNotification(notification);
                 }
             });
             snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_SLIDE);
             snackbar.show();
-            viewModel.archive(itemToArchive);
         });
+        mViewModel.archive(itemToArchive);
     }
 
     @Override
@@ -209,28 +218,40 @@ public class FrozenItemListFragment extends Fragment
 
     @Override
     public void onTakeButtonClicked(FrozenItem item) {
-        new TakeOutDialogFragment(this, item).show(getParentFragmentManager(), "take out");
+        new TakeOutDialogFragment(new TakeListener(), item).show(getParentFragmentManager(), "take out");
     }
 
-    @Override
-    public void onPositiveClick(final TakeOutDialogFragment dialog) {
-        // Update the item from which the things were taken
-        FrozenItemViewModel viewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
-        float amount = dialog.getSelectionAmount();
-        FrozenItem item = dialog.getItem();
-        viewModel.updateItem(item, amount);
+    /**
+     * For the given item take the specified amount and use the view model to update the item in the database.
+     *
+     * @param item The item where the amount was taken from
+     * @param amountTaken The amount that was taken from the item
+     */
+    private void takeFromItem(FrozenItem item, float amountTaken) {
+        float newAmount = Math.max(0.0F, item.getAmount() - amountTaken);
+        mViewModel.updateItem(item, newAmount);
 
         // TODO Possibly a hack. The amount was not updated because the current item is changed in the view model.
         //  Therefore the DiffUtil does not recognize the item as changed and the recycler view will not be notified of changes.
-        //  The same applies for the neutral click
         mItemListAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onNeutralClick(final TakeOutDialogFragment dialog) {
-        FrozenItemViewModel viewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
-        viewModel.updateItem(dialog.getItem(), dialog.getItem().getAmount());
-        mItemListAdapter.notifyDataSetChanged();
+    private class TakeListener implements TakeOutDialogFragment.TakeOutDialogClickListener {
+
+        @Override
+        public void onPositiveClicked(final TakeOutDialogFragment dialog) {
+            takeFromItem(dialog.getItem(), dialog.getSelectionAmount());
+        }
+
+        @Override
+        public void onTakeAllClicked(final TakeOutDialogFragment dialog) {
+            takeFromItem(dialog.getItem(), dialog.getItem().getAmount());
+        }
+
+        @Override
+        public void onCancelClicked(final TakeOutDialogFragment dialog) {
+            mItemListAdapter.notifyDataSetChanged();
+        }
     }
 
 }

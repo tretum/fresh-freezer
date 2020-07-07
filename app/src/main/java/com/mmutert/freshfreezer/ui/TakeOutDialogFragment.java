@@ -2,7 +2,6 @@ package com.mmutert.freshfreezer.ui;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,9 +21,11 @@ public class TakeOutDialogFragment extends DialogFragment {
     private DialogTakeItemBinding binding;
 
     public interface TakeOutDialogClickListener {
-        void onPositiveClick(TakeOutDialogFragment dialog);
+        void onPositiveClicked(TakeOutDialogFragment dialog);
 
-        void onNeutralClick(TakeOutDialogFragment dialog);
+        void onTakeAllClicked(TakeOutDialogFragment dialog);
+
+        void onCancelClicked(TakeOutDialogFragment dialog);
     }
 
 
@@ -48,11 +49,9 @@ public class TakeOutDialogFragment extends DialogFragment {
 
         AlertDialog alertDialog = new MaterialAlertDialogBuilder(getContext())
                 .setView(binding.getRoot())
-                .setPositiveButton("Ok", (dialog, which) -> listener.onPositiveClick(this))
-                .setNeutralButton("Take all", (dialog, which) -> listener.onNeutralClick(this))
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    // Noop
-                })
+                .setPositiveButton("Ok", (dialog, which) -> listener.onPositiveClicked(this))
+                .setNeutralButton("Take all", (dialog, which) -> listener.onTakeAllClicked(this))
+                .setNegativeButton("Cancel", (dialog, which) -> listener.onCancelClicked(this))
                 .create();
 
         return alertDialog;
