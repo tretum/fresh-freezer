@@ -3,7 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
+        <variable
+            name="selectedOffset"
+            type="Integer" />
+        <import type="com.mmutert.freshfreezer.ui.databinding.IntStringConverter"/>
     </data>
 
     <FrameLayout
@@ -43,7 +46,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number"
-                        android:text="@string/dialog_add_notification_amount_default_value"
+                        android:text="@{`` + selectedOffset}"
                         android:selectAllOnFocus="true"
                         android:textSize="18sp" />
                 </com.google.android.material.textfield.TextInputLayout>

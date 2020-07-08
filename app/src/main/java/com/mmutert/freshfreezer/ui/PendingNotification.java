@@ -33,18 +33,6 @@ class PendingNotification {
     }
 
     enum OffsetUnit {
-        DAYS("days"), WEEKS("weeks"), MONTHS("months");
-
-        private String name;
-
-        OffsetUnit(String name) {
-            this.name = name;
-        }
-
-        @NonNull
-        @Override
-        public String toString() {
-            return name;
-        }
+        DAYS, WEEKS, MONTHS
     }
 }

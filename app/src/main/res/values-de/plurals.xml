@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="days_plural">
-        <item quantity="one">@string/day</item>
-        <item quantity="other">@string/days</item>
-    </plurals>
     <plurals name="days_capitalized_plural">
-        <item quantity="one">@string/day</item>
-        <item quantity="other">@string/days</item>
+        <item quantity="one">Tag</item>
+        <item quantity="other">Tage</item>
+    </plurals>
+    <plurals name="days_selected_capitalized_plural">
+        <item quantity="one">Tag davor</item>
+        <item quantity="other">Tage davor</item>
     </plurals>
 
-    <plurals name="weeks_plural">
-        <item quantity="one">@string/week</item>
-        <item quantity="other">@string/weeks</item>
-    </plurals>
     <plurals name="weeks_capitalized_plural">
-        <item quantity="one">@string/week</item>
-        <item quantity="other">@string/weeks</item>
+        <item quantity="one">Woche</item>
+        <item quantity="other">Wochen</item>
+    </plurals>
+    <plurals name="weeks_selected_capitalized_plural">
+        <item quantity="one">Woche davor</item>
+        <item quantity="other">Wochen davor</item>
     </plurals>
 
-    <plurals name="months_plural">
-        <item quantity="one">@string/month</item>
-        <item quantity="other">@string/months</item>
-    </plurals>
     <plurals name="months_capitalized_plural">
-        <item quantity="one">@string/month</item>
-        <item quantity="other">@string/months</item>
+        <item quantity="one">Monat</item>
+        <item quantity="other">Monate</item>
+    </plurals>
+    <plurals name="months_selected_capitalized_plural">
+        <item quantity="one">Monat davor</item>
+        <item quantity="other">Monate davor</item>
     </plurals>
 </resources>
