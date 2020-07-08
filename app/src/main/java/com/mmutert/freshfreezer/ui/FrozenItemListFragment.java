@@ -35,6 +35,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
+/**
+ *
+ */
 public class FrozenItemListFragment extends Fragment
         implements ListItemClickedCallback,
         ListItemDeleteClickedCallback,
@@ -43,6 +46,11 @@ public class FrozenItemListFragment extends Fragment
     private FragmentFrozenItemListBinding mBinding;
     private FrozenItemViewModel mViewModel;
     private ItemListAdapter mItemListAdapter;
+
+    /**
+     * The snackbar that is displayed when an item is deleted in order to allow undoing the action.
+     */
+    private Snackbar mDeleteSnackbar;
 
 
     @Override
@@ -121,12 +129,6 @@ public class FrozenItemListFragment extends Fragment
                     new TakeOutDialogFragment(new TakeListener(), item).show(getParentFragmentManager(), "take out");
                     mItemListAdapter.notifyItemChanged(pos);
                 }
-
-//                ListItemBinding binding = ((ItemListAdapter.ItemListAdapterViewHolder) viewHolder).binding;
-//                View deleteBackground = binding.listItemDeleteBackground;
-//                View takeBackground = binding.listItemTakeBackground;
-//                deleteBackground.setVisibility(View.INVISIBLE);
-//                takeBackground.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -234,25 +236,30 @@ public class FrozenItemListFragment extends Fragment
      */
     private void archiveItem(FrozenItem itemToArchive, final int position) {
 
-        Snackbar snackbar = Snackbar.make(
+//        if(mDeleteSnackbar != null && mDeleteSnackbar.isShown()) {
+//            mDeleteSnackbar.dismiss();
+//        }
+
+        mDeleteSnackbar = Snackbar.make(
                 mBinding.itemListCoordinatorLayout,
                 "Deleted item " + itemToArchive.getName(),
                 Snackbar.LENGTH_LONG
         );
+        mDeleteSnackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_SLIDE);
 
-        ArrayList<FrozenItem> newList = new ArrayList<>(mItemListAdapter.getItemList());
-        int oldIndex = newList.indexOf(itemToArchive);
-        newList.remove(itemToArchive);
-        mItemListAdapter.setItems(newList);
+        // Actually archive the item
+        // This causes the list to be updated and the RV to be updated.
+        // We do not cancel the scheduled notifications here and only do that only if the action was not undone.
+        mViewModel.archive(itemToArchive);
 
-        snackbar.setAction("Undo", v -> {
-            newList.add(oldIndex, itemToArchive);
-            mItemListAdapter.setItems(newList);
+        // Undoing the action restores the item from the archive and the RV will be updated automatically
+        // Scheduling the notifications is not required since they were not cancelled until undo is no longer possible
+        mDeleteSnackbar.setAction("Undo", v -> {
+            mViewModel.restore(itemToArchive);
         });
-        snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_SLIDE);
 
         // Adds a callback that finally actually archives the item when the snackbar times out
-        snackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+        mDeleteSnackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
             @Override
             public void onDismissed(final Snackbar transientBottomBar, final int event) {
                 if(event == DISMISS_EVENT_TIMEOUT || event == DISMISS_EVENT_CONSECUTIVE || event == DISMISS_EVENT_SWIPE || event == DISMISS_EVENT_MANUAL) {
@@ -266,12 +273,11 @@ public class FrozenItemListFragment extends Fragment
                             workManager.cancelWorkById(notification.getNotificationId());
                         }
                     });
-                    mViewModel.archive(itemToArchive);
                 }
                 super.onDismissed(transientBottomBar, event);
             }
         });
-        snackbar.show();
+        mDeleteSnackbar.show();
     }
 
     @Override
