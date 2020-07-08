@@ -1,17 +1,27 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="add_item_title_size">18sp</dimen>
+    <dimen name="add_item_label_text_size">18sp</dimen>
+    <dimen name="add_item_name_text_size">22sp</dimen>
+
     <dimen name="add_item_pad_horizontal">8dp</dimen>
     <dimen name="add_item_pad_title_top">8dp</dimen>
+    <dimen name="add_item_pad_vertical">8dp</dimen>
+    <dimen name="add_item_margin_vertical">8dp</dimen>
+
+    <dimen name="fab_margin">16dp</dimen>
+
     <dimen name="list_item_side_margin">16dp</dimen>
     <dimen name="list_item_vertical_margin">8dp</dimen>
+    <dimen name="list_item_card_vertical_margin">4dp</dimen>
+    <dimen name="list_item_title_text_size">20sp</dimen>
+    <dimen name="list_item_label_text_size">16sp</dimen>
+    <dimen name="list_item_value_text_size">18sp</dimen>
+
     <dimen name="dialog_card_padding">8dp</dimen>
     <dimen name="dialog_card_corner_radius">4dp</dimen>
     <dimen name="dialog_layout_horizontal_margin">16dp</dimen>
     <dimen name="dialog_layout_vertical_margin">8dp</dimen>
     <dimen name="dialog_title_text_size">22sp</dimen>
+
     <dimen name="take_dialog_text_size">20sp</dimen>
-    <dimen name="list_item_card_vertical_margin">4dp</dimen>
-    <dimen name="add_item_pad_vertical">8dp</dimen>
-    <dimen name="add_item_margin_vertical">8dp</dimen>
+    <dimen name="add_item_margin_horizontal">8dp</dimen>
 </resources>
