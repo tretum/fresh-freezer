@@ -1,4 +1,4 @@
-package com.mmutert.freshfreezer.ui;
+package com.mmutert.freshfreezer.ui.itemlist;
 
 import com.mmutert.freshfreezer.data.FrozenItem;
 

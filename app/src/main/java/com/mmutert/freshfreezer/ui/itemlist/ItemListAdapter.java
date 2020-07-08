@@ -1,4 +1,4 @@
-package com.mmutert.freshfreezer.ui;
+package com.mmutert.freshfreezer.ui.itemlist;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.databinding.ListItemBinding;
+import com.mmutert.freshfreezer.ui.ListSortingDialogFragment;
 import com.mmutert.freshfreezer.util.SortingOption;
 import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 
