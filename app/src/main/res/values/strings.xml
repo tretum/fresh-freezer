@@ -15,10 +15,11 @@
     </string>
     <string name="add_item_best_before_date_picker_title_text">Select Best Before Date</string>
     <string name="add_item_frozen_at_date_picker_title_text">Select Frozen At Date</string>
+    <string name="add_item_new_notification_placeholder_label">New notification</string>
 
     <!-- Add notification dialog fragment-->
     <string name="dialog_add_notification_enter_amount_hint">Enter amount</string>
-    <string name="dialog_add_notification_amount_default_value">1</string>
+    <string name="dialog_add_notification_amount_default_value" translatable="false">1</string>
     <string name="dialog_add_notification_fragment_title">Add notification</string>
     <string name="dialog_add_notification_days_button_title">Days</string>
     <string name="dialog_add_notification_weeks_button_title">Weeks</string>
@@ -44,9 +45,7 @@
 
     <!-- Notifications -->
     <string name="notification_channel_title">Best Before Date Updates</string>
-    <string name="notification_channel_description">
-        Notifications for items in your freezer with a best before date that is coming up soon.
-    </string>
+    <string name="notification_channel_description">Notifications for items in your freezer with a best before date that is coming up soon.</string>
 
     <!-- Time units -->
     <string name="days">days</string>
@@ -65,13 +64,13 @@
     <string name="months_capitalized">Months</string>
 
     <!-- Menu Items -->
-    <string name="menu_item_filter">Filter</string>
+    <string name="menu_item_filter">Sort</string>
 
     <!-- Take from item dialog fragment -->
     <string name="dialog_take_out_title">Take out</string>
     <string name="dialog_take_out_divider_text">of</string>
     <string name="dialog_take_from_selected_item_text">Selected Item:</string>
-    <string name="dialog_take_from_default_amount">1</string>
+    <string name="dialog_take_from_default_amount" translatable="false">1</string>
 
     <!-- Unsorted strings -->
 </resources>

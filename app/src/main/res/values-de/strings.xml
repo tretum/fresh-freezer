@@ -20,7 +20,6 @@
 
     <!-- Add notification dialog fragment-->
     <string name="dialog_add_notification_enter_amount_hint">Anzahl angeben</string>
-    <string name="dialog_add_notification_amount_default_value">1</string>
     <string name="dialog_add_notification_fragment_title">Benachrichtigung hinzufügen</string>
     <string name="dialog_add_notification_days_button_title">Tage</string>
     <string name="dialog_add_notification_weeks_button_title">Wochen</string>
@@ -46,9 +45,7 @@
 
     <!-- Notifications -->
     <string name="notification_channel_title">MHD Benachrichtigungen</string>
-    <string name="notification_channel_description">
-        Benachrichtigungen für Artikel deren MHD in Kürze erreicht wird.
-    </string>
+    <string name="notification_channel_description">Benachrichtigungen für Artikel deren MHD in Kürze erreicht wird.</string>
 
     <!-- Time units -->
     <string name="days">Tage</string>
@@ -65,4 +62,9 @@
     <string name="months">Monate</string>
     <string name="month_capitalized">Monat</string>
     <string name="months_capitalized">Monate</string>
+    <string name="add_item_new_notification_placeholder_label">Neue Benachrichtigung</string>
+    <string name="dialog_take_out_title">Entnehmen</string>
+    <string name="dialog_take_out_divider_text">von</string>
+    <string name="dialog_take_from_selected_item_text">Ausgewählter Artikel</string>
+    <string name="menu_item_filter">Sortieren</string>
 </resources>
