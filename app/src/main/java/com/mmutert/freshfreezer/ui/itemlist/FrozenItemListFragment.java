@@ -93,6 +93,19 @@ public class FrozenItemListFragment extends Fragment
         ItemTouchHelper itemTouchHelper = createSwipeHelper();
         itemTouchHelper.attachToRecyclerView(mBinding.rvFrozenItemList);
 
+        mBinding.rvFrozenItemList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if(dy > 0){
+                    mBinding.fab.hide();
+                } else{
+                    mBinding.fab.show();
+                }
+
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+
 
         mBinding.fab.setOnClickListener(view2 -> {
             mBinding.fab.setVisibility(View.GONE);

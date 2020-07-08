@@ -243,6 +243,9 @@ public class AddItemFragment extends Fragment {
         frozenItemViewModel.insert(newItem);
     }
 
+    /**
+     * Sets up the Floating Action Button for saving the new item
+     */
     private void setUpFloatingActionButton() {
         mBinding.floatingActionButton.setOnClickListener(v -> {
             // TODO Check validity of inputs
@@ -287,8 +290,8 @@ public class AddItemFragment extends Fragment {
                             scheduledOn = scheduledOn.minusMonths(notification.getOffsetAmount());
                             break;
                     }
-                    
-                    if(!LocalDateTime.now().isBefore(scheduledOn)){
+
+                    if (!LocalDateTime.now().isBefore(scheduledOn)) {
                         UUID uuid = NotificationHelper.scheduleNotification(
                                 getContext(),
                                 newItem,
