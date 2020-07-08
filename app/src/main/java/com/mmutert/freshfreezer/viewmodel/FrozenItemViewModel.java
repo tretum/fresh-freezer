@@ -23,8 +23,8 @@ public class FrozenItemViewModel extends AndroidViewModel {
 
     private LiveData<List<FrozenItem>> mFrozenItems;
 
-    private SortingOption.SortingOrder sortingOrder = SortingOption.SortingOrder.DESCENDING;
-    private SortingOption sortingOption = SortingOption.NAME;
+    private SortingOption.SortingOrder sortingOrder = SortingOption.SortingOrder.ASCENDING;
+    private SortingOption sortingOption = SortingOption.DATE_BEST_BEFORE;
 
     public FrozenItemViewModel(@NonNull Application application) {
         super(application);
