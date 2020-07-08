@@ -22,6 +22,9 @@
     <dimen name="dialog_layout_vertical_margin">8dp</dimen>
     <dimen name="dialog_title_text_size">22sp</dimen>
 
+    <dimen name="dialog_radio_button_label_text_size">18sp</dimen>
+    <dimen name="dialog_padding_horizontal">8dp</dimen>
+
     <dimen name="take_dialog_text_size">20sp</dimen>
     <dimen name="add_item_margin_horizontal">8dp</dimen>
 </resources>

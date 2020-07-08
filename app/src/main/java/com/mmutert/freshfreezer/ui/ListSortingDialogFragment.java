@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.databinding.DialogFilterActionOptionsBinding;
 import com.mmutert.freshfreezer.util.SortingOption;
@@ -117,7 +118,7 @@ public class ListSortingDialogFragment extends DialogFragment {
             }
         });
 
-        return new AlertDialog.Builder(context)
+        return new MaterialAlertDialogBuilder(context)
                 .setView(binging.getRoot())
                 .setPositiveButton("Select", (dialog, which) -> {
                     listener.listOptionClicked(currentOption, currentOrder);
