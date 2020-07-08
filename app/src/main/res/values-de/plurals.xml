@@ -1,29 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="days_capitalized_plural">
+    <plurals name="days_capitalized">
         <item quantity="one">Tag</item>
         <item quantity="other">Tage</item>
     </plurals>
-    <plurals name="days_selected_capitalized_plural">
+    <plurals name="days_selected_capitalized">
         <item quantity="one">Tag davor</item>
         <item quantity="other">Tage davor</item>
     </plurals>
+    <plurals name="notification_list_entry_days_capitalized">
+        <item quantity="one">%d Tag davor</item>
+        <item quantity="other">%d Tage davor</item>
+    </plurals>
 
-    <plurals name="weeks_capitalized_plural">
+    <plurals name="weeks_capitalized">
         <item quantity="one">Woche</item>
         <item quantity="other">Wochen</item>
     </plurals>
-    <plurals name="weeks_selected_capitalized_plural">
+    <plurals name="weeks_selected_capitalized">
         <item quantity="one">Woche davor</item>
         <item quantity="other">Wochen davor</item>
     </plurals>
+    <plurals name="notification_list_entry_weeks_capitalized">
+        <item quantity="one">%d Woche davor</item>
+        <item quantity="other">%d Wochen davor</item>
+    </plurals>
 
-    <plurals name="months_capitalized_plural">
+    <plurals name="months_capitalized">
         <item quantity="one">Monat</item>
         <item quantity="other">Monate</item>
     </plurals>
-    <plurals name="months_selected_capitalized_plural">
+    <plurals name="months_selected_capitalized">
         <item quantity="one">Monat davor</item>
         <item quantity="other">Monate davor</item>
+    </plurals>
+    <plurals name="notification_list_entry_months_capitalized">
+        <item quantity="one">%d Monat davor</item>
+        <item quantity="other">%d Monate davor</item>
     </plurals>
 </resources>

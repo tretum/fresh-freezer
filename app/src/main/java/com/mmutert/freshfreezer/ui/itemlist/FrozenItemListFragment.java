@@ -250,10 +250,6 @@ public class FrozenItemListFragment extends Fragment
      */
     private void archiveItem(FrozenItem itemToArchive, final int position) {
 
-//        if(mDeleteSnackbar != null && mDeleteSnackbar.isShown()) {
-//            mDeleteSnackbar.dismiss();
-//        }
-
         mDeleteSnackbar = Snackbar.make(
                 mBinding.itemListCoordinatorLayout,
                 "Deleted item " + itemToArchive.getName(),

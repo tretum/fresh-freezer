@@ -39,7 +39,6 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -172,12 +171,29 @@ public class AddItemFragment extends Fragment {
                 notification.setTimeUnit(offSetUnit);
                 notifications.add(notification);
 
-                notificationTextView.setText(String.format(
-                        Locale.getDefault(),
-                        "%d %s before",
-                        enteredOffset,
-                        offSetUnit.toString()
-                ));
+                switch (offSetUnit) {
+                    case DAYS:
+                        notificationTextView.setText(getResources().getQuantityString(
+                                R.plurals.notification_list_entry_days_capitalized,
+                                enteredOffset,
+                                enteredOffset
+                        ));
+                        break;
+                    case WEEKS:
+                        notificationTextView.setText(getResources().getQuantityString(
+                                R.plurals.notification_list_entry_weeks_capitalized,
+                                enteredOffset,
+                                enteredOffset
+                        ));
+                        break;
+                    case MONTHS:
+                        notificationTextView.setText(getResources().getQuantityString(
+                                R.plurals.notification_list_entry_months_capitalized,
+                                enteredOffset,
+                                enteredOffset
+                        ));
+                        break;
+                }
             }).show(getParentFragmentManager(), "add notification");
         });
     }

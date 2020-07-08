@@ -1,29 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="days_capitalized_plural">
+    <plurals name="days_capitalized">
         <item quantity="one">@string/day_capitalized</item>
         <item quantity="other">@string/days_capitalized</item>
     </plurals>
-    <plurals name="days_selected_capitalized_plural">
+    <plurals name="days_selected_capitalized">
         <item quantity="one">Day before</item>
         <item quantity="other">Days before</item>
     </plurals>
+    <plurals name="notification_list_entry_days_capitalized">
+        <item quantity="one">%d Day before</item>
+        <item quantity="other">%d Days before</item>
+    </plurals>
 
-    <plurals name="weeks_capitalized_plural">
+    <plurals name="weeks_capitalized">
         <item quantity="one">Week</item>
         <item quantity="other">Weeks</item>
     </plurals>
-    <plurals name="weeks_selected_capitalized_plural">
+    <plurals name="weeks_selected_capitalized">
         <item quantity="one">Week before</item>
         <item quantity="other">Weeks before</item>
     </plurals>
+    <plurals name="notification_list_entry_weeks_capitalized">
+        <item quantity="one">%d Week before</item>
+        <item quantity="other">%d Weeks before</item>
+    </plurals>
 
-    <plurals name="months_capitalized_plural">
+    <plurals name="months_capitalized">
         <item quantity="one">Month</item>
         <item quantity="other">Months</item>
     </plurals>
-    <plurals name="months_selected_capitalized_plural">
+    <plurals name="months_selected_capitalized">
         <item quantity="one">Month before</item>
         <item quantity="other">Months before</item>
+    </plurals>
+    <plurals name="notification_list_entry_months_capitalized">
+        <item quantity="one">%d Month before</item>
+        <item quantity="other">%d Months before</item>
     </plurals>
 </resources>

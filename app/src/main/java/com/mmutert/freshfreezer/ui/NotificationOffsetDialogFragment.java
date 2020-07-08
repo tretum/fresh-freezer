@@ -67,13 +67,13 @@ public class NotificationOffsetDialogFragment extends DialogFragment {
                 mOffsetUnit = PendingNotification.OffsetUnit.DAYS;
 
                 String quantityString = getResources().getQuantityString(
-                        R.plurals.days_selected_capitalized_plural,
+                        R.plurals.days_selected_capitalized,
                         selectedValue
                 );
                 buttonView.setText(quantityString);
             } else {
                 String quantityString = getResources().getQuantityString(
-                        R.plurals.days_capitalized_plural,
+                        R.plurals.days_capitalized,
                         selectedValue
                 );
                 buttonView.setText(quantityString);
@@ -87,13 +87,13 @@ public class NotificationOffsetDialogFragment extends DialogFragment {
                 mOffsetUnit = PendingNotification.OffsetUnit.WEEKS;
 
                 String quantityString = getResources().getQuantityString(
-                        R.plurals.weeks_selected_capitalized_plural,
+                        R.plurals.weeks_selected_capitalized,
                         selectedValue
                 );
                 buttonView.setText(quantityString);
             } else {
                 String quantityString = getResources().getQuantityString(
-                        R.plurals.weeks_capitalized_plural,
+                        R.plurals.weeks_capitalized,
                         selectedValue
                 );
                 buttonView.setText(quantityString);
@@ -105,13 +105,13 @@ public class NotificationOffsetDialogFragment extends DialogFragment {
                 mOffsetUnit = PendingNotification.OffsetUnit.MONTHS;
 
                 String quantityString = getResources().getQuantityString(
-                        R.plurals.months_selected_capitalized_plural,
+                        R.plurals.months_selected_capitalized,
                         selectedValue
                 );
                 buttonView.setText(quantityString);
             } else {
                 String quantityString = getResources().getQuantityString(
-                        R.plurals.months_capitalized_plural,
+                        R.plurals.months_capitalized,
                         selectedValue
                 );
                 buttonView.setText(quantityString);
@@ -150,7 +150,7 @@ public class NotificationOffsetDialogFragment extends DialogFragment {
     }
 
     public int getEnteredOffset() {
-        return dialogBinding.getSelectedOffset();
+        return selectedValue;
     }
 
     public PendingNotification.OffsetUnit getOffSetAmount() {

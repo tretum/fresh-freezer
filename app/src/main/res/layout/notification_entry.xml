@@ -3,7 +3,7 @@
     android:id="@+id/tv_notification_1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
+    android:layout_marginTop="@dimen/add_item_margin_vertical"
     android:background="@android:color/transparent"
     android:drawableEnd="@drawable/ic_close_24px"
     android:padding="@dimen/add_item_pad_horizontal"
