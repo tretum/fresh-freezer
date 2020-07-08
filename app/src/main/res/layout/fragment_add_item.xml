@@ -261,6 +261,8 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             android:clickable="true"
+            android:focusable="true"
+            android:backgroundTint="@color/colorAccent"
             app:srcCompat="@drawable/ic_done_24px" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
