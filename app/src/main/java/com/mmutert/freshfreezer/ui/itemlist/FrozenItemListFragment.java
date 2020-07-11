@@ -1,5 +1,6 @@
 package com.mmutert.freshfreezer.ui.itemlist;
 
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,9 +13,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -67,6 +70,9 @@ public class FrozenItemListFragment extends Fragment
     ) {
         // Inflate the layout for this fragment
         mBinding = FragmentFrozenItemListBinding.inflate(inflater, container, false);
+
+        boolean darkModeEnabled = getDarkModeEnabledPreference();
+        applyDarkMode(darkModeEnabled);
 
         return mBinding.getRoot();
     }
@@ -209,6 +215,10 @@ public class FrozenItemListFragment extends Fragment
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.menu_item_list, menu);
+
+        boolean darkModeEnabled = getDarkModeEnabledPreference();
+        MenuItem item = menu.findItem(R.id.action_toggle_dark_mode);
+        item.setChecked(darkModeEnabled);
     }
 
     @Override
@@ -231,9 +241,47 @@ public class FrozenItemListFragment extends Fragment
                     mItemListAdapter
             );
             listSortingDialogFragment.show(getParentFragmentManager(), "set sorting option");
+        } else if (id == R.id.action_toggle_dark_mode) {
+            if(item.isChecked()) {
+                saveDarkModePreference(false);
+                applyDarkMode(false);
+                item.setChecked(false);
+            } else {
+                saveDarkModePreference(true);
+                applyDarkMode(true);
+                item.setChecked(true);
+            }
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Returns the saved value for the preference of dark mode.
+     * @return The saved value.
+     */
+    private boolean getDarkModeEnabledPreference() {
+        SharedPreferences defaultSharedPreferences
+                = PreferenceManager.getDefaultSharedPreferences(getContext());
+        return defaultSharedPreferences.getBoolean("darkMode", false);
+    }
+
+    private void saveDarkModePreference(boolean enabled) {
+        SharedPreferences defaultSharedPreferences
+                = PreferenceManager.getDefaultSharedPreferences(getContext());
+        defaultSharedPreferences.edit().putBoolean("darkMode", enabled).apply();
+    }
+
+    /**
+     * Applies the given status to dark mode
+     * @param enabled
+     */
+    private void applyDarkMode(boolean enabled) {
+        if(enabled) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
     }
 
     @Override

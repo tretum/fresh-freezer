@@ -22,15 +22,16 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/list_item_card_vertical_margin"
             android:layout_marginBottom="@dimen/list_item_card_vertical_margin"
-            android:background="#E9C34242">
+            android:background="@color/list_item_delete_background">
 
             <ImageView
                 android:id="@+id/list_item_delete_icon"
+                android:layout_alignParentStart="true"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="@dimen/list_item_swipe_icon_margin_horizontal"
+                android:layout_marginEnd="@dimen/list_item_swipe_icon_margin_horizontal"
                 android:src="@drawable/ic_delete_white_24dp" />
         </RelativeLayout>
 
@@ -41,15 +42,16 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/list_item_card_vertical_margin"
             android:layout_marginBottom="@dimen/list_item_card_vertical_margin"
-            android:background="#C5AA25">
+            android:background="@color/list_item_take_background">
 
             <ImageView
                 android:id="@+id/list_item_take_icon"
+                android:layout_alignParentEnd="true"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="@dimen/list_item_swipe_icon_margin_horizontal"
+                android:layout_marginEnd="@dimen/list_item_swipe_icon_margin_horizontal"
                 android:src="@drawable/ic_baseline_reply_24" />
         </RelativeLayout>
 
@@ -64,8 +66,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                app:cardBackgroundColor="#FFFFFF"
+                android:elevation="5dp"
                 app:cardCornerRadius="8dp">
+<!--                app:cardBackgroundColor="@color/list_item_background"-->
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -90,6 +93,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/list_item_amount_title"
                         android:textSize="@dimen/list_item_label_text_size"
+                        android:labelFor="@id/tv_amount"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_amount"
                         app:layout_constraintStart_toStartOf="@+id/tv_title"
                         app:layout_constraintTop_toTopOf="@+id/tv_amount" />
@@ -121,6 +125,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/list_item_frozen_at_title"
                         android:textSize="@dimen/list_item_label_text_size"
+                        android:labelFor="@id/tv_date_frozen"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_date_frozen"
                         app:layout_constraintStart_toStartOf="@+id/tv_amount_title"
                         app:layout_constraintTop_toTopOf="@+id/tv_date_frozen" />
@@ -143,6 +148,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/list_item_best_before_title"
                         android:textSize="@dimen/list_item_label_text_size"
+                        android:labelFor="@id/tv_best_before_date"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_best_before_date"
                         app:layout_constraintStart_toStartOf="@+id/tv_frozen_date_title"
                         app:layout_constraintTop_toTopOf="@+id/tv_best_before_date" />

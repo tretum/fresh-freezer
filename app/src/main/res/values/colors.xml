@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#558EBA</color>
-    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorPrimaryDark">#0396DA</color>
     <color name="colorAccent">#0396DA</color>
 
     <color name="item_list_background">#E0E9EF</color>
+    <color name="list_item_delete_background">#E9C34242</color>
+    <color name="list_item_take_background">#C5AA25</color>
+    <color name="list_item_background">#FFFFFF</color>
 </resources>
