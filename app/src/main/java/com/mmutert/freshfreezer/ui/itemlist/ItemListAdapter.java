@@ -19,6 +19,7 @@ import com.mmutert.freshfreezer.util.SortingOption;
 import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -26,6 +27,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemListAdapterViewHolder> implements
@@ -94,7 +96,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         }
         binding.tvAmount.setText(amountText);
 
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormat.longDate().withLocale(Locale.getDefault());
 
         LocalDate bestBeforeDate = itemForPosition.getBestBeforeDate();
         String bestBeforeFormatted = formatter.print(bestBeforeDate);
