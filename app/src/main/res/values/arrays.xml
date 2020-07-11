@@ -9,4 +9,12 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+    
+    <string-array name="units">
+        <item>@string/unit_grams</item>
+        <item>@string/unit_kilograms</item>
+        <item>@string/unit_liters</item>
+        <item>@string/unit_milliliters</item>
+        <item>@string/unit_pieces</item>
+    </string-array>
 </resources>

@@ -1,5 +1,7 @@
 package com.mmutert.freshfreezer.ui.itemlist;
 
+import android.content.Context;
+import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mmutert.freshfreezer.data.AmountUnit;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.databinding.ListItemBinding;
 import com.mmutert.freshfreezer.ui.ListSortingDialogFragment;
@@ -19,6 +22,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,17 +34,17 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
     private final AsyncListDiffer<FrozenItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
 
     private final ListItemClickedCallback itemClickedCallback;
-    private ListItemTakeClickedCallback takeClickedCallback;
+    private Context context;
     private FrozenItemViewModel mViewModel;
 
 
     public ItemListAdapter(
             final FrozenItemViewModel viewModel,
             ListItemClickedCallback itemClickedCallback,
-            ListItemTakeClickedCallback takeClickedCallback) {
+            Context context) {
         this.mViewModel            = viewModel;
         this.itemClickedCallback   = itemClickedCallback;
-        this.takeClickedCallback   = takeClickedCallback;
+        this.context               = context;
     }
 
 
@@ -67,6 +71,28 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         FrozenItem itemForPosition = getItemAtPosition(position);
 
         binding.setItem(itemForPosition);
+
+        // TODO Format tv_amount
+        AmountUnit unit = itemForPosition.getUnit();
+        binding.tvAmountUnit.setText(context.getResources().getString(unit.getStringResId()));
+
+        String amountText = "";
+        NumberFormat numberInstance = NumberFormat.getNumberInstance();
+        switch (unit) {
+            case KILOGRAMS:
+            case LITERS:
+                numberInstance.setMaximumFractionDigits(3);
+                amountText = numberInstance.format(itemForPosition.getAmount());
+                break;
+
+            case GRAMS:
+            case PIECES:
+            case MILLILITERS:
+                numberInstance.setMaximumFractionDigits(1);
+                amountText = numberInstance.format(itemForPosition.getAmount());
+                break;
+        }
+        binding.tvAmount.setText(amountText);
 
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 

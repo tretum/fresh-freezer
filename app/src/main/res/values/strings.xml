@@ -72,5 +72,12 @@
     <string name="dialog_take_from_selected_item_text">Selected Item:</string>
     <string name="dialog_take_from_default_amount" translatable="false">1</string>
 
+    <!-- Units -->
+    <string name="unit_grams">g</string>
+    <string name="unit_kilograms">kg</string>
+    <string name="unit_liters">l</string>
+    <string name="unit_milliliters">ml</string>
+    <string name="unit_pieces">pcs</string>
+
     <!-- Unsorted strings -->
 </resources>

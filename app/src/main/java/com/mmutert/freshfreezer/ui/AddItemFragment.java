@@ -9,7 +9,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -86,21 +85,21 @@ public class AddItemFragment extends Fragment {
         setupDatePickers();
         setUpAddNotificationButton();
 
-        mBinding.spAddItemsUnitSelection.setAdapter(new ArrayAdapter<>(
+        UnitArrayAdapter unitAdapter = new UnitArrayAdapter(
                 getContext(),
-                android.R.layout.simple_spinner_dropdown_item,
-                AmountUnit.values()
-        ));
+                android.R.layout.simple_spinner_dropdown_item
+        );
+        mBinding.spAddItemsUnitSelection.setAdapter(unitAdapter);
+//        mBinding.spAddItemsUnitSelection.setAdapter(new ArrayAdapter<>(
+//                getContext(),
+//                android.R.layout.simple_spinner_dropdown_item,
+//                AmountUnit.values()
+//        ));
         mBinding.spAddItemsUnitSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Object itemAtPosition = parent.getItemAtPosition(position);
-                if (itemAtPosition instanceof AmountUnit) {
-                    AmountUnit atPosition = (AmountUnit) itemAtPosition;
-                    newItem.setUnit(atPosition);
-                } else {
-                    Log.d(TAG, "Selected item is not a AmountUnit");
-                }
+                AmountUnit selectedUnit = unitAdapter.getSelectedUnit(position);
+                newItem.setUnit(selectedUnit);
             }
 
             @Override

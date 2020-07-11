@@ -1,19 +1,22 @@
 package com.mmutert.freshfreezer.data;
 
-import androidx.annotation.NonNull;
+import com.mmutert.freshfreezer.R;
+
 
 public enum AmountUnit {
-    GRAMS("g"), KILOGRAMS("kg"), PIECES("pcs");
+    GRAMS(R.string.unit_grams),
+    KILOGRAMS(R.string.unit_kilograms),
+    PIECES(R.string.unit_pieces),
+    LITERS(R.string.unit_liters),
+    MILLILITERS(R.string.unit_milliliters);
 
-    private String name;
+    private int stringResId;
 
-    AmountUnit(String name) {
-        this.name = name;
+    AmountUnit(int stringResId) {
+        this.stringResId = stringResId;
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return name;
+    public int getStringResId() {
+        return stringResId;
     }
 }

@@ -17,6 +17,7 @@
     </string>
     <string name="add_item_best_before_date_picker_title_text">MHD auswählen</string>
     <string name="add_item_frozen_at_date_picker_title_text">Einfrierdatum auswählen</string>
+    <string name="add_item_new_notification_placeholder_label">Neue Benachrichtigung</string>
 
     <!-- Add notification dialog fragment-->
     <string name="dialog_add_notification_enter_amount_hint">Anzahl angeben</string>
@@ -62,9 +63,19 @@
     <string name="months">Monate</string>
     <string name="month_capitalized">Monat</string>
     <string name="months_capitalized">Monate</string>
-    <string name="add_item_new_notification_placeholder_label">Neue Benachrichtigung</string>
+
+    <!-- Menu Items -->
+    <string name="menu_item_filter">Sortieren</string>
+
+    <!-- Take from item dialog fragment -->
     <string name="dialog_take_out_title">Entnehmen</string>
     <string name="dialog_take_out_divider_text">von</string>
     <string name="dialog_take_from_selected_item_text">Ausgewählter Artikel</string>
-    <string name="menu_item_filter">Sortieren</string>
+
+    <!-- Units -->
+    <string name="unit_grams">g</string>
+    <string name="unit_kilograms">kg</string>
+    <string name="unit_liters">l</string>
+    <string name="unit_milliliters">ml</string>
+    <string name="unit_pieces">Stk</string>
 </resources>

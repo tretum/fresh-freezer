@@ -82,7 +82,7 @@ public class FrozenItemListFragment extends Fragment
 
         mViewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
 
-        mItemListAdapter = new ItemListAdapter(mViewModel, this, this);
+        mItemListAdapter = new ItemListAdapter(mViewModel, this, getContext());
 
         // Observe the items in the database that have to get added to the database
         mViewModel.getFrozenItems().observe(getViewLifecycleOwner(), mItemListAdapter::setItems);
