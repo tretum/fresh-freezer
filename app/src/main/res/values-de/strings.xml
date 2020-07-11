@@ -78,4 +78,9 @@
     <string name="unit_liters">l</string>
     <string name="unit_milliliters">ml</string>
     <string name="unit_pieces">Stk</string>
+    <string name="dialog_sort_select_button_label">Ok</string>
+    <string name="dialog_sort_close_button_label">Abbrechen</string>
+    <string name="dialog_take_accept_button_label">Ok</string>
+    <string name="dialog_take_button_take_all_label">Alles nehmen</string>
+    <string name="dialog_take_button_cancel_label">Abbrechen</string>
 </resources>

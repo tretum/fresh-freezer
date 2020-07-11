@@ -76,22 +76,8 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         AmountUnit unit = itemForPosition.getUnit();
         binding.tvAmountUnit.setText(context.getResources().getString(unit.getStringResId()));
 
-        String amountText = "";
-        NumberFormat numberInstance = NumberFormat.getNumberInstance();
-        switch (unit) {
-            case KILOGRAMS:
-            case LITERS:
-                numberInstance.setMaximumFractionDigits(3);
-                amountText = numberInstance.format(itemForPosition.getAmount());
-                break;
-
-            case GRAMS:
-            case PIECES:
-            case MILLILITERS:
-                numberInstance.setMaximumFractionDigits(1);
-                amountText = numberInstance.format(itemForPosition.getAmount());
-                break;
-        }
+        NumberFormat numberInstance = AmountUnit.getFormatterForUnit(itemForPosition.getUnit());
+        String amountText = numberInstance.format(itemForPosition.getAmount());
         binding.tvAmount.setText(amountText);
 
         DateTimeFormatter formatter = DateTimeFormat.longDate().withLocale(Locale.getDefault());

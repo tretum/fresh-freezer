@@ -120,10 +120,10 @@ public class ListSortingDialogFragment extends DialogFragment {
 
         return new MaterialAlertDialogBuilder(context)
                 .setView(binging.getRoot())
-                .setPositiveButton("Select", (dialog, which) -> {
+                .setPositiveButton(R.string.dialog_sort_select_button_label, (dialog, which) -> {
                     listener.listOptionClicked(currentOption, currentOrder);
                 })
-                .setNegativeButton("Close", (dialog, which) -> {
+                .setNegativeButton(R.string.dialog_sort_close_button_label, (dialog, which) -> {
                     // Noop
                 })
                 .create();
