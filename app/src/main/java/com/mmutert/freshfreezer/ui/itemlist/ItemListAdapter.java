@@ -1,7 +1,6 @@
 package com.mmutert.freshfreezer.ui.itemlist;
 
 import android.content.Context;
-import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import com.mmutert.freshfreezer.util.SortingOption;
 import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -103,9 +101,15 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         binding.tvBestBeforeDate.setText(bestBeforeFormatted);
 
         LocalDate frozenDate = itemForPosition.getFrozenAtDate();
-        String frozenFormatted = formatter.print(frozenDate);
-        binding.tvDateFrozen.setText(frozenFormatted);
-
+        if(frozenDate != null) {
+            binding.tvDateFrozen.setVisibility(View.VISIBLE);
+            binding.tvFrozenDateTitle.setVisibility(View.VISIBLE);
+            String frozenFormatted = formatter.print(frozenDate);
+            binding.tvDateFrozen.setText(frozenFormatted);
+        } else {
+            binding.tvFrozenDateTitle.setVisibility(View.GONE);
+            binding.tvDateFrozen.setVisibility(View.GONE);
+        }
         binding.getRoot().setOnClickListener(v -> {
             itemClickedCallback.onClick(itemForPosition);
         });

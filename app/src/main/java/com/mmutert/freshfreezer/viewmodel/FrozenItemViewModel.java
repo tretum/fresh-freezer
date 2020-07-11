@@ -12,8 +12,11 @@ import com.mmutert.freshfreezer.data.ItemRepository;
 import com.mmutert.freshfreezer.util.SortingOption;
 
 import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 
@@ -25,6 +28,9 @@ public class FrozenItemViewModel extends AndroidViewModel {
 
     private SortingOption.SortingOrder sortingOrder = SortingOption.SortingOrder.ASCENDING;
     private SortingOption sortingOption = SortingOption.DATE_BEST_BEFORE;
+
+   public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormat.longDate().withLocale(Locale.getDefault());
+
 
     public FrozenItemViewModel(@NonNull Application application) {
         super(application);

@@ -28,6 +28,7 @@ import com.mmutert.freshfreezer.notification.NotificationHelper;
 import com.mmutert.freshfreezer.util.Keyboard;
 import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -35,13 +36,16 @@ import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
 
 import static com.mmutert.freshfreezer.notification.NotificationConstants.NOTIFICATION_OFFSET_TIMEUNIT;
+import static com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel.DATE_FORMATTER;
 
 
 public class AddItemFragment extends Fragment {
@@ -56,6 +60,7 @@ public class AddItemFragment extends Fragment {
     private List<PendingNotification> notifications = new ArrayList<>();
 
     private Snackbar mSnackbar;
+    private MaterialDatePicker<Long> freezingDatePicker;
 
     public AddItemFragment() {
         // Required empty public constructor
@@ -83,6 +88,7 @@ public class AddItemFragment extends Fragment {
 
         setUpFloatingActionButton();
         setupDatePickers();
+        setupFreezingDateButton();
         setUpAddNotificationButton();
 
         UnitArrayAdapter unitAdapter = new UnitArrayAdapter(
@@ -197,6 +203,22 @@ public class AddItemFragment extends Fragment {
         });
     }
 
+    private void setupFreezingDateButton() {
+        mBinding.tvAddFreezingDate.setOnClickListener(v -> {
+            mBinding.tvAddFreezingDate.setVisibility(View.GONE);
+            mBinding.rlFreezingDateLayout.setVisibility(View.VISIBLE);
+            freezingDatePicker.show(getParentFragmentManager(), freezingDatePicker.toString());
+        });
+    }
+
+    private MaterialDatePicker<Long> createDatePicker(int stringId, LocalDate date) {
+        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
+        builder.setTitleText(getResources().getString(stringId));
+        // TODO Fix hack with adding hours to get the correct selection
+        builder.setSelection(date.toLocalDateTime(LocalTime.MIDNIGHT.plusHours(12)).toDate().getTime());
+        return builder.build();
+    }
+
     /**
      * Sets up the date picker dialogs for the date of freezing the item and the best before date.
      */
@@ -204,10 +226,9 @@ public class AddItemFragment extends Fragment {
         // Set up the date pickers for the best before and frozen date fields
 
         LocalDate currentDate = LocalDate.now();
-        newItem.setFrozenAtDate(currentDate);
         newItem.setBestBeforeDate(currentDate);
-        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(DATE_FORMAT);
-        String curDateFormatted = dateTimeFormatter.print(currentDate);
+
+        String curDateFormatted = DATE_FORMATTER.print(currentDate);
 
         mBinding.etAddItemFrozenDate.setInputType(InputType.TYPE_NULL);
         mBinding.etAddItemFrozenDate.setText(curDateFormatted);
@@ -215,37 +236,42 @@ public class AddItemFragment extends Fragment {
         mBinding.etAddItemBestBefore.setInputType(InputType.TYPE_NULL);
         mBinding.etAddItemBestBefore.setText(curDateFormatted);
 
-        mBinding.etAddItemFrozenDate.setOnClickListener(v -> {
-            MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
-            builder.setTitleText(getResources().getString(R.string.add_item_frozen_at_date_picker_title_text));
-            builder.setSelection(newItem.getFrozenAtDate().toDate().getTime());
-            MaterialDatePicker<Long> picker = builder.build();
-
-            picker.addOnPositiveButtonClickListener(selection -> {
-                LocalDate date = LocalDate.fromDateFields(new Date(selection));
-                newItem.setFrozenAtDate(date);
-                String selectedFrozenDateFormatted = dateTimeFormatter.print(date);
-                mBinding.etAddItemFrozenDate.setText(selectedFrozenDateFormatted);
-            });
-
-            picker.show(getParentFragmentManager(), picker.toString());
+        // Set up the freezing date picker
+        freezingDatePicker = createDatePicker(
+                R.string.add_item_frozen_at_date_picker_title_text,
+                newItem.getFrozenAtDate() != null ? newItem.getFrozenAtDate() : currentDate
+        );
+        freezingDatePicker.addOnPositiveButtonClickListener(selection -> {
+            LocalDate date = convertSelectedDate(selection);
+            newItem.setFrozenAtDate(date);
+            String selectedFrozenDateFormatted = DATE_FORMATTER.print(date);
+            mBinding.etAddItemFrozenDate.setText(selectedFrozenDateFormatted);
         });
 
+        mBinding.etAddItemFrozenDate.setOnClickListener(v -> {
+            freezingDatePicker.show(getParentFragmentManager(), freezingDatePicker.toString());
+        });
+
+        // Set up the best before date picker
         mBinding.etAddItemBestBefore.setOnClickListener(v -> {
-            MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
-            builder.setTitleText(getResources().getString(R.string.add_item_best_before_date_picker_title_text));
-            builder.setSelection(newItem.getFrozenAtDate().toDate().getTime());
-            MaterialDatePicker<Long> picker = builder.build();
+            MaterialDatePicker<Long> picker = createDatePicker(
+                    R.string.add_item_best_before_date_picker_title_text,
+                    newItem.getBestBeforeDate()
+            );
 
             picker.addOnPositiveButtonClickListener(selection -> {
-                LocalDate date = LocalDate.fromDateFields(new Date(selection));
+                LocalDate date = convertSelectedDate(selection);
                 newItem.setBestBeforeDate(date);
-                String selectedFrozenDateFormatted = dateTimeFormatter.print(date);
+                String selectedFrozenDateFormatted = DATE_FORMATTER.print(date);
                 mBinding.etAddItemBestBefore.setText(selectedFrozenDateFormatted);
             });
 
             picker.show(getParentFragmentManager(), picker.toString());
         });
+    }
+
+    private LocalDate convertSelectedDate(final Long selection) {
+        return LocalDate.fromDateFields(new Date(selection));
     }
 
     /**
