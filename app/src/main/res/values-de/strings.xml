@@ -83,4 +83,6 @@
     <string name="dialog_take_accept_button_label">Ok</string>
     <string name="dialog_take_button_take_all_label">Alles nehmen</string>
     <string name="dialog_take_button_cancel_label">Abbrechen</string>
+    <string name="menu_item_enable_dark_mode">Dunkles Design</string>
+    <string name="add_item_add_freezing_date">Einfrierdatum hinzufügen (optional)</string>
 </resources>

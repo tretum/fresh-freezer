@@ -150,7 +150,7 @@
                         android:background="@android:color/transparent"
                         android:padding="@dimen/add_item_pad_horizontal"
                         android:paddingTop="@dimen/add_item_pad_title_top"
-                        android:text="Add Freezing Date (Optional)"
+                        android:text="@string/add_item_add_freezing_date"
                         android:textSize="@dimen/add_item_label_text_size"
                         android:visibility="visible" />
                 </FrameLayout>

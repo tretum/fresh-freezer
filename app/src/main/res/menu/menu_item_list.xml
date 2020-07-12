@@ -19,7 +19,7 @@
         android:checkable="true"
         android:checkableBehavior="single"
         android:enabled="true"
-        android:title="Enable Dark Mode"
+        android:title="@string/menu_item_enable_dark_mode"
         android:visible="true"
         app:showAsAction="never" />
 </menu>

@@ -83,6 +83,8 @@
     <string name="dialog_take_accept_button_label">Ok</string>
     <string name="dialog_take_button_take_all_label">Take all</string>
     <string name="dialog_take_button_cancel_label">Cancel</string>
+    <string name="menu_item_enable_dark_mode">Enable Dark Mode</string>
+    <string name="add_item_add_freezing_date">Add Freezing Date (Optional)</string>
 
     <!-- Unsorted strings -->
 </resources>
