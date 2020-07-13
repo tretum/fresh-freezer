@@ -67,12 +67,10 @@ public class AddItemFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (savedInstanceState == null || savedInstanceState.getInt("itemId") != -2) {
+        if (savedInstanceState == null || !savedInstanceState.getBoolean("editing")) {
             long itemId = AddItemFragmentArgs.fromBundle(getArguments()).getItemId();
             if (itemId == -1) {
                 addItemViewModel.newItem();
-            } else if (itemId == -2) {
-                // Noop: Device was rotated or otherwise the fragment was redrawn
             } else {
                 addItemViewModel
                         .getItemAndNotifications(itemId)
@@ -149,7 +147,7 @@ public class AddItemFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull final Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("itemId", -2);
+        outState.putBoolean("editing", true);
     }
 
     @SuppressLint("ClickableViewAccessibility")
