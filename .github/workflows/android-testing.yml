@@ -4,7 +4,7 @@ name: Testing Workflow
 on:
   pull_request:
     branches:
-      - github-actions
+      - master
 
 jobs:
   testing:
