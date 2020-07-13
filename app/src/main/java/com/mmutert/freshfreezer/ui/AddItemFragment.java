@@ -1,6 +1,7 @@
 package com.mmutert.freshfreezer.ui;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -17,6 +18,8 @@ import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.mmutert.freshfreezer.R;
@@ -29,8 +32,12 @@ import com.mmutert.freshfreezer.viewmodel.AddItemViewModel;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import static com.mmutert.freshfreezer.ui.PendingNotification.OffsetUnit.DAYS;
+import static com.mmutert.freshfreezer.ui.PendingNotification.OffsetUnit.WEEKS;
 import static com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel.DATE_FORMATTER;
 
 
@@ -43,6 +50,7 @@ public class AddItemFragment extends Fragment {
     private FragmentAddItemBinding mBinding;
     private MaterialDatePicker<Long> freezingDatePicker;
     private UnitArrayAdapter spinnerUnitAdapter;
+    private NotificationListAdapter mNotificationListAdapter;
 
     public AddItemFragment() {
         // Required empty public constructor
@@ -82,6 +90,14 @@ public class AddItemFragment extends Fragment {
         }
 
         mBinding.setCurrentItem(addItemViewModel.getItem());
+
+        mNotificationListAdapter = new NotificationListAdapter();
+        mBinding.rvAddItemNotificationList.setAdapter(mNotificationListAdapter);
+        mBinding.rvAddItemNotificationList.setLayoutManager(new LinearLayoutManager(
+                getContext(),
+                RecyclerView.VERTICAL,
+                false
+        ));
 
         setUpFloatingActionButton();
         setUpDatePickers();
@@ -157,43 +173,7 @@ public class AddItemFragment extends Fragment {
     private void setUpAddNotificationButton() {
         mBinding.tvAddNotification.setOnClickListener(v -> {
 
-            // Add the entry to the notifications list
-            TextView notificationTextView = (TextView) getLayoutInflater().inflate(
-                    R.layout.notification_entry,
-                    mBinding.addItemNotificationLayout,
-                    false
-            );
-
-            int id = ViewCompat.generateViewId();
-            notificationTextView.setId(id);
-            mBinding.addItemNotificationLayout.addView(
-                    notificationTextView,
-                    mBinding.addItemNotificationLayout.getChildCount() - 1
-            );
-
             PendingNotification notification = new PendingNotification();
-
-            // Add the delete button for the notification in the list
-            notificationTextView.setOnTouchListener((v1, event) -> {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
-                final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (event.getRawX() >= (notificationTextView.getRight()
-                            - notificationTextView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        // Remove notification from list
-                        addItemViewModel.removePendingNotification(notification);
-
-                        // Remove UI element
-                        mBinding.addItemNotificationLayout.removeView(notificationTextView);
-                        return true;
-                    }
-                }
-                return false;
-            });
-
 
             // Open notification dialog
             new NotificationOffsetDialogFragment(dialog -> {
@@ -207,31 +187,10 @@ public class AddItemFragment extends Fragment {
 
                 notification.setOffsetAmount(enteredOffset);
                 notification.setTimeUnit(offSetUnit);
-                addItemViewModel.addPendingNotification(notification);
 
-                switch (offSetUnit) {
-                    case DAYS:
-                        notificationTextView.setText(getResources().getQuantityString(
-                                R.plurals.notification_list_entry_days_capitalized,
-                                enteredOffset,
-                                enteredOffset
-                        ));
-                        break;
-                    case WEEKS:
-                        notificationTextView.setText(getResources().getQuantityString(
-                                R.plurals.notification_list_entry_weeks_capitalized,
-                                enteredOffset,
-                                enteredOffset
-                        ));
-                        break;
-                    case MONTHS:
-                        notificationTextView.setText(getResources().getQuantityString(
-                                R.plurals.notification_list_entry_months_capitalized,
-                                enteredOffset,
-                                enteredOffset
-                        ));
-                        break;
-                }
+                // TODO Remove duplication of notifications in ViewModel and RecyclerView
+                addItemViewModel.addPendingNotification(notification);
+                mNotificationListAdapter.addNotificationEntry(notification);
             }).show(getParentFragmentManager(), "add notification");
         });
     }
@@ -340,4 +299,121 @@ public class AddItemFragment extends Fragment {
         });
     }
 
+
+    /**
+     * The Adapter for the list of pending or created notifications.
+     */
+    private class NotificationListAdapter
+            extends RecyclerView.Adapter<NotificationListAdapter.NotificationListAdapterViewHolder> {
+
+        private List<PendingNotification> notifications;
+
+        public NotificationListAdapter() {
+            this.notifications = new ArrayList<>();
+        }
+
+        private void setItems(List<PendingNotification> notificationList) {
+            this.notifications = notificationList;
+            notifyDataSetChanged();
+        }
+
+        private void addNotificationEntry(PendingNotification notification) {
+            Log.d(TAG, "Adding notification entry");
+            notifications.add(notification);
+            notifyItemInserted(getItemCount());
+        }
+
+        @NonNull
+        @Override
+        public NotificationListAdapterViewHolder onCreateViewHolder(
+                @NonNull final ViewGroup parent,
+                final int viewType) {
+
+            View view = getLayoutInflater().inflate(R.layout.notification_entry, parent, false);
+            return new NotificationListAdapterViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull final NotificationListAdapterViewHolder holder, final int position) {
+            PendingNotification notification = getNotificationAtPosition(position);
+            PendingNotification.OffsetUnit offsetUnit = notification.getTimeUnit();
+            int offsetAmount = notification.getOffsetAmount();
+
+            switch (offsetUnit) {
+                case DAYS:
+                    holder.entry.setText(getResources().getQuantityString(
+                            R.plurals.notification_list_entry_days_capitalized,
+                            offsetAmount,
+                            offsetAmount
+                    ));
+                    break;
+                case WEEKS:
+                    holder.entry.setText(getResources().getQuantityString(
+                            R.plurals.notification_list_entry_weeks_capitalized,
+                            offsetAmount,
+                            offsetAmount
+                    ));
+                    break;
+                case MONTHS:
+                    holder.entry.setText(getResources().getQuantityString(
+                            R.plurals.notification_list_entry_months_capitalized,
+                            offsetAmount,
+                            offsetAmount
+                    ));
+                    break;
+            }
+
+            // Add the delete button for the notification in the list
+            holder.entry.setOnTouchListener((v1, event) -> {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (event.getRawX() >= (holder.entry.getRight()
+                            - holder.entry.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        // Remove notification from list
+                        addItemViewModel.removePendingNotification(notification);
+                        mNotificationListAdapter.removeNotification(notification);
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+
+        private void removeNotification(final PendingNotification notification) {
+            int positionOfNotification = getPositionOfNotification(notification);
+            notifications.remove(positionOfNotification);
+            notifyItemRemoved(positionOfNotification);
+        }
+
+        private int getPositionOfNotification(final PendingNotification notification) {
+            return notifications.indexOf(notification);
+        }
+
+        private PendingNotification getNotificationAtPosition(int position) {
+            return notifications.get(position);
+        }
+
+        @Override
+        public int getItemCount() {
+            return notifications.size();
+        }
+
+        /**
+         * The view holder for the notification list recycler view
+         */
+        private class NotificationListAdapterViewHolder extends RecyclerView.ViewHolder {
+
+            private TextView entry;
+
+            public NotificationListAdapterViewHolder(@NonNull final View itemView) {
+                super(itemView);
+
+                entry = (TextView) itemView;
+            }
+        }
+    }
 }
