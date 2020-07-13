@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -113,9 +114,17 @@ public class FrozenItemListFragment extends Fragment
         });
 
 
+        setupNewItemFAB();
+    }
+
+    private void setupNewItemFAB() {
         mBinding.fab.setOnClickListener(view2 -> {
+            // TODO Check if setting to invisible is still necessary
             mBinding.fab.setVisibility(View.GONE);
-            Navigation.findNavController(view).navigate(R.id.action_item_list_to_add_item);
+
+            FrozenItemListFragmentDirections.ActionOpenAddItemView navDirections = FrozenItemListFragmentDirections.actionOpenAddItemView();
+            navDirections.setItemId(-1);
+            Navigation.findNavController(view2).navigate(navDirections);
             Log.d("", "Clicked FAB");
         });
     }
@@ -287,6 +296,9 @@ public class FrozenItemListFragment extends Fragment
     @Override
     public void onClick(FrozenItem item) {
         Log.d("ListFragment", "Clicked on item " + item.getName());
+        FrozenItemListFragmentDirections.ActionOpenAddItemView navDirections = FrozenItemListFragmentDirections.actionOpenAddItemView();
+        navDirections.setItemId(item.getId());
+        Navigation.findNavController(getView()).navigate(navDirections);
     }
 
 

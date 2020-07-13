@@ -43,10 +43,6 @@ public class FrozenItemViewModel extends AndroidViewModel {
         return mFrozenItems;
     }
 
-    public void insert(FrozenItem item) {
-        mItemRepository.insertItem(item);
-    }
-
     public void updateItem(FrozenItem item, float newAmount) {
         // TODO Check for possible side effects and possibly create copy of item first
         item.setAmount(newAmount);
@@ -65,23 +61,6 @@ public class FrozenItemViewModel extends AndroidViewModel {
         mItemRepository.restoreItem(item);
     }
 
-    public void addNotification(FrozenItem item, UUID uuid, LocalDateTime notifyOn){
-        ItemNotification notification = new ItemNotification(uuid, item.getId(), notifyOn);
-        mItemRepository.addNotification(notification);
-    }
-
-    public LiveData<List<ItemNotification>> getAllNotificationsLiveData(FrozenItem item) {
-        return mItemRepository.getAllNotificationsLiveData(item);
-    }
-    public List<ItemNotification> getAllNotifications(FrozenItem item) {
-        return mItemRepository.getAllNotifications(item);
-    }
-
-    public void deleteNotification(ItemNotification notification) {
-        mItemRepository.deleteNotification(notification);
-    }
-
-
     public SortingOption.SortingOrder getSortingOrder() {
         return sortingOrder;
     }
@@ -96,5 +75,18 @@ public class FrozenItemViewModel extends AndroidViewModel {
 
     public void setSortingOption(final SortingOption sortingOption) {
         this.sortingOption = sortingOption;
+    }
+
+    /*
+     * Notifications
+     */
+
+    /**
+     * Get all scheduled notifications for the given item
+     * @param item The item to retrieve the scheduled notifications for.
+     * @return The list of notifications for the item.
+     */
+    public List<ItemNotification> getAllNotifications(FrozenItem item) {
+        return mItemRepository.getAllNotifications(item);
     }
 }

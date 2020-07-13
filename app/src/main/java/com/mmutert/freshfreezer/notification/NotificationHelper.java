@@ -3,6 +3,7 @@ package com.mmutert.freshfreezer.notification;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.work.Constraints;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
@@ -24,7 +25,7 @@ public class NotificationHelper {
     public static final String TAG = NotificationHelper.class.getName();
 
     public static UUID scheduleNotification(
-            Context context,
+            @NonNull Context context,
             FrozenItem item,
             TimeUnit timeUnit,
             LocalDateTime scheduledOn) {
@@ -37,7 +38,7 @@ public class NotificationHelper {
         return scheduleNotification(context, item, offset, timeUnit);
     }
 
-    public static UUID scheduleNotification(Context context, FrozenItem item, long timeOffset, TimeUnit timeUnit) {
+    public static UUID scheduleNotification(@NonNull Context context, FrozenItem item, long timeOffset, TimeUnit timeUnit) {
         Log.d(TAG, "Creating workrequest for item " + item.getName());
         Log.d(TAG, "Offset is " + timeOffset + " and unit " + timeUnit.name());
         OneTimeWorkRequest notificationRequest =

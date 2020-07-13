@@ -4,8 +4,11 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import java.util.ArrayList;
+import com.mmutert.freshfreezer.data.converters.ItemAndNotifications;
+
 import java.util.List;
+import java.util.concurrent.Executors;
+
 
 public class ItemRepository {
 
@@ -63,6 +66,10 @@ public class ItemRepository {
         }
     }
 
+    public ItemAndNotifications getItem(long itemId) {
+        return mItemDao.getItemAndNotifications(itemId);
+    }
+
     public LiveData<List<ItemNotification>> getNotifications(){
         return mItemDao.getAllNotificationsLiveData();
     }
@@ -89,4 +96,7 @@ public class ItemRepository {
         return mAllArchivedFrozenItems;
     }
 
+    public LiveData<ItemAndNotifications> getItemAndNotificationsLiveData(final long itemId) {
+        return mItemDao.getItemAndNotificationsLiveData(itemId);
+    }
 }

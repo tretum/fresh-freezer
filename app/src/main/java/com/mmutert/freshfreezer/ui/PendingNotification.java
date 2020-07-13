@@ -1,9 +1,6 @@
 package com.mmutert.freshfreezer.ui;
 
-import androidx.annotation.NonNull;
-
-
-class PendingNotification {
+public class PendingNotification {
     private int offsetAmount;
     private OffsetUnit timeUnit;
 
@@ -32,7 +29,7 @@ class PendingNotification {
         return timeUnit;
     }
 
-    enum OffsetUnit {
+    public enum OffsetUnit {
         DAYS, WEEKS, MONTHS
     }
 }

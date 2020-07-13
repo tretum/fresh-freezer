@@ -28,4 +28,6 @@
     <dimen name="take_dialog_text_size">20sp</dimen>
     <dimen name="add_item_margin_horizontal">8dp</dimen>
     <dimen name="list_item_swipe_icon_margin_horizontal">10dp</dimen>
+    <dimen name="add_item_divider_height">1dp</dimen>
+    <dimen name="add_item_icon_margin_horizontal">16dp</dimen>
 </resources>

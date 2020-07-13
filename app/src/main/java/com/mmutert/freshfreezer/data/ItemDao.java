@@ -73,7 +73,11 @@ public abstract class ItemDao {
 
     @Transaction
     @Query("Select * from items where id = :id")
-    public abstract LiveData<ItemAndNotifications> getItemAndNotifications(long id);
+    public abstract LiveData<ItemAndNotifications> getItemAndNotificationsLiveData(long id);
+
+    @Transaction
+    @Query("Select * from items where id = :id")
+    public abstract ItemAndNotifications getItemAndNotifications(long id);
 
     @Transaction
     @Query("Select * from items")

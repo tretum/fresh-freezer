@@ -11,13 +11,14 @@
         android:label="@string/fragment_item_list_label"
         tools:layout="@layout/fragment_frozen_item_list">
         <action
-            android:id="@+id/action_item_list_to_add_item"
+            android:id="@+id/action_open_add_item_view"
             app:destination="@id/addItemFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/item_list" />
+            app:popUpTo="@id/item_list">
+        </action>
         <action
             android:id="@+id/action_settings"
             app:destination="@id/settingsFragment"
@@ -26,6 +27,7 @@
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
     </fragment>
+
     <fragment
         android:id="@+id/addItemFragment"
         android:name="com.mmutert.freshfreezer.ui.AddItemFragment"
@@ -35,11 +37,12 @@
             android:id="@+id/action_new_item_save"
             app:destination="@id/item_list"
             app:popUpTo="@id/item_list" />
-        <action
-            android:id="@+id/action_new_item_discard"
-            app:destination="@id/item_list"
-            app:popUpTo="@id/item_list" />
+        <argument
+            android:name="itemId"
+            app:argType="long"
+            android:defaultValue="-1L" />
     </fragment>
+
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.mmutert.freshfreezer.ui.SettingsFragment"

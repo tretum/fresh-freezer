@@ -5,7 +5,7 @@
 
     <data>
         <variable
-            name="newItem"
+            name="currentItem"
             type="com.mmutert.freshfreezer.data.FrozenItem" />
     </data>
 
@@ -24,83 +24,100 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <EditText
-                    android:id="@+id/et_add_item_title"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/add_item_name_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="@dimen/add_item_margin_horizontal"
-                    android:hint="@string/add_item_title_hint"
-                    android:inputType="textPersonName"
-                    android:paddingStart="@dimen/add_item_pad_horizontal"
-                    android:paddingLeft="@dimen/add_item_pad_horizontal"
-                    android:paddingRight="@dimen/add_item_pad_horizontal"
-                    android:text="@={newItem.name}"
-                    android:textSize="@dimen/add_item_name_text_size"
+                    app:hintAnimationEnabled="false"
+                    app:hintEnabled="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <EditText
+                        android:id="@+id/et_add_item_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/add_item_title_hint"
+                        android:inputType="textPersonName"
+                        android:paddingStart="@dimen/add_item_pad_horizontal"
+                        android:paddingLeft="@dimen/add_item_pad_horizontal"
+                        android:paddingRight="@dimen/add_item_pad_horizontal"
+                        android:paddingTop="12dp"
+                        android:text="@={currentItem.name}"
+                        android:textSize="@dimen/add_item_name_text_size" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <View
                     android:id="@+id/divider"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="@dimen/add_item_divider_height"
                     android:layout_marginTop="@dimen/add_item_margin_vertical"
                     android:background="?android:attr/listDivider"
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_add_item_title" />
+                    app:layout_constraintTop_toBottomOf="@id/add_item_name_layout" />
 
                 <ImageView
                     android:id="@+id/iv_frozen_date_cal_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="@dimen/add_item_icon_margin_horizontal"
+                    android:layout_marginEnd="@dimen/add_item_icon_margin_horizontal"
                     android:src="@drawable/ic_calendar_today_24px"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_add_best_before_date_title"
+                    app:layout_constraintBottom_toBottomOf="@+id/rl_best_before_date_layout"
                     app:layout_constraintEnd_toStartOf="@+id/guideline"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tv_add_best_before_date_title" />
+                    app:layout_constraintTop_toTopOf="@+id/rl_best_before_date_layout" />
 
-                <TextView
-                    android:id="@+id/tv_add_best_before_date_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:labelFor="@id/et_add_item_best_before"
-                    android:paddingStart="@dimen/add_item_pad_horizontal"
-                    android:paddingEnd="@dimen/add_item_pad_horizontal"
-                    android:text="@string/add_item_best_before_date_title"
-                    android:textSize="@dimen/add_item_label_text_size"
-                    app:layout_constraintBottom_toBottomOf="@+id/et_add_item_best_before"
+                <RelativeLayout
+                    android:id="@+id/rl_best_before_date_layout"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
-                    app:layout_constraintTop_toTopOf="@+id/et_add_item_best_before" />
-
-                <EditText
-                    android:id="@+id/et_add_item_best_before"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:focusable="false"
-                    android:inputType="none"
-                    android:paddingLeft="@dimen/add_item_pad_horizontal"
-                    android:paddingTop="@dimen/add_item_pad_vertical"
-                    android:paddingRight="@dimen/add_item_pad_horizontal"
-                    android:paddingBottom="@dimen/add_item_pad_vertical"
-                    android:textAlignment="center"
-                    android:textSize="@dimen/add_item_label_text_size"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.47"
-                    app:layout_constraintStart_toEndOf="@+id/tv_add_best_before_date_title"
                     app:layout_constraintTop_toBottomOf="@+id/divider"
-                    tools:text="2020-06-01" />
+                    android:layout_marginTop="@dimen/add_item_margin_vertical"
+                    android:layout_marginEnd="@dimen/add_item_margin_horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_add_best_before_date_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:labelFor="@id/et_add_item_best_before"
+                        android:paddingStart="@dimen/add_item_pad_horizontal"
+                        android:paddingEnd="@dimen/add_item_pad_horizontal"
+                        android:text="@string/add_item_best_before_date_title"
+                        android:textSize="@dimen/add_item_label_text_size"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignTop="@id/et_add_item_best_before"
+                        android:layout_alignBottom="@id/et_add_item_best_before"/>
+
+                    <EditText
+                        android:id="@+id/et_add_item_best_before"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:paddingLeft="@dimen/add_item_pad_horizontal"
+                        android:paddingTop="@dimen/add_item_pad_vertical"
+                        android:paddingRight="@dimen/add_item_pad_horizontal"
+                        android:paddingBottom="@dimen/add_item_pad_vertical"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/add_item_label_text_size"
+                        android:layout_alignParentEnd="true"
+                        tools:text="2020-06-01" />
+                </RelativeLayout>
+
 
 
                 <FrameLayout
                     app:layout_constraintStart_toStartOf="@+id/guideline"
-                    app:layout_constraintTop_toBottomOf="@+id/et_add_item_best_before"
+                    app:layout_constraintTop_toBottomOf="@+id/rl_best_before_date_layout"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="@dimen/add_item_margin_horizontal"
                     android:layout_marginTop="@dimen/add_item_margin_vertical"
@@ -202,8 +219,8 @@
                 <View
                     android:id="@+id/divider2"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_height="@dimen/add_item_divider_height"
+                    android:layout_marginTop="@dimen/add_item_margin_vertical"
                     android:background="?android:attr/listDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -220,7 +237,7 @@
                     android:paddingLeft="@dimen/add_item_pad_horizontal"
                     android:paddingRight="@dimen/add_item_pad_horizontal"
                     android:selectAllOnFocus="true"
-                    android:text="@={`` + newItem.amount}"
+                    android:text="@={`` + currentItem.amount}"
                     android:textAlignment="textEnd"
                     app:layout_constraintEnd_toStartOf="@id/sp_add_items_unit_selection"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -241,7 +258,7 @@
                 <View
                     android:id="@+id/divider3"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="@dimen/add_item_divider_height"
                     android:layout_marginTop="@dimen/add_item_margin_vertical"
                     android:background="?android:attr/listDivider"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -283,7 +300,7 @@
                 <View
                     android:id="@+id/divider4"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="@dimen/add_item_divider_height"
                     android:layout_marginTop="@dimen/add_item_margin_vertical"
                     android:background="?android:attr/listDivider"
                     app:layout_constraintTop_toBottomOf="@id/add_item_notification_layout" />
@@ -311,7 +328,7 @@
                     android:paddingLeft="@dimen/add_item_pad_horizontal"
                     android:paddingEnd="@dimen/add_item_pad_horizontal"
                     android:paddingRight="@dimen/add_item_pad_horizontal"
-                    android:text="@={newItem.notes}"
+                    android:text="@={currentItem.notes}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
                     app:layout_constraintTop_toBottomOf="@+id/divider4" />

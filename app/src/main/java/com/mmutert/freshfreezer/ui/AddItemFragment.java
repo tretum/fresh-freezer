@@ -15,69 +15,50 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.snackbar.Snackbar;
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.AmountUnit;
-import com.mmutert.freshfreezer.data.FrozenItem;
+import com.mmutert.freshfreezer.data.converters.ItemAndNotifications;
 import com.mmutert.freshfreezer.databinding.FragmentAddItemBinding;
-import com.mmutert.freshfreezer.notification.NotificationHelper;
 import com.mmutert.freshfreezer.util.Keyboard;
-import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
+import com.mmutert.freshfreezer.viewmodel.AddItemViewModel;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.UUID;
 
-import static com.mmutert.freshfreezer.notification.NotificationConstants.NOTIFICATION_OFFSET_TIMEUNIT;
 import static com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel.DATE_FORMATTER;
 
 
 public class AddItemFragment extends Fragment {
 
     public static final String TAG = AddItemFragment.class.getName();
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
-    private FrozenItemViewModel frozenItemViewModel;
 
+    private AddItemViewModel addItemViewModel;
 
-    private FrozenItem newItem;
     private FragmentAddItemBinding mBinding;
-    private List<PendingNotification> notifications = new ArrayList<>();
-
-    private Snackbar mSnackbar;
     private MaterialDatePicker<Long> freezingDatePicker;
 
     public AddItemFragment() {
         // Required empty public constructor
-        newItem = new FrozenItem();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
+        this.addItemViewModel = new ViewModelProvider(requireActivity()).get(AddItemViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mBinding = FragmentAddItemBinding.inflate(inflater, container, false);
-        mBinding.setNewItem(newItem);
 
         return mBinding.getRoot();
     }
@@ -86,46 +67,94 @@ public class AddItemFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setUpFloatingActionButton();
-        setupDatePickers();
-        setupFreezingDateButton();
-        setUpAddNotificationButton();
+        if (savedInstanceState == null || savedInstanceState.getInt("itemId") != -2) {
+            long itemId = AddItemFragmentArgs.fromBundle(getArguments()).getItemId();
+            if (itemId == -1) {
+                addItemViewModel.newItem();
+            } else if (itemId == -2) {
+                // Noop: Device was rotated or otherwise the fragment was redrawn
+            } else {
+                addItemViewModel
+                        .getItemAndNotifications(itemId)
+                        .observe(getViewLifecycleOwner(), itemAndNotifications1 -> {
+                            addItemViewModel.setCurrentItem(itemAndNotifications1.item);
+                            updateWithNewData();
+                        });
+            }
+        }
 
+        mBinding.setCurrentItem(addItemViewModel.getItem());
+
+        setUpFloatingActionButton();
+        setUpDatePickers();
+        setUpFreezingDateButton();
+        setUpAddNotificationButton();
+        setUpUnitSpinner();
+
+        updateWithNewData();
+    }
+
+    private void updateWithNewData() {
+        // TODO Missing values
+        mBinding.setCurrentItem(addItemViewModel.getItem());
+
+        // TODO Unit spinner
+        // TODO Notifications
+
+        LocalDate frozenAtDate = addItemViewModel.getItem().getFrozenAtDate();
+        if (frozenAtDate != null) {
+            showFreezingDate();
+
+            String selectedFrozenDateFormatted = DATE_FORMATTER.print(frozenAtDate);
+            mBinding.etAddItemFrozenDate.setText(selectedFrozenDateFormatted);
+        } else {
+            showAddFreezingDateButton();
+        }
+
+        LocalDate bestBeforeDate = addItemViewModel.getItem().getBestBeforeDate();
+        String bestBeforeDateFormatted = DATE_FORMATTER.print(bestBeforeDate);
+        mBinding.etAddItemBestBefore.setText(bestBeforeDateFormatted);
+    }
+
+    private void showFreezingDate() {
+        mBinding.tvAddFreezingDate.setVisibility(View.GONE);
+        mBinding.rlFreezingDateLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void showAddFreezingDateButton() {
+        mBinding.tvAddFreezingDate.setVisibility(View.VISIBLE);
+        mBinding.rlFreezingDateLayout.setVisibility(View.GONE);
+    }
+
+    private void setUpUnitSpinner() {
         UnitArrayAdapter unitAdapter = new UnitArrayAdapter(
                 getContext(),
                 android.R.layout.simple_spinner_dropdown_item
         );
         mBinding.spAddItemsUnitSelection.setAdapter(unitAdapter);
-//        mBinding.spAddItemsUnitSelection.setAdapter(new ArrayAdapter<>(
-//                getContext(),
-//                android.R.layout.simple_spinner_dropdown_item,
-//                AmountUnit.values()
-//        ));
         mBinding.spAddItemsUnitSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 AmountUnit selectedUnit = unitAdapter.getSelectedUnit(position);
-                newItem.setUnit(selectedUnit);
+                addItemViewModel.setUnit(selectedUnit);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                newItem.setUnit(AmountUnit.GRAMS);
+                addItemViewModel.setUnit(AmountUnit.GRAMS);
             }
         });
+    }
 
-        this.frozenItemViewModel = new ViewModelProvider(requireActivity()).get(FrozenItemViewModel.class);
+    @Override
+    public void onSaveInstanceState(@NonNull final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("itemId", -2);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void setUpAddNotificationButton() {
-        TextView tvAddNotification = mBinding.tvAddNotification;
-        tvAddNotification.setOnClickListener(v -> {
-
-            // Add pending notification to local list
-            // TODO Set values to selection
-            // TODO Add dialogs that allow selecting a notification offset or actual time
-            PendingNotification notification = new PendingNotification();
+        mBinding.tvAddNotification.setOnClickListener(v -> {
 
             // Add the entry to the notifications list
             TextView notificationTextView = (TextView) getLayoutInflater().inflate(
@@ -136,11 +165,12 @@ public class AddItemFragment extends Fragment {
 
             int id = ViewCompat.generateViewId();
             notificationTextView.setId(id);
-
             mBinding.addItemNotificationLayout.addView(
                     notificationTextView,
                     mBinding.addItemNotificationLayout.getChildCount() - 1
             );
+
+            PendingNotification notification = new PendingNotification();
 
             // Add the delete button for the notification in the list
             notificationTextView.setOnTouchListener((v1, event) -> {
@@ -153,7 +183,9 @@ public class AddItemFragment extends Fragment {
                     if (event.getRawX() >= (notificationTextView.getRight()
                             - notificationTextView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         // Remove notification from list
-                        notifications.remove(notification);
+                        addItemViewModel.removePendingNotification(notification);
+
+                        // Remove UI element
                         mBinding.addItemNotificationLayout.removeView(notificationTextView);
                         return true;
                     }
@@ -174,7 +206,7 @@ public class AddItemFragment extends Fragment {
 
                 notification.setOffsetAmount(enteredOffset);
                 notification.setTimeUnit(offSetUnit);
-                notifications.add(notification);
+                addItemViewModel.addPendingNotification(notification);
 
                 switch (offSetUnit) {
                     case DAYS:
@@ -203,30 +235,37 @@ public class AddItemFragment extends Fragment {
         });
     }
 
-    private void setupFreezingDateButton() {
+    private void setUpFreezingDateButton() {
         mBinding.tvAddFreezingDate.setOnClickListener(v -> {
-            mBinding.tvAddFreezingDate.setVisibility(View.GONE);
-            mBinding.rlFreezingDateLayout.setVisibility(View.VISIBLE);
+            showFreezingDate();
             freezingDatePicker.show(getParentFragmentManager(), freezingDatePicker.toString());
         });
     }
 
-    private MaterialDatePicker<Long> createDatePicker(int stringId, LocalDate date) {
+    /**
+     * Creates a material date picker. This can be shown using result.show()
+     *
+     * @param titleStringId        The string id of the title text
+     * @param defaultSelectionDate The date
+     * @return The date picker
+     */
+    private MaterialDatePicker<Long> createDatePicker(int titleStringId, LocalDate defaultSelectionDate) {
         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
-        builder.setTitleText(getResources().getString(stringId));
+        builder.setTitleText(getResources().getString(titleStringId));
         // TODO Fix hack with adding hours to get the correct selection
-        builder.setSelection(date.toLocalDateTime(LocalTime.MIDNIGHT.plusHours(12)).toDate().getTime());
+        builder.setSelection(defaultSelectionDate.toLocalDateTime(LocalTime.MIDNIGHT.plusHours(12)).toDate().getTime());
         return builder.build();
     }
 
     /**
      * Sets up the date picker dialogs for the date of freezing the item and the best before date.
      */
-    private void setupDatePickers() {
+    private void setUpDatePickers() {
         // Set up the date pickers for the best before and frozen date fields
+        // TODO Fix such that it uses the values from the present item and initialize the item with current date for the best before date
 
         LocalDate currentDate = LocalDate.now();
-        newItem.setBestBeforeDate(currentDate);
+        addItemViewModel.getItem().setBestBeforeDate(currentDate);
 
         String curDateFormatted = DATE_FORMATTER.print(currentDate);
 
@@ -239,11 +278,12 @@ public class AddItemFragment extends Fragment {
         // Set up the freezing date picker
         freezingDatePicker = createDatePicker(
                 R.string.add_item_frozen_at_date_picker_title_text,
-                newItem.getFrozenAtDate() != null ? newItem.getFrozenAtDate() : currentDate
+                addItemViewModel.getItem().getFrozenAtDate() != null ?
+                        addItemViewModel.getItem().getFrozenAtDate() : currentDate
         );
         freezingDatePicker.addOnPositiveButtonClickListener(selection -> {
             LocalDate date = convertSelectedDate(selection);
-            newItem.setFrozenAtDate(date);
+            addItemViewModel.getItem().setFrozenAtDate(date);
             String selectedFrozenDateFormatted = DATE_FORMATTER.print(date);
             mBinding.etAddItemFrozenDate.setText(selectedFrozenDateFormatted);
         });
@@ -256,12 +296,12 @@ public class AddItemFragment extends Fragment {
         mBinding.etAddItemBestBefore.setOnClickListener(v -> {
             MaterialDatePicker<Long> picker = createDatePicker(
                     R.string.add_item_best_before_date_picker_title_text,
-                    newItem.getBestBeforeDate()
+                    addItemViewModel.getItem().getBestBeforeDate()
             );
 
             picker.addOnPositiveButtonClickListener(selection -> {
                 LocalDate date = convertSelectedDate(selection);
-                newItem.setBestBeforeDate(date);
+                addItemViewModel.getItem().setBestBeforeDate(date);
                 String selectedFrozenDateFormatted = DATE_FORMATTER.print(date);
                 mBinding.etAddItemBestBefore.setText(selectedFrozenDateFormatted);
             });
@@ -275,76 +315,27 @@ public class AddItemFragment extends Fragment {
     }
 
     /**
-     * Adds remaining item properties and inserts the items into the database using the view model.
-     */
-    private void insertItem() {
-        newItem.setId(0);
-        newItem.setItemCreationDate(LocalDateTime.now());
-        newItem.setLastChangedAtDate(LocalDateTime.now());
-        frozenItemViewModel.insert(newItem);
-    }
-
-    /**
      * Sets up the Floating Action Button for saving the new item
      */
     private void setUpFloatingActionButton() {
-        mBinding.floatingActionButton.setOnClickListener(v -> {
+        // TODO Set up for saving an existing entry
+
+        mBinding.floatingActionButton.setOnClickListener(fab -> {
             // TODO Check validity of inputs
             Log.d("AddItem", "Clicked on Save button");
 
-
-            if (newItem.getName().isEmpty()) {
-                if (this.mSnackbar != null) {
-                    this.mSnackbar.dismiss();
-                    this.mSnackbar = null;
-                }
-                this.mSnackbar = Snackbar.make(
-                        v,
-                        getResources().getString(R.string.add_item_saving_failed_text),
-                        Snackbar.LENGTH_SHORT
-                );
-                this.mSnackbar.show();
-            } else {
-                insertItem();
-
-                Navigation.findNavController(v).navigate(R.id.action_new_item_save);
-
-                // TODO Check for possible race conditions where id for the item might not be set yet
-                for (PendingNotification notification : notifications) {
-                    Log.d(TAG, "Scheduling notification");
-
-                    LocalTime notificationTime = LocalTime.now(DateTimeZone.forTimeZone(TimeZone.getDefault()));
-                    // TODO Set notification time to the one saved in the pending notification object, otherwise used preference
-
-                    LocalDateTime scheduledOn = newItem
-                            .getBestBeforeDate()
-                            .toLocalDateTime(notificationTime);
-
-                    switch (notification.getTimeUnit()) {
-                        case DAYS:
-                            scheduledOn = scheduledOn.minusDays(notification.getOffsetAmount());
-                            break;
-                        case WEEKS:
-                            scheduledOn = scheduledOn.minusWeeks(notification.getOffsetAmount());
-                            break;
-                        case MONTHS:
-                            scheduledOn = scheduledOn.minusMonths(notification.getOffsetAmount());
-                            break;
-                    }
-
-                    if (!LocalDateTime.now().isBefore(scheduledOn)) {
-                        UUID uuid = NotificationHelper.scheduleNotification(
-                                getContext(),
-                                newItem,
-                                NOTIFICATION_OFFSET_TIMEUNIT,
-                                scheduledOn
-                        );
-                        frozenItemViewModel.addNotification(newItem, uuid, scheduledOn);
-                    }
-                }
-
-                Keyboard.hideKeyboardFrom(getContext(), v);
+            // Input check: Name may not be empty
+            if (addItemViewModel.getItem().getName().isEmpty()) {
+                mBinding.addItemNameLayout.setErrorEnabled(true);
+                mBinding.addItemNameLayout.setError("Name may not be empty");
+                return;
             }
+
+            addItemViewModel.insertItem();
+            addItemViewModel.scheduleNotifications();
+
+            Keyboard.hideKeyboardFrom(getActivity(), fab);
+            Navigation.findNavController(fab).navigate(R.id.action_new_item_save);
         });
     }
 
