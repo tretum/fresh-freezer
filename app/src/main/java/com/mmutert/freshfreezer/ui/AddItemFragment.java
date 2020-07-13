@@ -15,14 +15,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.AmountUnit;
-import com.mmutert.freshfreezer.data.converters.ItemAndNotifications;
+import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.databinding.FragmentAddItemBinding;
 import com.mmutert.freshfreezer.util.Keyboard;
 import com.mmutert.freshfreezer.viewmodel.AddItemViewModel;
@@ -43,6 +42,7 @@ public class AddItemFragment extends Fragment {
 
     private FragmentAddItemBinding mBinding;
     private MaterialDatePicker<Long> freezingDatePicker;
+    private UnitArrayAdapter spinnerUnitAdapter;
 
     public AddItemFragment() {
         // Required empty public constructor
@@ -93,13 +93,16 @@ public class AddItemFragment extends Fragment {
     }
 
     private void updateWithNewData() {
-        // TODO Missing values
-        mBinding.setCurrentItem(addItemViewModel.getItem());
+        FrozenItem item = addItemViewModel.getItem();
 
-        // TODO Unit spinner
+        mBinding.setCurrentItem(item);
+
+        // Unit spinner
+        mBinding.spAddItemsUnitSelection.setSelection(spinnerUnitAdapter.getIndexOfUnit(item.getUnit()));
+
         // TODO Notifications
 
-        LocalDate frozenAtDate = addItemViewModel.getItem().getFrozenAtDate();
+        LocalDate frozenAtDate = item.getFrozenAtDate();
         if (frozenAtDate != null) {
             showFreezingDate();
 
@@ -109,7 +112,7 @@ public class AddItemFragment extends Fragment {
             showAddFreezingDateButton();
         }
 
-        LocalDate bestBeforeDate = addItemViewModel.getItem().getBestBeforeDate();
+        LocalDate bestBeforeDate = item.getBestBeforeDate();
         String bestBeforeDateFormatted = DATE_FORMATTER.print(bestBeforeDate);
         mBinding.etAddItemBestBefore.setText(bestBeforeDateFormatted);
     }
@@ -125,15 +128,15 @@ public class AddItemFragment extends Fragment {
     }
 
     private void setUpUnitSpinner() {
-        UnitArrayAdapter unitAdapter = new UnitArrayAdapter(
+        spinnerUnitAdapter = new UnitArrayAdapter(
                 getContext(),
                 android.R.layout.simple_spinner_dropdown_item
         );
-        mBinding.spAddItemsUnitSelection.setAdapter(unitAdapter);
+        mBinding.spAddItemsUnitSelection.setAdapter(spinnerUnitAdapter);
         mBinding.spAddItemsUnitSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                AmountUnit selectedUnit = unitAdapter.getSelectedUnit(position);
+                AmountUnit selectedUnit = spinnerUnitAdapter.getSelectedUnit(position);
                 addItemViewModel.setUnit(selectedUnit);
             }
 

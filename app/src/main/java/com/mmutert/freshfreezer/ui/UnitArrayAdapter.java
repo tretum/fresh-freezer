@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.mmutert.freshfreezer.data.AmountUnit;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -28,5 +29,9 @@ public class UnitArrayAdapter extends ArrayAdapter<CharSequence>{
 
     public AmountUnit getSelectedUnit(final int position) {
         return AmountUnit.values()[position];
+    }
+
+    public int getIndexOfUnit(AmountUnit unit) {
+        return Arrays.asList(AmountUnit.values()).indexOf(unit);
     }
 }
