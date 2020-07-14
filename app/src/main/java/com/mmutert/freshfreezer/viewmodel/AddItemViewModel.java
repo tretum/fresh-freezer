@@ -1,8 +1,6 @@
 package com.mmutert.freshfreezer.viewmodel;
 
 import android.app.Application;
-import android.app.Notification;
-import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -21,17 +19,27 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
-import java.util.concurrent.Executors;
 
 import static com.mmutert.freshfreezer.notification.NotificationConstants.NOTIFICATION_OFFSET_TIMEUNIT;
 
 
 public class AddItemViewModel extends AndroidViewModel {
+
+
+    private FrozenItem currentItem;
+    private List<PendingNotification> pendingNotifications = new ArrayList<>();
+    public static final String TAG = AddItemViewModel.class.getName();
+
+    public final DateTimeFormatter DATE_FORMATTER = DateTimeFormat.longDate().withLocale(Locale.getDefault());
+
+    private ItemRepository mItemRepository;
 
     public AddItemViewModel(@NonNull final Application application) {
         super(application);
@@ -39,14 +47,9 @@ public class AddItemViewModel extends AndroidViewModel {
         currentItem     = new FrozenItem();
     }
 
-    private FrozenItem currentItem;
-    private List<PendingNotification> pendingNotifications = new ArrayList<>();
-    public static final String TAG = AddItemViewModel.class.getName();
-
-    private ItemRepository mItemRepository;
-
-    public void newItem() {
+    public void reset() {
         currentItem = new FrozenItem();
+        // TODO Notifications
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.mmutert.freshfreezer.ui;
 
 import android.annotation.SuppressLint;
-import android.app.PendingIntent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -35,10 +33,6 @@ import org.joda.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static com.mmutert.freshfreezer.ui.PendingNotification.OffsetUnit.DAYS;
-import static com.mmutert.freshfreezer.ui.PendingNotification.OffsetUnit.WEEKS;
-import static com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel.DATE_FORMATTER;
 
 
 public class AddItemFragment extends Fragment {
@@ -78,7 +72,7 @@ public class AddItemFragment extends Fragment {
         if (savedInstanceState == null || !savedInstanceState.getBoolean("editing")) {
             long itemId = AddItemFragmentArgs.fromBundle(getArguments()).getItemId();
             if (itemId == -1) {
-                addItemViewModel.newItem();
+                addItemViewModel.reset();
             } else {
                 addItemViewModel
                         .getItemAndNotifications(itemId)
@@ -122,14 +116,14 @@ public class AddItemFragment extends Fragment {
         if (frozenAtDate != null) {
             showFreezingDate();
 
-            String selectedFrozenDateFormatted = DATE_FORMATTER.print(frozenAtDate);
+            String selectedFrozenDateFormatted = addItemViewModel.DATE_FORMATTER.print(frozenAtDate);
             mBinding.etAddItemFrozenDate.setText(selectedFrozenDateFormatted);
         } else {
             showAddFreezingDateButton();
         }
 
         LocalDate bestBeforeDate = item.getBestBeforeDate();
-        String bestBeforeDateFormatted = DATE_FORMATTER.print(bestBeforeDate);
+        String bestBeforeDateFormatted = addItemViewModel.DATE_FORMATTER.print(bestBeforeDate);
         mBinding.etAddItemBestBefore.setText(bestBeforeDateFormatted);
     }
 
@@ -225,15 +219,21 @@ public class AddItemFragment extends Fragment {
         // TODO Fix such that it uses the values from the present item and initialize the item with current date for the best before date
 
         LocalDate currentDate = LocalDate.now();
-        addItemViewModel.getItem().setBestBeforeDate(currentDate);
+        if(addItemViewModel.getItem().getBestBeforeDate() == null) {
+            addItemViewModel.getItem().setBestBeforeDate(currentDate);
+        }
 
-        String curDateFormatted = DATE_FORMATTER.print(currentDate);
 
         mBinding.etAddItemFrozenDate.setInputType(InputType.TYPE_NULL);
-        mBinding.etAddItemFrozenDate.setText(curDateFormatted);
-
+        if(addItemViewModel.getItem().getFrozenAtDate() != null) {
+            mBinding.etAddItemFrozenDate.setText(
+                    addItemViewModel.DATE_FORMATTER.print(addItemViewModel.getItem().getFrozenAtDate())
+            );
+        }
         mBinding.etAddItemBestBefore.setInputType(InputType.TYPE_NULL);
-        mBinding.etAddItemBestBefore.setText(curDateFormatted);
+        String bestBeforeDateFormatted =
+                addItemViewModel.DATE_FORMATTER.print(addItemViewModel.getItem().getBestBeforeDate());
+        mBinding.etAddItemBestBefore.setText(bestBeforeDateFormatted);
 
         // Set up the freezing date picker
         freezingDatePicker = createDatePicker(
@@ -241,32 +241,41 @@ public class AddItemFragment extends Fragment {
                 addItemViewModel.getItem().getFrozenAtDate() != null ?
                         addItemViewModel.getItem().getFrozenAtDate() : currentDate
         );
+
+        // Add the behavior for the positive button of the freezing date picker
         freezingDatePicker.addOnPositiveButtonClickListener(selection -> {
             LocalDate date = convertSelectedDate(selection);
             addItemViewModel.getItem().setFrozenAtDate(date);
-            String selectedFrozenDateFormatted = DATE_FORMATTER.print(date);
+            String selectedFrozenDateFormatted = addItemViewModel.DATE_FORMATTER.print(date);
             mBinding.etAddItemFrozenDate.setText(selectedFrozenDateFormatted);
         });
 
+        // Open the freezing date picker on clicking the row
         mBinding.etAddItemFrozenDate.setOnClickListener(v -> {
+            freezingDatePicker.show(getParentFragmentManager(), freezingDatePicker.toString());
+        });
+        mBinding.rlFreezingDateLayout.setOnClickListener(v -> {
             freezingDatePicker.show(getParentFragmentManager(), freezingDatePicker.toString());
         });
 
         // Set up the best before date picker
+        MaterialDatePicker<Long> bestBeforeDatePicker = createDatePicker(
+                R.string.add_item_best_before_date_picker_title_text,
+                addItemViewModel.getItem().getBestBeforeDate()
+        );
+
+        bestBeforeDatePicker.addOnPositiveButtonClickListener(selection -> {
+            LocalDate date = convertSelectedDate(selection);
+            addItemViewModel.getItem().setBestBeforeDate(date);
+            String selectedFrozenDateFormatted = addItemViewModel.DATE_FORMATTER.print(date);
+            mBinding.etAddItemBestBefore.setText(selectedFrozenDateFormatted);
+        });
+
         mBinding.etAddItemBestBefore.setOnClickListener(v -> {
-            MaterialDatePicker<Long> picker = createDatePicker(
-                    R.string.add_item_best_before_date_picker_title_text,
-                    addItemViewModel.getItem().getBestBeforeDate()
-            );
-
-            picker.addOnPositiveButtonClickListener(selection -> {
-                LocalDate date = convertSelectedDate(selection);
-                addItemViewModel.getItem().setBestBeforeDate(date);
-                String selectedFrozenDateFormatted = DATE_FORMATTER.print(date);
-                mBinding.etAddItemBestBefore.setText(selectedFrozenDateFormatted);
-            });
-
-            picker.show(getParentFragmentManager(), picker.toString());
+            bestBeforeDatePicker.show(getParentFragmentManager(), bestBeforeDatePicker.toString());
+        });
+        mBinding.rlBestBeforeDateLayout.setOnClickListener(v -> {
+            bestBeforeDatePicker.show(getParentFragmentManager(), bestBeforeDatePicker.toString());
         });
     }
 

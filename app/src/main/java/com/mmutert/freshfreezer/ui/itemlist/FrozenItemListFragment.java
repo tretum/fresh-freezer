@@ -16,46 +16,31 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.WorkManager;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.FrozenItem;
-import com.mmutert.freshfreezer.data.ItemNotification;
 import com.mmutert.freshfreezer.databinding.FragmentFrozenItemListBinding;
 import com.mmutert.freshfreezer.databinding.ListItemBinding;
 import com.mmutert.freshfreezer.ui.ListSortingDialogFragment;
 import com.mmutert.freshfreezer.ui.TakeOutDialogFragment;
 import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
 
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 
 /**
  *
  */
-public class FrozenItemListFragment extends Fragment
-        implements ListItemClickedCallback,
-        ListItemDeleteClickedCallback,
-        ListItemTakeClickedCallback {
+public class FrozenItemListFragment extends Fragment implements ListItemClickedCallback {
 
     private FragmentFrozenItemListBinding mBinding;
     private FrozenItemViewModel mViewModel;
     private ItemListAdapter mItemListAdapter;
-
-    /**
-     * The snackbar that is displayed when an item is deleted in order to allow undoing the action.
-     */
-    private Snackbar mDeleteSnackbar;
 
 
     @Override
@@ -103,9 +88,9 @@ public class FrozenItemListFragment extends Fragment
         mBinding.rvFrozenItemList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if(dy > 0){
+                if (dy > 0) {
                     mBinding.fab.hide();
-                } else{
+                } else {
                     mBinding.fab.show();
                 }
 
@@ -122,7 +107,8 @@ public class FrozenItemListFragment extends Fragment
             // TODO Check if setting to invisible is still necessary
             mBinding.fab.setVisibility(View.GONE);
 
-            FrozenItemListFragmentDirections.ActionOpenAddItemView navDirections = FrozenItemListFragmentDirections.actionOpenAddItemView();
+            FrozenItemListFragmentDirections.ActionOpenAddItemView navDirections
+                    = FrozenItemListFragmentDirections.actionOpenAddItemView();
             navDirections.setItemId(-1);
             Navigation.findNavController(view2).navigate(navDirections);
             Log.d("", "Clicked FAB");
@@ -153,7 +139,7 @@ public class FrozenItemListFragment extends Fragment
                 int pos = viewHolder.getAdapterPosition();
                 FrozenItem item = mItemListAdapter.getItemAtPosition(pos);
                 if (direction == ItemTouchHelper.RIGHT) {
-                    archiveItem(item, pos);
+                    archiveItem(item);
                 } else if (direction == ItemTouchHelper.LEFT) {
                     new TakeOutDialogFragment(new TakeListener(), item).show(getParentFragmentManager(), "take out");
                     mItemListAdapter.notifyItemChanged(pos);
@@ -184,7 +170,7 @@ public class FrozenItemListFragment extends Fragment
                 if (dX < 0) {
                     deleteBackground.setVisibility(View.INVISIBLE);
                     takeBackground.setVisibility(View.VISIBLE);
-                } else if (dX > 0){
+                } else if (dX > 0) {
                     deleteBackground.setVisibility(View.VISIBLE);
                     takeBackground.setVisibility(View.INVISIBLE);
                 } else {
@@ -251,7 +237,7 @@ public class FrozenItemListFragment extends Fragment
             );
             listSortingDialogFragment.show(getParentFragmentManager(), "set sorting option");
         } else if (id == R.id.action_toggle_dark_mode) {
-            if(item.isChecked()) {
+            if (item.isChecked()) {
                 saveDarkModePreference(false);
                 applyDarkMode(false);
                 item.setChecked(false);
@@ -267,6 +253,7 @@ public class FrozenItemListFragment extends Fragment
 
     /**
      * Returns the saved value for the preference of dark mode.
+     *
      * @return The saved value.
      */
     private boolean getDarkModeEnabledPreference() {
@@ -283,10 +270,11 @@ public class FrozenItemListFragment extends Fragment
 
     /**
      * Applies the given status to dark mode
+     *
      * @param enabled
      */
     private void applyDarkMode(boolean enabled) {
-        if(enabled) {
+        if (enabled) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
@@ -296,9 +284,10 @@ public class FrozenItemListFragment extends Fragment
     @Override
     public void onClick(FrozenItem item) {
         Log.d("ListFragment", "Clicked on item " + item.getName());
-        FrozenItemListFragmentDirections.ActionOpenAddItemView navDirections = FrozenItemListFragmentDirections.actionOpenAddItemView();
+        FrozenItemListFragmentDirections.ActionOpenAddItemView navDirections
+                = FrozenItemListFragmentDirections.actionOpenAddItemView();
         navDirections.setItemId(item.getId());
-        Navigation.findNavController(getView()).navigate(navDirections);
+        Navigation.findNavController(mBinding.getRoot()).navigate(navDirections);
     }
 
 
@@ -306,11 +295,13 @@ public class FrozenItemListFragment extends Fragment
      * Archives the given item and displays a snackbar that allows undoing the operation.
      *
      * @param itemToArchive The item to archive.
-     * @param position
      */
-    private void archiveItem(FrozenItem itemToArchive, final int position) {
+    private void archiveItem(FrozenItem itemToArchive) {
 
-        mDeleteSnackbar = Snackbar.make(
+        /**
+         * The snackbar that is displayed when an item is deleted in order to allow undoing the action.
+         */
+        Snackbar mDeleteSnackbar = Snackbar.make(
                 mBinding.itemListCoordinatorLayout,
                 "Deleted item " + itemToArchive.getName(),
                 Snackbar.LENGTH_LONG
@@ -332,32 +323,17 @@ public class FrozenItemListFragment extends Fragment
         mDeleteSnackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
             @Override
             public void onDismissed(final Snackbar transientBottomBar, final int event) {
-                if(event == DISMISS_EVENT_TIMEOUT || event == DISMISS_EVENT_CONSECUTIVE || event == DISMISS_EVENT_SWIPE || event == DISMISS_EVENT_MANUAL) {
-                    ExecutorService executor = Executors.newSingleThreadExecutor();
-                    executor.execute(() -> {
-                        List<ItemNotification> allNotifications = mViewModel.getAllNotifications(itemToArchive);
+                if (event == DISMISS_EVENT_TIMEOUT
+                        || event == DISMISS_EVENT_CONSECUTIVE
+                        || event == DISMISS_EVENT_SWIPE
+                        || event == DISMISS_EVENT_MANUAL) {
+                    mViewModel.cancelNotifications(itemToArchive);
 
-                        // Cancel all notifications
-                        WorkManager workManager = WorkManager.getInstance(getContext());
-                        for (ItemNotification notification : allNotifications) {
-                            workManager.cancelWorkById(notification.getNotificationId());
-                        }
-                    });
                 }
                 super.onDismissed(transientBottomBar, event);
             }
         });
         mDeleteSnackbar.show();
-    }
-
-    @Override
-    public void onDeleteClicked(FrozenItem itemToDelete, int position) {
-        archiveItem(itemToDelete, position);
-    }
-
-    @Override
-    public void onTakeButtonClicked(FrozenItem item) {
-        new TakeOutDialogFragment(new TakeListener(), item).show(getParentFragmentManager(), "take out");
     }
 
     /**
@@ -368,7 +344,7 @@ public class FrozenItemListFragment extends Fragment
      */
     private void takeFromItem(FrozenItem item, float amountTaken) {
         float newAmount = Math.max(0.0F, item.getAmount() - amountTaken);
-        mViewModel.updateItem(item, newAmount);
+        mViewModel.takeFromItem(item, amountTaken);
 
         // TODO Possibly a hack. The amount was not updated because the current item is changed in the view model.
         //  Therefore the DiffUtil does not recognize the item as changed and the recycler view will not be notified of changes.
