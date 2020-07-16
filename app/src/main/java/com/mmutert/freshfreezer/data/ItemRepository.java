@@ -4,10 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.mmutert.freshfreezer.data.converters.ItemAndNotifications;
-
 import java.util.List;
-import java.util.concurrent.Executors;
 
 
 public class ItemRepository {

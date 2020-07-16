@@ -23,6 +23,8 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.AmountUnit;
 import com.mmutert.freshfreezer.data.FrozenItem;
+import com.mmutert.freshfreezer.data.TimeOffsetUnit;
+import com.mmutert.freshfreezer.data.PendingNotification;
 import com.mmutert.freshfreezer.databinding.FragmentAddItemBinding;
 import com.mmutert.freshfreezer.util.Keyboard;
 import com.mmutert.freshfreezer.viewmodel.AddItemViewModel;
@@ -167,20 +169,18 @@ public class AddItemFragment extends Fragment {
     private void setUpAddNotificationButton() {
         mBinding.tvAddNotification.setOnClickListener(v -> {
 
-            PendingNotification notification = new PendingNotification();
 
             // Open notification dialog
             new NotificationOffsetDialogFragment(dialog -> {
                 Log.d(TAG, "Selected notification offset from dialog.");
 
-                PendingNotification.OffsetUnit offSetUnit = dialog.getOffSetAmount();
+                TimeOffsetUnit offSetUnitTime = dialog.getOffSetAmount();
                 int enteredOffset = dialog.getEnteredOffset();
 
                 Log.d(TAG, "Selected Offset: " + enteredOffset);
-                Log.d(TAG, "Selected Unit: " + offSetUnit);
+                Log.d(TAG, "Selected Unit: " + offSetUnitTime);
 
-                notification.setOffsetAmount(enteredOffset);
-                notification.setTimeUnit(offSetUnit);
+                PendingNotification notification = new PendingNotification(enteredOffset, offSetUnitTime);
 
                 // TODO Remove duplication of notifications in ViewModel and RecyclerView
                 addItemViewModel.addPendingNotification(notification);
@@ -345,10 +345,10 @@ public class AddItemFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull final NotificationListAdapterViewHolder holder, final int position) {
             PendingNotification notification = getNotificationAtPosition(position);
-            PendingNotification.OffsetUnit offsetUnit = notification.getTimeUnit();
+            TimeOffsetUnit timeOffsetUnit = notification.getTimeUnit();
             int offsetAmount = notification.getOffsetAmount();
 
-            switch (offsetUnit) {
+            switch (timeOffsetUnit) {
                 case DAYS:
                     holder.entry.setText(getResources().getQuantityString(
                             R.plurals.notification_list_entry_days_capitalized,

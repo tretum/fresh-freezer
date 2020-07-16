@@ -9,8 +9,6 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
-import com.mmutert.freshfreezer.data.converters.ItemAndNotifications;
-
 import java.util.List;
 
 @Dao

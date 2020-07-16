@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.mmutert.freshfreezer.R;
+import com.mmutert.freshfreezer.data.TimeOffsetUnit;
 import com.mmutert.freshfreezer.databinding.DialogAddNotificationBinding;
 import com.mmutert.freshfreezer.ui.databinding.IntStringConverter;
 
@@ -20,7 +21,7 @@ import java.util.Objects;
 
 public class NotificationOffsetDialogFragment extends DialogFragment {
 
-    private PendingNotification.OffsetUnit mOffsetUnit = PendingNotification.OffsetUnit.DAYS;
+    private TimeOffsetUnit mTimeOffsetUnit = TimeOffsetUnit.DAYS;
     private DialogAddNotificationBinding dialogBinding;
 
     private int selectedValue = 1;
@@ -64,7 +65,7 @@ public class NotificationOffsetDialogFragment extends DialogFragment {
         CompoundButton.OnCheckedChangeListener daysButtonListener = (buttonView, isChecked) -> {
 
             if (isChecked) {
-                mOffsetUnit = PendingNotification.OffsetUnit.DAYS;
+                mTimeOffsetUnit = TimeOffsetUnit.DAYS;
 
                 String quantityString = getResources().getQuantityString(
                         R.plurals.days_selected_capitalized,
@@ -84,7 +85,7 @@ public class NotificationOffsetDialogFragment extends DialogFragment {
             //            Integer amount = IntStringConverter.stringToInt(dialogBinding.etAddNotificationOffsetAmount.getText().toString());
 
             if (isChecked) {
-                mOffsetUnit = PendingNotification.OffsetUnit.WEEKS;
+                mTimeOffsetUnit = TimeOffsetUnit.WEEKS;
 
                 String quantityString = getResources().getQuantityString(
                         R.plurals.weeks_selected_capitalized,
@@ -102,7 +103,7 @@ public class NotificationOffsetDialogFragment extends DialogFragment {
 
         CompoundButton.OnCheckedChangeListener monthsButtonListener = (buttonView, isChecked) -> {
             if (isChecked) {
-                mOffsetUnit = PendingNotification.OffsetUnit.MONTHS;
+                mTimeOffsetUnit = TimeOffsetUnit.MONTHS;
 
                 String quantityString = getResources().getQuantityString(
                         R.plurals.months_selected_capitalized,
@@ -153,7 +154,7 @@ public class NotificationOffsetDialogFragment extends DialogFragment {
         return selectedValue;
     }
 
-    public PendingNotification.OffsetUnit getOffSetAmount() {
-        return mOffsetUnit;
+    public TimeOffsetUnit getOffSetAmount() {
+        return mTimeOffsetUnit;
     }
 }

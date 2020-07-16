@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.mmutert.freshfreezer.data.converters.LocalDateTimeConverter;
+import com.mmutert.freshfreezer.data.converters.OffsetUnitConverter;
 import com.mmutert.freshfreezer.data.converters.UUIDConverter;
 
 import org.joda.time.LocalDateTime;
@@ -37,10 +38,23 @@ public class ItemNotification {
     @ColumnInfo(name = "notify_on")
     private LocalDateTime notifyOn;
 
-    public ItemNotification(@NonNull final UUID notificationId, final long itemId, final LocalDateTime notifyOn) {
+    @TypeConverters(OffsetUnitConverter.class)
+    @ColumnInfo(name = "time_offset_unit")
+    private TimeOffsetUnit timeOffsetUnit;
+
+    @ColumnInfo(name = "offset_amount")
+    private float offsetAmount;
+
+    public ItemNotification(
+            @NonNull final UUID notificationId,
+            final long itemId,
+            final LocalDateTime notifyOn,
+            final TimeOffsetUnit timeOffsetUnit, final float offsetAmount) {
         this.notificationId = notificationId;
         this.itemId         = itemId;
         this.notifyOn       = notifyOn;
+        this.timeOffsetUnit = timeOffsetUnit;
+        this.offsetAmount   = offsetAmount;
     }
 
     @NonNull
@@ -54,5 +68,13 @@ public class ItemNotification {
 
     public LocalDateTime getNotifyOn() {
         return notifyOn;
+    }
+
+    public TimeOffsetUnit getTimeOffsetUnit() {
+        return timeOffsetUnit;
+    }
+
+    public float getOffsetAmount() {
+        return offsetAmount;
     }
 }

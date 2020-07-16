@@ -1,4 +1,4 @@
-package com.mmutert.freshfreezer.data.converters;
+package com.mmutert.freshfreezer.data;
 
 
 import androidx.room.Embedded;

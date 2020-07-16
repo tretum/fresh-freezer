@@ -11,9 +11,10 @@ import com.mmutert.freshfreezer.data.AmountUnit;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.data.ItemNotification;
 import com.mmutert.freshfreezer.data.ItemRepository;
-import com.mmutert.freshfreezer.data.converters.ItemAndNotifications;
+import com.mmutert.freshfreezer.data.ItemAndNotifications;
+import com.mmutert.freshfreezer.data.TimeOffsetUnit;
 import com.mmutert.freshfreezer.notification.NotificationHelper;
-import com.mmutert.freshfreezer.ui.PendingNotification;
+import com.mmutert.freshfreezer.data.PendingNotification;
 
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
@@ -47,6 +48,9 @@ public class AddItemViewModel extends AndroidViewModel {
         currentItem     = new FrozenItem();
     }
 
+    /**
+     * Resets this ViewModel to the "New Item" state, i.e. not editing another item.
+     */
     public void reset() {
         currentItem = new FrozenItem();
         // TODO Notifications
@@ -63,11 +67,20 @@ public class AddItemViewModel extends AndroidViewModel {
 
     /**
      * Add a notification for the given item to the repository.
-     * @param uuid The UUID of the worker that is used to schedule the notification
-     * @param notifyOn The exact time the notification is scheduled on.
+     *
+     * @param uuid           The UUID of the worker that is used to schedule the notification
+     * @param notifyOn       The exact time the notification is scheduled on.
+     * @param timeOffsetUnit The unit for the offset that was used to schedule the notification
+     * @param offsetAmount   The offset that was used to schedule the notification
      */
-    public void addNotification(UUID uuid, LocalDateTime notifyOn){
-        ItemNotification notification = new ItemNotification(uuid, currentItem.getId(), notifyOn);
+    public void addNotification(
+            UUID uuid,
+            LocalDateTime notifyOn,
+            final TimeOffsetUnit timeOffsetUnit,
+            final int offsetAmount) {
+
+        ItemNotification notification =
+                new ItemNotification(uuid, currentItem.getId(), notifyOn, timeOffsetUnit, offsetAmount);
         mItemRepository.addNotification(notification);
     }
 
@@ -77,6 +90,7 @@ public class AddItemViewModel extends AndroidViewModel {
 
     /**
      * Get all scheduled notifications for the given item
+     *
      * @return The list of notifications for the item.
      */
     public List<ItemNotification> getAllNotifications() {
@@ -95,9 +109,7 @@ public class AddItemViewModel extends AndroidViewModel {
             LocalTime notificationTime = LocalTime.now(DateTimeZone.forTimeZone(TimeZone.getDefault()));
             // TODO Set notification time to the one saved in the pending notification object, otherwise used preference
 
-            LocalDateTime scheduledOn = currentItem
-                    .getBestBeforeDate()
-                    .toLocalDateTime(notificationTime);
+            LocalDateTime scheduledOn = currentItem.getBestBeforeDate().toLocalDateTime(notificationTime);
 
             switch (notification.getTimeUnit()) {
                 case DAYS:
@@ -118,9 +130,9 @@ public class AddItemViewModel extends AndroidViewModel {
                         NOTIFICATION_OFFSET_TIMEUNIT,
                         scheduledOn
                 );
-                this.addNotification(uuid, scheduledOn);
+                this.addNotification(uuid, scheduledOn, notification.getTimeUnit(), notification.getOffsetAmount());
             } else {
-                Log.d(
+                Log.e(
                         TAG,
                         "Could not schedule notification for item " + currentItem.getName()
                                 + ". The scheduled time "
@@ -131,7 +143,6 @@ public class AddItemViewModel extends AndroidViewModel {
             }
         }
     }
-
 
 
     public void addPendingNotification(final PendingNotification notification) {
