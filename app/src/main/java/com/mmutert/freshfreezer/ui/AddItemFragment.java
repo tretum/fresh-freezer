@@ -23,8 +23,8 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.AmountUnit;
 import com.mmutert.freshfreezer.data.FrozenItem;
+import com.mmutert.freshfreezer.data.ItemNotification;
 import com.mmutert.freshfreezer.data.TimeOffsetUnit;
-import com.mmutert.freshfreezer.data.PendingNotification;
 import com.mmutert.freshfreezer.databinding.FragmentAddItemBinding;
 import com.mmutert.freshfreezer.util.Keyboard;
 import com.mmutert.freshfreezer.viewmodel.AddItemViewModel;
@@ -78,8 +78,10 @@ public class AddItemFragment extends Fragment {
             } else {
                 addItemViewModel
                         .getItemAndNotifications(itemId)
-                        .observe(getViewLifecycleOwner(), itemAndNotifications1 -> {
-                            addItemViewModel.setCurrentItem(itemAndNotifications1.item);
+                        .observe(getViewLifecycleOwner(), itemAndNotifications -> {
+                            addItemViewModel.setCurrentItem(itemAndNotifications.item);
+                            addItemViewModel.setCurrentNotifications(itemAndNotifications.notifications);
+                            mNotificationListAdapter.setItems(addItemViewModel.getCurrentNotifications());
                             updateWithNewData();
                         });
             }
@@ -104,6 +106,9 @@ public class AddItemFragment extends Fragment {
         updateWithNewData();
     }
 
+    /**
+     * Updates the Interface elements with the data from the current item of the view model.
+     */
     private void updateWithNewData() {
         FrozenItem item = addItemViewModel.getItem();
 
@@ -180,10 +185,8 @@ public class AddItemFragment extends Fragment {
                 Log.d(TAG, "Selected Offset: " + enteredOffset);
                 Log.d(TAG, "Selected Unit: " + offSetUnitTime);
 
-                PendingNotification notification = new PendingNotification(enteredOffset, offSetUnitTime);
-
                 // TODO Remove duplication of notifications in ViewModel and RecyclerView
-                addItemViewModel.addPendingNotification(notification);
+                ItemNotification notification = addItemViewModel.addNotification(enteredOffset, offSetUnitTime);
                 mNotificationListAdapter.addNotificationEntry(notification);
             }).show(getParentFragmentManager(), "add notification");
         });
@@ -300,8 +303,7 @@ public class AddItemFragment extends Fragment {
                 return;
             }
 
-            addItemViewModel.insertItem();
-            addItemViewModel.scheduleNotifications();
+            addItemViewModel.save();
 
             Keyboard.hideKeyboardFrom(getActivity(), fab);
             Navigation.findNavController(fab).navigate(R.id.action_new_item_save);
@@ -315,22 +317,32 @@ public class AddItemFragment extends Fragment {
     private class NotificationListAdapter
             extends RecyclerView.Adapter<NotificationListAdapter.NotificationListAdapterViewHolder> {
 
-        private List<PendingNotification> notifications;
+        private List<ItemNotification> notifications;
 
         public NotificationListAdapter() {
             this.notifications = new ArrayList<>();
         }
 
-        private void setItems(List<PendingNotification> notificationList) {
-            this.notifications = notificationList;
+        private void setItems(List<ItemNotification> notificationList) {
+            this.notifications = new ArrayList<>(notificationList);
             notifyDataSetChanged();
         }
 
-        private void addNotificationEntry(PendingNotification notification) {
-            Log.d(TAG, "Adding notification entry");
+
+        private void addNotificationEntry(ItemNotification notification) {
+            Log.d(TAG, "Adding notification entry to RV");
             notifications.add(notification);
             notifyItemInserted(getItemCount());
         }
+
+
+        private void removeNotificationEntry(final ItemNotification notification) {
+            Log.d(TAG, "Removing notification entry from RV");
+            int positionOfNotification = getPositionOfNotification(notification);
+            notifications.remove(notification);
+            notifyItemRemoved(positionOfNotification);
+        }
+
 
         @NonNull
         @Override
@@ -344,8 +356,8 @@ public class AddItemFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull final NotificationListAdapterViewHolder holder, final int position) {
-            PendingNotification notification = getNotificationAtPosition(position);
-            TimeOffsetUnit timeOffsetUnit = notification.getTimeUnit();
+            ItemNotification notification = getNotificationAtPosition(position);
+            TimeOffsetUnit timeOffsetUnit = notification.getTimeOffsetUnit();
             int offsetAmount = notification.getOffsetAmount();
 
             switch (timeOffsetUnit) {
@@ -383,8 +395,8 @@ public class AddItemFragment extends Fragment {
                     if (event.getRawX() >= (holder.entry.getRight()
                             - holder.entry.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         // Remove notification from list
-                        addItemViewModel.removePendingNotification(notification);
-                        mNotificationListAdapter.removeNotification(notification);
+                        addItemViewModel.addNotificationToDelete(notification);
+                        mNotificationListAdapter.removeNotificationEntry(notification);
                         return true;
                     }
                 }
@@ -392,17 +404,12 @@ public class AddItemFragment extends Fragment {
             });
         }
 
-        private void removeNotification(final PendingNotification notification) {
-            int positionOfNotification = getPositionOfNotification(notification);
-            notifications.remove(positionOfNotification);
-            notifyItemRemoved(positionOfNotification);
-        }
 
-        private int getPositionOfNotification(final PendingNotification notification) {
+        private int getPositionOfNotification(final ItemNotification notification) {
             return notifications.indexOf(notification);
         }
 
-        private PendingNotification getNotificationAtPosition(int position) {
+        private ItemNotification getNotificationAtPosition(int position) {
             return notifications.get(position);
         }
 

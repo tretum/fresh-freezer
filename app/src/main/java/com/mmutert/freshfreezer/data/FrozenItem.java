@@ -40,12 +40,10 @@ public class FrozenItem {
 
     @ColumnInfo(name = "item_creation_date")
     @TypeConverters(value = {LocalDateTimeConverter.class})
-    @NonNull
     private LocalDateTime itemCreationDate;
 
     @ColumnInfo(name = "last_changed_at_date")
     @TypeConverters(value = {LocalDateTimeConverter.class})
-    @NonNull
     private LocalDateTime lastChangedAtDate;
 
     private String notes;
@@ -123,7 +121,6 @@ public class FrozenItem {
         this.archived = archived;
     }
 
-    @NonNull
     public LocalDateTime getItemCreationDate() {
         return itemCreationDate;
     }
@@ -132,7 +129,6 @@ public class FrozenItem {
         this.itemCreationDate = itemCreationDate;
     }
 
-    @NonNull
     public LocalDateTime getLastChangedAtDate() {
         return lastChangedAtDate;
     }

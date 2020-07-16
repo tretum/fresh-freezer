@@ -1,6 +1,5 @@
 package com.mmutert.freshfreezer.data;
 
-import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -25,8 +24,9 @@ import java.util.UUID;
         indices = @Index(name = "ItemIdIndex", value = "item_id"))
 public class ItemNotification {
 
-    @PrimaryKey()
-    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    private long id;
+
     @ColumnInfo(name = "notification_id")
     @TypeConverters(UUIDConverter.class)
     private UUID notificationId;
@@ -34,30 +34,25 @@ public class ItemNotification {
     @ColumnInfo(name = "item_id")
     private long itemId;
 
-    @TypeConverters(LocalDateTimeConverter.class)
-    @ColumnInfo(name = "notify_on")
-    private LocalDateTime notifyOn;
-
     @TypeConverters(OffsetUnitConverter.class)
     @ColumnInfo(name = "time_offset_unit")
     private TimeOffsetUnit timeOffsetUnit;
 
     @ColumnInfo(name = "offset_amount")
-    private float offsetAmount;
+    private int offsetAmount;
 
     public ItemNotification(
-            @NonNull final UUID notificationId,
+            final UUID notificationId,
             final long itemId,
-            final LocalDateTime notifyOn,
-            final TimeOffsetUnit timeOffsetUnit, final float offsetAmount) {
+            final TimeOffsetUnit timeOffsetUnit,
+            final int offsetAmount) {
+
         this.notificationId = notificationId;
         this.itemId         = itemId;
-        this.notifyOn       = notifyOn;
         this.timeOffsetUnit = timeOffsetUnit;
         this.offsetAmount   = offsetAmount;
     }
 
-    @NonNull
     public UUID getNotificationId() {
         return notificationId;
     }
@@ -66,15 +61,31 @@ public class ItemNotification {
         return itemId;
     }
 
-    public LocalDateTime getNotifyOn() {
-        return notifyOn;
-    }
-
     public TimeOffsetUnit getTimeOffsetUnit() {
         return timeOffsetUnit;
     }
 
-    public float getOffsetAmount() {
+    public int getOffsetAmount() {
         return offsetAmount;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setNotificationId(final UUID notificationId) {
+        this.notificationId = notificationId;
+    }
+
+
+    public void setItemId(final long itemId) {
+
+        this.itemId = itemId;
+    }
+
+
+    public void setId(final long id) {
+
+        this.id = id;
     }
 }
