@@ -72,6 +72,7 @@ public class NotificationHelper {
                         .build();
 
         WorkManager.getInstance(context).enqueue(notificationRequest);
+        Log.d(TAG, "Enqueued the notification worker with uuid: " + notificationRequest.getId());
         return notificationRequest.getId();
     }
 

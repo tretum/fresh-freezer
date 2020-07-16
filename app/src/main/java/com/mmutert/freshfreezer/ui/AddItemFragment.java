@@ -16,6 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.AsyncListDiffer;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -269,7 +271,8 @@ public class AddItemFragment extends Fragment {
 
         bestBeforeDatePicker.addOnPositiveButtonClickListener(selection -> {
             LocalDate date = convertSelectedDate(selection);
-            addItemViewModel.getItem().setBestBeforeDate(date);
+            addItemViewModel.updateBestBefore(date);
+            mNotificationListAdapter.setItems(addItemViewModel.getCurrentNotifications());
             String selectedFrozenDateFormatted = addItemViewModel.DATE_FORMATTER.print(date);
             mBinding.etAddItemBestBefore.setText(selectedFrozenDateFormatted);
         });
@@ -317,31 +320,58 @@ public class AddItemFragment extends Fragment {
     private class NotificationListAdapter
             extends RecyclerView.Adapter<NotificationListAdapter.NotificationListAdapterViewHolder> {
 
-        private List<ItemNotification> notifications;
 
         public NotificationListAdapter() {
-            this.notifications = new ArrayList<>();
+
         }
 
+
         private void setItems(List<ItemNotification> notificationList) {
-            this.notifications = new ArrayList<>(notificationList);
-            notifyDataSetChanged();
+            mDiffer.submitList(new ArrayList<>(notificationList));
         }
 
 
         private void addNotificationEntry(ItemNotification notification) {
             Log.d(TAG, "Adding notification entry to RV");
+            ArrayList<ItemNotification> notifications = new ArrayList<>(mDiffer.getCurrentList());
             notifications.add(notification);
-            notifyItemInserted(getItemCount());
+            mDiffer.submitList(notifications);
         }
 
 
         private void removeNotificationEntry(final ItemNotification notification) {
             Log.d(TAG, "Removing notification entry from RV");
-            int positionOfNotification = getPositionOfNotification(notification);
+            ArrayList<ItemNotification> notifications = new ArrayList<>(mDiffer.getCurrentList());
             notifications.remove(notification);
-            notifyItemRemoved(positionOfNotification);
+            mDiffer.submitList(notifications);
         }
+
+
+        /**
+         * The Callback for the DiffUtil.
+         */
+        private final DiffUtil.ItemCallback<ItemNotification> DIFF_CALLBACK
+                = new DiffUtil.ItemCallback<ItemNotification>() {
+            @Override
+            public boolean areItemsTheSame(
+                    @NonNull ItemNotification oldNotification, @NonNull ItemNotification newNotification) {
+                // Notification properties may have changed if reloaded from the DB, but ID is fixed
+                // TODO Fix
+                boolean same = oldNotification.getOffsetAmount() == newNotification.getOffsetAmount() && oldNotification
+                        .getTimeOffsetUnit()
+                        .equals(newNotification.getTimeOffsetUnit());
+//                return oldNotification.getId() == newNotification.getId();
+                return same;
+            }
+            @Override
+            public boolean areContentsTheSame(
+                    @NonNull ItemNotification oldNotification, @NonNull ItemNotification newNotification) {
+                // NOTE: if you use equals, your object must properly override Object#equals()
+                // Incorrectly returning false here will result in too many animations.
+                return oldNotification.equals(newNotification);
+            }
+        };
+        private final AsyncListDiffer<ItemNotification> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
 
 
         @NonNull
@@ -354,6 +384,7 @@ public class AddItemFragment extends Fragment {
             return new NotificationListAdapterViewHolder(view);
         }
 
+        @SuppressLint("ClickableViewAccessibility")
         @Override
         public void onBindViewHolder(@NonNull final NotificationListAdapterViewHolder holder, final int position) {
             ItemNotification notification = getNotificationAtPosition(position);
@@ -392,11 +423,12 @@ public class AddItemFragment extends Fragment {
                 final int DRAWABLE_BOTTOM = 3;
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (event.getRawX() >= (holder.entry.getRight()
-                            - holder.entry.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    int rightDrawablePositionX = holder.getEntry().getRight();
+                    int rightDrawableWidth = holder.getEntry().getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+                    if (event.getRawX() >= (rightDrawablePositionX - rightDrawableWidth)) {
                         // Remove notification from list
                         addItemViewModel.addNotificationToDelete(notification);
-                        mNotificationListAdapter.removeNotificationEntry(notification);
+                        removeNotificationEntry(notification);
                         return true;
                     }
                 }
@@ -405,17 +437,13 @@ public class AddItemFragment extends Fragment {
         }
 
 
-        private int getPositionOfNotification(final ItemNotification notification) {
-            return notifications.indexOf(notification);
-        }
-
         private ItemNotification getNotificationAtPosition(int position) {
-            return notifications.get(position);
+            return mDiffer.getCurrentList().get(position);
         }
 
         @Override
         public int getItemCount() {
-            return notifications.size();
+            return mDiffer.getCurrentList().size();
         }
 
         /**
@@ -429,6 +457,12 @@ public class AddItemFragment extends Fragment {
                 super(itemView);
 
                 entry = (TextView) itemView;
+            }
+
+
+            public TextView getEntry() {
+
+                return entry;
             }
         }
     }

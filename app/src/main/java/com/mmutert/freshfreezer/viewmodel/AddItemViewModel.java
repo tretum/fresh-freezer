@@ -18,6 +18,7 @@ import com.mmutert.freshfreezer.data.TimeOffsetUnit;
 import com.mmutert.freshfreezer.notification.NotificationHelper;
 
 import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
@@ -39,6 +40,7 @@ public class AddItemViewModel extends AndroidViewModel {
     public final DateTimeFormatter DATE_FORMATTER = DateTimeFormat.longDate().withLocale(Locale.getDefault());
 
     private FrozenItem currentItem;
+    private boolean editing = false;
 
     private ItemRepository mItemRepository;
     private List<ItemNotification> notifications;
@@ -63,6 +65,7 @@ public class AddItemViewModel extends AndroidViewModel {
         currentItem           = new FrozenItem();
         notificationsToDelete = new ArrayList<>();
         notifications         = new ArrayList<>();
+        editing               = false;
         // TODO Notifications
     }
 
@@ -74,6 +77,10 @@ public class AddItemViewModel extends AndroidViewModel {
      */
     public void addNotificationToDelete(ItemNotification notification) {
 
+        Log.d(TAG,
+              "Adding notification " + notification.getOffsetAmount() + notification.getTimeOffsetUnit()
+                      + " to the delete list."
+        );
         this.notificationsToDelete.add(notification);
         this.notifications.remove(notification);
     }
@@ -93,30 +100,26 @@ public class AddItemViewModel extends AndroidViewModel {
                         .cancelWorkById(notification.getNotificationId());
 
                 operation.getResult().addListener(() -> {
-                    Log.d(TAG, "Removed the notification with offset unit " + notification.getTimeOffsetUnit().toString() + " and amount " + notification.getOffsetAmount());
+                    Log.d(TAG, "Cancelled the notification worker with uuid: " + notification.getNotificationId());
+                    Log.d(TAG, "For notification with offset " + notification.getTimeOffsetUnit().toString()
+                            + " and amount " + notification.getOffsetAmount()
+                    );
                 }, Executors.newSingleThreadExecutor());
 
             }
 
             // Remove from repository
-            deleteNotification(notification);
+            deleteNotificationFromRepository(notification);
         }
     }
 
 
-    /**
-     * Get all scheduled notifications for the given item
-     *
-     * @return The list of notifications for the item.
-     */
-    public List<ItemNotification> getAllNotifications() {
+    public void deleteNotificationFromRepository(ItemNotification notification) {
 
-        return mItemRepository.getAllNotifications(currentItem);
-    }
-
-
-    public void deleteNotification(ItemNotification notification) {
-
+        Log.d(TAG,
+              "Deleting notification from repository. " + notification.getOffsetAmount()
+                      + notification.getTimeOffsetUnit() + " " + notification.getNotificationId()
+        );
         mItemRepository.deleteNotification(notification);
     }
 
@@ -153,7 +156,7 @@ public class AddItemViewModel extends AndroidViewModel {
                     notification.setItemId(currentItem.getId());
                     mItemRepository.addNotification(notification);
 
-                    Log.d(TAG, "Scheduled a notification for ");
+                    Log.d(TAG, "Scheduled a notification with UUID: " + uuid);
                 } else {
                     Log.e(
                             TAG,
@@ -215,7 +218,8 @@ public class AddItemViewModel extends AndroidViewModel {
 
     public void setCurrentItem(FrozenItem item) {
 
-        this.currentItem = item;
+        this.currentItem      = item;
+        this.editing          = true;
         notificationsToDelete = new ArrayList<>();
     }
 
@@ -239,8 +243,8 @@ public class AddItemViewModel extends AndroidViewModel {
 
         // TODO Check for weird LiveData updates and possible problems with scheduling and deleting
         //  Might need switching these instructions around or possibly more effort
-        scheduleNotifications();
         removeNotificationsToDelete();
+        scheduleNotifications();
     }
 
 
@@ -255,5 +259,47 @@ public class AddItemViewModel extends AndroidViewModel {
     public List<ItemNotification> getCurrentNotifications() {
 
         return notifications;
+    }
+
+
+    /**
+     * Remember to update the list in the recyclerview after calling this method since the list in the RV is immutable and needs to be updated
+     *
+     * @param date
+     */
+    public void updateBestBefore(final LocalDate date) {
+
+        // Precondition: Date should have changed
+        if (currentItem.getBestBeforeDate() != null && currentItem.getBestBeforeDate().isEqual(date)) {
+            // Noop
+            return;
+        }
+
+        currentItem.setBestBeforeDate(date);
+
+        ArrayList<ItemNotification> newNotifications = new ArrayList<>();
+
+        if (editing) {
+            for (ItemNotification notification : notifications) {
+                ItemNotification notificationCopy = new ItemNotification(
+                        null,
+                        currentItem.getId(),
+                        notification.getTimeOffsetUnit(),
+                        notification.getOffsetAmount()
+                );
+
+                // TODO Check if the delete thing should be here
+                notificationsToDelete.add(notification);
+                Log.d(
+                        TAG,
+                        "Marking notification " + notification.getOffsetAmount() + " " + notification
+                                .getTimeOffsetUnit()
+                                .toString() + " as to delete due to best before date change."
+                );
+
+                newNotifications.add(notificationCopy);
+            }
+            notifications = newNotifications;
+        }
     }
 }

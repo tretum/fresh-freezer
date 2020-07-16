@@ -13,6 +13,7 @@ import com.mmutert.freshfreezer.data.converters.UUIDConverter;
 
 import org.joda.time.LocalDateTime;
 
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -87,5 +88,30 @@ public class ItemNotification {
     public void setId(final long id) {
 
         this.id = id;
+    }
+
+
+    @Override
+    public boolean equals(final Object o) {
+
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ItemNotification that = (ItemNotification) o;
+        return id == that.id &&
+                itemId == that.itemId &&
+                offsetAmount == that.offsetAmount &&
+                Objects.equals(notificationId, that.notificationId) &&
+                timeOffsetUnit == that.timeOffsetUnit;
+    }
+
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, notificationId, itemId, timeOffsetUnit, offsetAmount);
     }
 }

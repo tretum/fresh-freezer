@@ -1,6 +1,7 @@
 package com.mmutert.freshfreezer.viewmodel;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -12,18 +13,14 @@ import com.mmutert.freshfreezer.data.ItemNotification;
 import com.mmutert.freshfreezer.data.ItemRepository;
 import com.mmutert.freshfreezer.util.SortingOption;
 
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
 import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
 public class FrozenItemViewModel extends AndroidViewModel {
+
+    public static final String TAG = "FrozenItemViewModel";
 
     private ItemRepository mItemRepository;
 
@@ -102,6 +99,7 @@ public class FrozenItemViewModel extends AndroidViewModel {
             WorkManager workManager = WorkManager.getInstance(getApplication());
             for (ItemNotification notification : allNotifications) {
                 workManager.cancelWorkById(notification.getNotificationId());
+                Log.d(TAG, "Cancelled the notification worker with uuid: " + notification.getNotificationId());
             }
         });
     }
