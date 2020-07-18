@@ -113,6 +113,16 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         return mDiffer.getCurrentList().get(position);
     }
 
+
+    /**
+     * Returns the current position of the given item as the index of the item in the list for the adapter
+     * @param item The item to get the position for
+     * @return The index of the item.
+     */
+    public int getPositionOfItem(FrozenItem item) {
+        return mDiffer.getCurrentList().indexOf(item);
+    }
+
     @Override
     public void listOptionClicked(
             final SortingOption selectedSortingOption, final SortingOption.SortingOrder sortingOrder) {

@@ -343,12 +343,11 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
      * @param amountTaken The amount that was taken from the item
      */
     private void takeFromItem(FrozenItem item, float amountTaken) {
-        float newAmount = Math.max(0.0F, item.getAmount() - amountTaken);
         mViewModel.takeFromItem(item, amountTaken);
 
         // TODO Possibly a hack. The amount was not updated because the current item is changed in the view model.
         //  Therefore the DiffUtil does not recognize the item as changed and the recycler view will not be notified of changes.
-        mItemListAdapter.notifyDataSetChanged();
+        mItemListAdapter.notifyItemChanged(mItemListAdapter.getPositionOfItem(item));
     }
 
     private class TakeListener implements TakeOutDialogFragment.TakeOutDialogClickListener {
