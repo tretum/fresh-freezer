@@ -1,11 +1,13 @@
 package com.mmutert.freshfreezer.viewmodel;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.preference.PreferenceManager;
 import androidx.work.WorkManager;
 
 import com.mmutert.freshfreezer.data.FrozenItem;
@@ -20,7 +22,9 @@ import java.util.concurrent.Executors;
 
 public class ItemListViewModel extends AndroidViewModel {
 
-    public static final String TAG = "FrozenItemViewModel";
+    public static final String TAG = "ItemListViewModel";
+    private static final String SORTING_ORDER_KEY = "sortingOrder";
+    private static final String SORTING_OPTION_KEY = "sortingOption";
 
     private ItemRepository mItemRepository;
 
@@ -34,6 +38,38 @@ public class ItemListViewModel extends AndroidViewModel {
         super(application);
         mItemRepository = new ItemRepository(application);
         mFrozenItems = mItemRepository.getAllActiveFrozenItems();
+        loadSortingOrderPreference();
+        loadSortingOptionPreference();
+    }
+
+
+    public void loadSortingOrderPreference() {
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
+        String orderString = preferences.getString(SORTING_ORDER_KEY, "ASCENDING");
+        sortingOrder = SortingOption.SortingOrder.valueOf(orderString);
+    }
+
+
+    public void storeSortingOrderPreference() {
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
+        preferences.edit().putString(SORTING_ORDER_KEY, sortingOrder.toString()).apply();
+    }
+
+
+    public void loadSortingOptionPreference() {
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
+        String orderString = preferences.getString(SORTING_OPTION_KEY, "DATE_BEST_BEFORE");
+        sortingOption = SortingOption.valueOf(orderString);
+    }
+
+
+    public void storeSortingOptionPreference() {
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
+        preferences.edit().putString(SORTING_OPTION_KEY, sortingOption.toString()).apply();
     }
 
 
@@ -63,6 +99,7 @@ public class ItemListViewModel extends AndroidViewModel {
 
     public void setSortingOrder(final SortingOption.SortingOrder sortingOrder) {
         this.sortingOrder = sortingOrder;
+        storeSortingOrderPreference();
     }
 
     public SortingOption getSortingOption() {
@@ -71,6 +108,7 @@ public class ItemListViewModel extends AndroidViewModel {
 
     public void setSortingOption(final SortingOption sortingOption) {
         this.sortingOption = sortingOption;
+        storeSortingOptionPreference();
     }
 
     /*
