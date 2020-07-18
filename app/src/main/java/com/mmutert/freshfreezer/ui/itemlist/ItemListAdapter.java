@@ -15,7 +15,7 @@ import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.databinding.ListItemBinding;
 import com.mmutert.freshfreezer.ui.ListSortingDialogFragment;
 import com.mmutert.freshfreezer.util.SortingOption;
-import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
+import com.mmutert.freshfreezer.viewmodel.ItemListViewModel;
 
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -35,11 +35,11 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
     private final ListItemClickedCallback itemClickedCallback;
     private Context context;
-    private FrozenItemViewModel mViewModel;
+    private ItemListViewModel mViewModel;
 
 
     public ItemListAdapter(
-            final FrozenItemViewModel viewModel,
+            final ItemListViewModel viewModel,
             ListItemClickedCallback itemClickedCallback,
             Context context) {
         this.mViewModel            = viewModel;

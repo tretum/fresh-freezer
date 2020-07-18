@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class FrozenItemViewModel extends AndroidViewModel {
+public class ItemListViewModel extends AndroidViewModel {
 
     public static final String TAG = "FrozenItemViewModel";
 
@@ -30,7 +30,7 @@ public class FrozenItemViewModel extends AndroidViewModel {
     private SortingOption sortingOption = SortingOption.DATE_BEST_BEFORE;
 
 
-    public FrozenItemViewModel(@NonNull Application application) {
+    public ItemListViewModel(@NonNull Application application) {
         super(application);
         mItemRepository = new ItemRepository(application);
         mFrozenItems = mItemRepository.getAllActiveFrozenItems();

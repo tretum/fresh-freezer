@@ -30,16 +30,16 @@ import com.mmutert.freshfreezer.databinding.FragmentFrozenItemListBinding;
 import com.mmutert.freshfreezer.databinding.ListItemBinding;
 import com.mmutert.freshfreezer.ui.ListSortingDialogFragment;
 import com.mmutert.freshfreezer.ui.TakeOutDialogFragment;
-import com.mmutert.freshfreezer.viewmodel.FrozenItemViewModel;
+import com.mmutert.freshfreezer.viewmodel.ItemListViewModel;
 
 
 /**
  *
  */
-public class FrozenItemListFragment extends Fragment implements ListItemClickedCallback {
+public class ItemListFragment extends Fragment implements ListItemClickedCallback {
 
     private FragmentFrozenItemListBinding mBinding;
-    private FrozenItemViewModel mViewModel;
+    private ItemListViewModel mViewModel;
     private ItemListAdapter mItemListAdapter;
 
 
@@ -72,7 +72,7 @@ public class FrozenItemListFragment extends Fragment implements ListItemClickedC
                 new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
         mBinding.rvFrozenItemList.setLayoutManager(layoutManager);
 
-        mViewModel = new ViewModelProvider(this).get(FrozenItemViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(ItemListViewModel.class);
 
         mItemListAdapter = new ItemListAdapter(mViewModel, this, getContext());
 
@@ -206,7 +206,7 @@ public class FrozenItemListFragment extends Fragment implements ListItemClickedC
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        Log.d(FrozenItemListFragment.class.getCanonicalName(), "Creating list options menu");
+        Log.d(ItemListFragment.class.getCanonicalName(), "Creating list options menu");
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.menu_item_list, menu);
