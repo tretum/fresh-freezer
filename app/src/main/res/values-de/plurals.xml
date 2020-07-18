@@ -38,4 +38,9 @@
         <item quantity="one">%d Monat davor</item>
         <item quantity="other">%d Monate davor</item>
     </plurals>
+
+    <plurals name="best_before_notification_text_long">
+        <item quantity="one">Das MHD für %s ist bald überschritten Es ist noch %s %s übrig.</item>
+        <item quantity="other">Das MHD für %s ist bald überschritten. Es sind noch %s %s übrig.</item>
+    </plurals>
 </resources>

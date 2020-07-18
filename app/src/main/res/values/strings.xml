@@ -72,6 +72,11 @@
     <string name="dialog_take_from_selected_item_text">Selected Item:</string>
     <string name="dialog_take_from_default_amount" translatable="false">1</string>
 
+    <!-- Notifications -->
+    <string name="best_before_notification_title">Best Before Date coming up!</string>
+    <string name="best_before_notification_text_short">The date for %s is coming up soon.</string>
+
+
     <!-- Units -->
     <string name="unit_grams">g</string>
     <string name="unit_kilograms">kg</string>

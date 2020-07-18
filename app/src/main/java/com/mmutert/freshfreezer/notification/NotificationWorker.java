@@ -14,18 +14,25 @@ import androidx.work.WorkerParameters;
 
 import com.mmutert.freshfreezer.MainActivity;
 import com.mmutert.freshfreezer.R;
+import com.mmutert.freshfreezer.data.AmountUnit;
+
+import java.text.NumberFormat;
 
 import static com.mmutert.freshfreezer.notification.NotificationConstants.CHANNEL_ID;
+
 
 public class NotificationWorker extends Worker {
 
     @NonNull
     private final Context context;
 
+
     public NotificationWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+
         super(context, workerParams);
         this.context = context;
     }
+
 
     @NonNull
     @Override
@@ -35,18 +42,30 @@ public class NotificationWorker extends Worker {
         String itemName = inputData.getString(NotificationConstants.KEY_ITEM_NAME);
         float itemAmount = inputData.getFloat(NotificationConstants.KEY_ITEM_AMOUNT, 0);
         int itemId = inputData.getInt(NotificationConstants.KEY_ITEM_ID, 0);
-        String itemAmountUnit = inputData.getString(NotificationConstants.KEY_ITEM_AMOUNT_UNIT);
+        AmountUnit itemAmountUnit = AmountUnit.valueOf(inputData.getString(NotificationConstants.KEY_ITEM_AMOUNT_UNIT));
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
+        NumberFormat formatterForUnit = AmountUnit.getFormatterForUnit(itemAmountUnit);
+        String amountFormatted = formatterForUnit.format(itemAmount);
+
+        String amountUnitFormatted = context.getResources().getString(itemAmountUnit.getStringResId());
+
         Notification build = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_done_24px)
-                .setContentTitle("Best Before Date coming up!")
-                .setContentText("The date for " + itemName + " is coming up soon.")
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText( "The date for " + itemName + " is coming up soon. There is still " + itemAmount + itemAmountUnit + " left.")
+                .setContentTitle(context.getString(R.string.best_before_notification_title))
+                .setContentText(context.getString(R.string.best_before_notification_text_short, itemName))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(
+                        context.getResources()
+                               .getQuantityString(
+                                       R.plurals.best_before_notification_text_long,
+                                       Math.round(itemAmount),
+                                       itemName,
+                                       amountFormatted,
+                                       amountUnitFormatted
+                               ))
                 )
                 .setPriority(NotificationConstants.NOTIFICATION_PRIORITY)
                 .setContentIntent(pendingIntent)

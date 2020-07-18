@@ -38,4 +38,9 @@
         <item quantity="one">%d Month before</item>
         <item quantity="other">%d Months before</item>
     </plurals>
+
+    <plurals name="best_before_notification_text_long">
+        <item quantity="one">The best before date for %s is coming up soon. There is %s %s left.</item>
+        <item quantity="other">The best before date for %s is coming up soon. There are %s %s left.</item>
+    </plurals>
 </resources>

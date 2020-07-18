@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 public class NotificationHelper {
 
-    public static final String TAG = NotificationHelper.class.getName();
+    public static final String TAG = "NotificationHelper";
 
     /**
      * Creates a work request for the notification of the given item.
