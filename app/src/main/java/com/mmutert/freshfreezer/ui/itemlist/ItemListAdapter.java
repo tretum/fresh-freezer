@@ -179,7 +179,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                     break;
                 case NAME:
                     Collections.sort(items, (item1, item2) -> {
-                        int result = item1.getName().compareTo(item2.getName());
+                        int result = item1.getName().toLowerCase().compareTo(item2.getName().toLowerCase());
                         if(mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)){
                             return result;
                         } else {
