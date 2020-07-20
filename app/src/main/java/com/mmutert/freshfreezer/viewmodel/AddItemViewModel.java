@@ -36,7 +36,7 @@ import static com.mmutert.freshfreezer.notification.NotificationConstants.NOTIFI
 
 public class AddItemViewModel extends AndroidViewModel {
 
-    public static final String TAG = AddItemViewModel.class.getName();
+    public static final String TAG = "AddItemViewModel";
     public final DateTimeFormatter DATE_FORMATTER = DateTimeFormat.longDate().withLocale(Locale.getDefault());
 
     private FrozenItem currentItem;

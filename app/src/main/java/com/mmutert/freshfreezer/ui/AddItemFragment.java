@@ -41,7 +41,7 @@ import java.util.List;
 
 public class AddItemFragment extends Fragment {
 
-    public static final String TAG = AddItemFragment.class.getName();
+    public static final String TAG = "AddItemFragment";
 
     private AddItemViewModel addItemViewModel;
 
