@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import static com.mmutert.freshfreezer.util.SortingOption.SortingOrder.ASCENDING;
+
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemListAdapterViewHolder> implements
         ListSortingDialogFragment.ListSortingChangedListener {
@@ -140,7 +142,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                 case DATE_CHANGED:
                     Collections.sort(items, (item1, item2) -> {
                         int result = item1.getLastChangedAtDate().compareTo(item2.getLastChangedAtDate());
-                        if (mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)) {
+                        if (mViewModel.getSortingOrder().equals(ASCENDING)) {
                             return result;
                         } else {
                             return result * (-1);
@@ -150,7 +152,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                 case DATE_ADDED:
                     Collections.sort(items, (item1, item2) -> {
                         int result = item1.getItemCreationDate().compareTo(item2.getItemCreationDate());
-                        if (mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)) {
+                        if (mViewModel.getSortingOrder().equals(ASCENDING)) {
                             return result;
                         } else {
                             return result * (-1);
@@ -159,8 +161,9 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                     break;
                 case DATE_FROZEN_AT:
                     Collections.sort(items, (item1, item2) -> {
+                        // TODO Handle null objects in all sorting operations
                         int result = item1.getFrozenAtDate().compareTo(item2.getFrozenAtDate());
-                        if(mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)){
+                        if(mViewModel.getSortingOrder().equals(ASCENDING)){
                             return result;
                         } else {
                             return result * (-1);
@@ -170,7 +173,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                 case DATE_BEST_BEFORE:
                     Collections.sort(items, (item1, item2) -> {
                         int result = item1.getBestBeforeDate().compareTo(item2.getBestBeforeDate());
-                        if(mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)){
+                        if(mViewModel.getSortingOrder().equals(ASCENDING)){
                             return result;
                         } else {
                             return result * (-1);
@@ -180,7 +183,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                 case NAME:
                     Collections.sort(items, (item1, item2) -> {
                         int result = item1.getName().toLowerCase().compareTo(item2.getName().toLowerCase());
-                        if(mViewModel.getSortingOrder().equals(SortingOption.SortingOrder.ASCENDING)){
+                        if(mViewModel.getSortingOrder().equals(ASCENDING)){
                             return result;
                         } else {
                             return result * (-1);
