@@ -194,7 +194,6 @@ public class AddItemFragment extends Fragment {
 
         mBinding.tvAddNotification.setOnClickListener(v -> {
 
-
             // Open notification dialog
             new NotificationOffsetDialogFragment(dialog -> {
                 Log.d(TAG, "Selected notification offset from dialog.");
@@ -205,9 +204,12 @@ public class AddItemFragment extends Fragment {
                 Log.d(TAG, "Selected Offset: " + enteredOffset);
                 Log.d(TAG, "Selected Unit: " + offSetUnitTime);
 
-                // TODO Remove duplication of notifications in ViewModel and RecyclerView
                 ItemNotification notification = addItemViewModel.addNotification(enteredOffset, offSetUnitTime);
-                mNotificationListAdapter.addNotificationEntry(notification);
+                if(notification != null) {
+                    mNotificationListAdapter.addNotificationEntry(notification);
+                } {
+                    Log.d(TAG, "The selected offset already exists. Not adding a second copy.");
+                }
             }).show(getParentFragmentManager(), "add notification");
         });
     }

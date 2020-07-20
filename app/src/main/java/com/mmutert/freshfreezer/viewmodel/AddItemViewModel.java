@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.work.Operation;
@@ -77,9 +78,10 @@ public class AddItemViewModel extends AndroidViewModel {
      */
     public void addNotificationToDelete(ItemNotification notification) {
 
-        Log.d(TAG,
-              "Adding notification " + notification.getOffsetAmount() + notification.getTimeOffsetUnit()
-                      + " to the delete list."
+        Log.d(
+                TAG,
+                "Adding notification " + notification.getOffsetAmount() + notification.getTimeOffsetUnit()
+                        + " to the delete list."
         );
         this.notificationsToDelete.add(notification);
         this.notifications.remove(notification);
@@ -116,9 +118,10 @@ public class AddItemViewModel extends AndroidViewModel {
 
     public void deleteNotificationFromRepository(ItemNotification notification) {
 
-        Log.d(TAG,
-              "Deleting notification from repository. " + notification.getOffsetAmount()
-                      + notification.getTimeOffsetUnit() + " " + notification.getNotificationId()
+        Log.d(
+                TAG,
+                "Deleting notification from repository. " + notification.getOffsetAmount()
+                        + notification.getTimeOffsetUnit() + " " + notification.getNotificationId()
         );
         mItemRepository.deleteNotification(notification);
     }
@@ -230,7 +233,13 @@ public class AddItemViewModel extends AndroidViewModel {
     }
 
 
+    /**
+     * Saves the current item to the repository and performs all necessary operations for correct notification scheduling,
+     * considering all the possible changes due to changing dates and added or removed notifications.
+     */
     public void save() {
+
+        Log.d(TAG, "Saving the current item...");
 
         // If the creation date was not set before, i.e. the item not edited, set the date
         if (currentItem.getItemCreationDate() == null) {
@@ -245,12 +254,31 @@ public class AddItemViewModel extends AndroidViewModel {
         //  Might need switching these instructions around or possibly more effort
         removeNotificationsToDelete();
         scheduleNotifications();
+
+        Log.d(TAG, "Save completed.");
     }
 
 
-    public ItemNotification addNotification(final int enteredOffset, final TimeOffsetUnit offSetUnitTime) {
+    /**
+     * Creates a new preliminary notification if there is none with the given parameters.
+     *
+     * @param offsetAmount   The amount that the notification should be offset by.
+     * @param offsetTimeUnit The time unit for the notification offset
+     * @return Null, if there already is a notification with the given parameters. The new notification, otherwise.
+     */
+    @Nullable
+    public ItemNotification addNotification(final int offsetAmount, final TimeOffsetUnit offsetTimeUnit) {
 
-        ItemNotification itemNotification = new ItemNotification(null, -1, offSetUnitTime, enteredOffset);
+        // Check if there already is a notification with the selected offset and unit
+        for (ItemNotification notification : notifications) {
+            if (notification.getOffsetAmount() == offsetAmount && notification
+                    .getTimeOffsetUnit()
+                    .equals(offsetTimeUnit)) {
+                return null;
+            }
+        }
+
+        ItemNotification itemNotification = new ItemNotification(null, -1, offsetTimeUnit, offsetAmount);
         this.notifications.add(itemNotification);
         return itemNotification;
     }
