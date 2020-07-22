@@ -88,35 +88,24 @@
                         tools:text="Chicken" />
 
                     <TextView
-                        android:id="@+id/tv_amount_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/list_item_amount_title"
-                        android:textSize="@dimen/list_item_label_text_size"
-                        android:labelFor="@id/tv_amount"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_amount"
-                        app:layout_constraintStart_toStartOf="@+id/tv_title"
-                        app:layout_constraintTop_toTopOf="@+id/tv_amount" />
-
-                    <TextView
                         android:id="@+id/tv_amount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:textSize="@dimen/list_item_value_text_size"
                         app:layout_constraintEnd_toStartOf="@+id/tv_amount_unit"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_title"
+                        app:layout_constraintTop_toTopOf="@+id/tv_title"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_title"
                         tools:text="2" />
 
                     <TextView
                         android:id="@+id/tv_amount_unit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
                         android:textSize="@dimen/list_item_value_text_size"
                         app:layout_constraintEnd_toEndOf="@+id/tv_date_frozen"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_title"
+                        app:layout_constraintTop_toTopOf="@+id/tv_title"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_title"
                         tools:text="pcs" />
 
                     <TextView
@@ -127,7 +116,7 @@
                         android:textSize="@dimen/list_item_label_text_size"
                         android:labelFor="@id/tv_date_frozen"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_date_frozen"
-                        app:layout_constraintStart_toStartOf="@+id/tv_amount_title"
+                        app:layout_constraintStart_toStartOf="@+id/tv_title"
                         app:layout_constraintTop_toTopOf="@+id/tv_date_frozen" />
 
                     <TextView

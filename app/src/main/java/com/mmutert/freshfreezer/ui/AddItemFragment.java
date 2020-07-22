@@ -245,7 +245,6 @@ public class AddItemFragment extends Fragment {
      * Sets up the date picker dialogs for the date of freezing the item and the best before date.
      */
     private void setUpDatePickers() {
-        // TODO Fix such that it uses the values from the present item and initialize the item with current date for the best before date
 
         LocalDate currentDate = LocalDate.now();
         FrozenItem item = addItemViewModel.getItem();
@@ -332,7 +331,6 @@ public class AddItemFragment extends Fragment {
      * Sets up the Floating Action Button for saving the new item
      */
     private void setUpFloatingActionButton() {
-        // TODO Set up for saving an existing entry
 
         mBinding.floatingActionButton.setOnClickListener(fab -> {
             // TODO Check validity of inputs

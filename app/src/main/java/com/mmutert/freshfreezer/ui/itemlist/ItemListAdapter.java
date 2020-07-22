@@ -78,7 +78,6 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
         binding.setItem(itemForPosition);
 
-        // TODO Format tv_amount
         AmountUnit unit = itemForPosition.getUnit();
         binding.tvAmountUnit.setText(context.getResources().getString(unit.getStringResId()));
 
@@ -144,7 +143,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
     /**
      * Sorts the given list of items according to the sorting option and sorting order that are currently in the view model.
      * Sorting is done in-place.
-     * 
+     *
      * @param items  The list of items to sort.
      */
     private void sortItems(final List<FrozenItem> items) {
