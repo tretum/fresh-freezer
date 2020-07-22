@@ -50,6 +50,10 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
     }
 
 
+    /**
+     * Set the list of items to display in the recycler view and sort them according to the values of the view model.
+     * @param items The list of items to display
+     */
     public void setItems(List<FrozenItem> items) {
         ArrayList<FrozenItem> newItems = new ArrayList<>(items);
         sortItems(newItems);
@@ -136,6 +140,13 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         mDiffer.submitList(frozenItems);
     }
 
+
+    /**
+     * Sorts the given list of items according to the sorting option and sorting order that are currently in the view model.
+     * Sorting is done in-place.
+     * 
+     * @param items  The list of items to sort.
+     */
     private void sortItems(final List<FrozenItem> items) {
         if (items.size() > 0) {
             switch (mViewModel.getSortingOption()) {
@@ -161,8 +172,14 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                     break;
                 case DATE_FROZEN_AT:
                     Collections.sort(items, (item1, item2) -> {
-                        // TODO Handle null objects in all sorting operations
-                        int result = item1.getFrozenAtDate().compareTo(item2.getFrozenAtDate());
+                        int result = 0;
+                        if(item1.getFrozenAtDate() != null && item2.getFrozenAtDate() != null) {
+                            result = item1.getFrozenAtDate().compareTo(item2.getFrozenAtDate());
+                        } else if(item1.getFrozenAtDate() == null && item2.getFrozenAtDate() != null) {
+                            result = -1;
+                        } else if(item1.getFrozenAtDate() != null && item2.getFrozenAtDate() == null) {
+                            result = 1;
+                        }
                         if(mViewModel.getSortingOrder().equals(ASCENDING)){
                             return result;
                         } else {
