@@ -55,10 +55,15 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
             Bundle savedInstanceState
     ) {
         // Inflate the layout for this fragment
-        mBinding = FragmentFrozenItemListBinding.inflate(inflater, container, false);
 
         boolean darkModeEnabled = getDarkModeEnabledPreference();
-        applyDarkMode(darkModeEnabled);
+        if (darkModeEnabled) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
+
+        mBinding = FragmentFrozenItemListBinding.inflate(inflater, container, false);
 
         return mBinding.getRoot();
     }
@@ -239,12 +244,12 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
         } else if (id == R.id.action_toggle_dark_mode) {
             if (item.isChecked()) {
                 saveDarkModePreference(false);
-                applyDarkMode(false);
                 item.setChecked(false);
+                applyDarkMode(false);
             } else {
                 saveDarkModePreference(true);
-                applyDarkMode(true);
                 item.setChecked(true);
+                applyDarkMode(true);
             }
         }
 
@@ -279,6 +284,8 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         }
+        getActivity().getWindow().setWindowAnimations(R.style.WindowAnimationTransition);
+        getActivity().recreate();
     }
 
     @Override
