@@ -30,4 +30,5 @@
     <dimen name="list_item_swipe_icon_margin_horizontal">10dp</dimen>
     <dimen name="add_item_divider_height">1dp</dimen>
     <dimen name="add_item_icon_margin_horizontal">16dp</dimen>
+    <dimen name="list_item_card_horizontal_margin">4dp</dimen>
 </resources>
