@@ -57,11 +57,7 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
         // Inflate the layout for this fragment
 
         boolean darkModeEnabled = getDarkModeEnabledPreference();
-        if (darkModeEnabled) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        }
+        applyDarkMode(darkModeEnabled);
 
         mBinding = FragmentFrozenItemListBinding.inflate(inflater, container, false);
 
@@ -284,8 +280,6 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         }
-        getActivity().getWindow().setWindowAnimations(R.style.WindowAnimationTransition);
-        getActivity().recreate();
     }
 
     @Override
