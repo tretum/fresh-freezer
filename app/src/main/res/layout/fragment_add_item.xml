@@ -36,7 +36,7 @@
                     app:layout_constraintStart_toStartOf="@+id/guideline"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_add_item_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

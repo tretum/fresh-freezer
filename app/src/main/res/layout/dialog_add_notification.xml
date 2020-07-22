@@ -41,7 +41,7 @@
                     app:hintEnabled="false"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_add_notification_offsetAmount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
