@@ -21,6 +21,7 @@ public class NotificationHelper {
 
     public static final String TAG = "NotificationHelper";
 
+
     /**
      * Creates a work request for the notification of the given item.
      *
@@ -45,6 +46,7 @@ public class NotificationHelper {
         return scheduleNotification(context, item, offset, timeUnit);
     }
 
+
     /**
      * Creates a work request for the notification of the given item.
      *
@@ -59,22 +61,37 @@ public class NotificationHelper {
             FrozenItem item,
             long timeOffset,
             TimeUnit timeUnit) {
+
         Log.d(TAG, "Creating WorkRequest for item " + item.getName());
         Log.d(TAG, "Offset is " + timeOffset + " and unit " + timeUnit.name());
-        OneTimeWorkRequest notificationRequest =
-                new OneTimeWorkRequest.Builder(NotificationWorker.class)
-                        .setInputData(NotificationHelper.createInputDataForItem(item))
-                        .setConstraints(
-                                new Constraints.Builder()
-                                        .setRequiresBatteryNotLow(true)
-                                        .build())
-                        .setInitialDelay(timeOffset, timeUnit)
-                        .build();
 
+        OneTimeWorkRequest notificationRequest = createWorkRequest(item, timeOffset, timeUnit);
         WorkManager.getInstance(context).enqueue(notificationRequest);
         Log.d(TAG, "Enqueued the notification worker with uuid: " + notificationRequest.getId());
         return notificationRequest.getId();
     }
+
+
+    /**
+     * Creates a work request for the notification of the given item with the given offset from the current time
+     *
+     * @param item       The item to schedule a notification for.
+     * @param timeOffset The offset from the current time at which the notification should be displayed
+     * @param timeUnit   The unit for the offset.
+     * @return The created {@link androidx.work.WorkRequest}
+     */
+    public static OneTimeWorkRequest createWorkRequest(FrozenItem item, long timeOffset, TimeUnit timeUnit) {
+
+        return new OneTimeWorkRequest.Builder(NotificationWorker.class)
+                .setInputData(NotificationHelper.createInputDataForItem(item))
+                .setConstraints(
+                        new Constraints.Builder()
+                                .setRequiresBatteryNotLow(true)
+                                .build())
+                .setInitialDelay(timeOffset, timeUnit)
+                .build();
+    }
+
 
     /**
      * Creates the input data for the Notification Worker that creates the notification.
@@ -82,7 +99,8 @@ public class NotificationHelper {
      * @param item The item to create the data for
      * @return The created data object.
      */
-    private static Data createInputDataForItem(FrozenItem item) {
+    public static Data createInputDataForItem(FrozenItem item) {
+
         return new Data.Builder()
                 .putString(NotificationConstants.KEY_ITEM_NAME, item.getName())
                 .putFloat(NotificationConstants.KEY_ITEM_AMOUNT, item.getAmount())
@@ -90,6 +108,7 @@ public class NotificationHelper {
                 .putString(NotificationConstants.KEY_ITEM_AMOUNT_UNIT, item.getUnit().toString())
                 .build();
     }
+
 
     /**
      * Calculates the offset
@@ -100,6 +119,7 @@ public class NotificationHelper {
      * @return The calculated offset
      */
     static long calculateOffset(TimeUnit timeUnit, LocalDateTime startDate, LocalDateTime goalDate) {
+
         long goalDateInMillis = goalDate.toDate().getTime();
         long startDateInMillis = startDate.toDate().getTime();
         return timeUnit.convert(

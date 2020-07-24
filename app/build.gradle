@@ -61,6 +61,10 @@ dependencies {
     // (Java only)
     implementation "androidx.work:work-runtime:$work_version"
 
+    // optional - Test helpers
+    androidTestImplementation "androidx.work:work-testing:$work_version"
+
+
     // Database
     implementation "androidx.room:room-runtime:$room_version"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
