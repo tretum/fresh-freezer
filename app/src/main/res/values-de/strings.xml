@@ -87,4 +87,5 @@
     <string name="add_item_add_freezing_date">Einfrierdatum hinzufügen (optional)</string>
     <string name="best_before_notification_title">Mindesthaltbarkeit wird bald überschritten!</string>
     <string name="best_before_notification_text_short">Das MHD für %s ist bald überschritten.</string>
+    <string name="fragment_add_item_label_editing">Eintrag bearbeiten</string>
 </resources>

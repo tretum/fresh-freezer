@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/item_list"
         android:name="com.mmutert.freshfreezer.ui.itemlist.ItemListFragment"
-        android:label="@string/fragment_item_list_label"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_frozen_item_list">
         <action
             android:id="@+id/action_open_add_item_view"
@@ -31,7 +31,7 @@
     <fragment
         android:id="@+id/addItemFragment"
         android:name="com.mmutert.freshfreezer.ui.AddItemFragment"
-        android:label="@string/fragment_add_item_label"
+        android:label="{title}"
         tools:layout="@layout/fragment_add_item" >
         <action
             android:id="@+id/action_new_item_save"
@@ -41,6 +41,9 @@
             android:name="itemId"
             app:argType="long"
             android:defaultValue="-1L" />
+        <argument
+            android:name="title"
+            app:argType="string"/>
     </fragment>
 
     <fragment

@@ -90,6 +90,7 @@
     <string name="dialog_take_button_cancel_label">Cancel</string>
     <string name="menu_item_enable_dark_mode">Enable Dark Mode</string>
     <string name="add_item_add_freezing_date">Add Freezing Date (Optional)</string>
+    <string name="fragment_add_item_label_editing">Edit the item</string>
 
     <!-- Unsorted strings -->
 </resources>

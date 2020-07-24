@@ -108,8 +108,9 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
             // TODO Check if setting to invisible is still necessary
             mBinding.fab.setVisibility(View.GONE);
 
+            String title = getString(R.string.fragment_add_item_label);
             ItemListFragmentDirections.ActionOpenAddItemView navDirections
-                    = ItemListFragmentDirections.actionOpenAddItemView();
+                    = ItemListFragmentDirections.actionOpenAddItemView(title);
             navDirections.setItemId(-1);
             Navigation.findNavController(view2).navigate(navDirections);
             Log.d("", "Clicked FAB");
@@ -285,8 +286,9 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
     @Override
     public void onClick(FrozenItem item) {
         Log.d("ListFragment", "Clicked on item " + item.getName());
+        String title = getString(R.string.fragment_add_item_label_editing);
         ItemListFragmentDirections.ActionOpenAddItemView navDirections
-                = ItemListFragmentDirections.actionOpenAddItemView();
+                = ItemListFragmentDirections.actionOpenAddItemView(title);
         navDirections.setItemId(item.getId());
         Navigation.findNavController(mBinding.getRoot()).navigate(navDirections);
     }
