@@ -452,21 +452,21 @@ public class AddItemFragment extends Fragment {
             switch (timeOffsetUnit) {
                 case DAYS:
                     holder.entry.setText(getResources().getQuantityString(
-                            R.plurals.notification_list_entry_days_capitalized,
+                            R.plurals.notification_list_entry_days_before_capitalized,
                             offsetAmount,
                             offsetAmount
                     ));
                     break;
                 case WEEKS:
                     holder.entry.setText(getResources().getQuantityString(
-                            R.plurals.notification_list_entry_weeks_capitalized,
+                            R.plurals.notification_list_entry_weeks_before_capitalized,
                             offsetAmount,
                             offsetAmount
                     ));
                     break;
                 case MONTHS:
                     holder.entry.setText(getResources().getQuantityString(
-                            R.plurals.notification_list_entry_months_capitalized,
+                            R.plurals.notification_list_entry_months_before_capitalized,
                             offsetAmount,
                             offsetAmount
                     ));

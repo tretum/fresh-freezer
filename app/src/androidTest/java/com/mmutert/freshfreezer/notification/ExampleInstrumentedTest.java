@@ -61,38 +61,38 @@ public class ExampleInstrumentedTest {
     @Ignore
     public void testNotificationLayoutAndText() throws ExecutionException, InterruptedException {
 
-        Log.d(TAG, "Starting notification test");
-
-        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        FrozenItem frozenItem = new FrozenItem();
-        frozenItem.setUnit(AmountUnit.LITERS);
-        frozenItem.setAmount(10.532f);
-        frozenItem.setName("NotificationTestItem");
-
-        Log.d(TAG, "Scheduling...");
-        Log.d(TAG, "Current time is ..." + LocalDateTime.now().toString());
-
-        TimeUnit timeUnit = TimeUnit.SECONDS;
-        LocalDateTime startDate = LocalDateTime.now();
-        LocalDateTime scheduledOn = LocalDateTime.now().plusSeconds(1);
-        long offset = NotificationHelper.calculateOffset(timeUnit, startDate, scheduledOn);
-
-        OneTimeWorkRequest workRequest = NotificationHelper.createWorkRequest(frozenItem, offset, timeUnit);
-        WorkManager workManager = WorkManager.getInstance(appContext);
-        // Get the TestDriver
-        TestDriver testDriver = WorkManagerTestInitHelper.getTestDriver(appContext);
-
-        // Enqueue and wait for result. This also runs the Worker synchronously
-        // because we are using a SynchronousExecutor.
-        workManager.enqueue(workRequest).getResult().get();
-
-        // Tells the WorkManager test framework that initial delays are now met.
-        testDriver.setInitialDelayMet(workRequest.getId());
-
-        // Get WorkInfo and outputData
-        WorkInfo workInfo = workManager.getWorkInfoById(workRequest.getId()).get();
-
-        // Assert
-        assertThat(workInfo.getState(), is(WorkInfo.State.SUCCEEDED));
+//        Log.d(TAG, "Starting notification test");
+//
+//        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+//        FrozenItem frozenItem = new FrozenItem();
+//        frozenItem.setUnit(AmountUnit.LITERS);
+//        frozenItem.setAmount(10.532f);
+//        frozenItem.setName("NotificationTestItem");
+//
+//        Log.d(TAG, "Scheduling...");
+//        Log.d(TAG, "Current time is ..." + LocalDateTime.now().toString());
+//
+//        TimeUnit timeUnit = TimeUnit.SECONDS;
+//        LocalDateTime startDate = LocalDateTime.now();
+//        LocalDateTime scheduledOn = LocalDateTime.now().plusSeconds(1);
+//        long offset = NotificationHelper.calculateOffset(timeUnit, startDate, scheduledOn);
+//
+//        OneTimeWorkRequest workRequest = NotificationHelper.createWorkRequest(frozenItem, offset, timeUnit);
+//        WorkManager workManager = WorkManager.getInstance(appContext);
+//        // Get the TestDriver
+//        TestDriver testDriver = WorkManagerTestInitHelper.getTestDriver(appContext);
+//
+//        // Enqueue and wait for result. This also runs the Worker synchronously
+//        // because we are using a SynchronousExecutor.
+//        workManager.enqueue(workRequest).getResult().get();
+//
+//        // Tells the WorkManager test framework that initial delays are now met.
+//        testDriver.setInitialDelayMet(workRequest.getId());
+//
+//        // Get WorkInfo and outputData
+//        WorkInfo workInfo = workManager.getWorkInfoById(workRequest.getId()).get();
+//
+//        // Assert
+//        assertThat(workInfo.getState(), is(WorkInfo.State.SUCCEEDED));
     }
 }

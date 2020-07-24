@@ -15,7 +15,10 @@ import androidx.work.testing.WorkManagerTestInitHelper;
 
 import com.mmutert.freshfreezer.data.AmountUnit;
 import com.mmutert.freshfreezer.data.FrozenItem;
+import com.mmutert.freshfreezer.data.ItemNotification;
+import com.mmutert.freshfreezer.data.TimeOffsetUnit;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,8 +53,9 @@ public class NotificationTest {
     public void testNotificationDisplay() throws ExecutionException, InterruptedException {
 
         FrozenItem item = createTestItem();
+        ItemNotification testItemNotification = createTestItemNotification();
 
-        Data inputData = NotificationHelper.createInputDataForItem(item);
+        Data inputData = NotificationHelper.createInputDataForItem(context, item, testItemNotification);
 
         TestListenableWorkerBuilder<NotificationWorker> builder =
                 TestListenableWorkerBuilder.from(context, NotificationWorker.class);
@@ -69,7 +73,15 @@ public class NotificationTest {
         item.setUnit(AmountUnit.LITERS);
         item.setAmount(10.532f);
         item.setName("NotificationTestItem");
+        item.setBestBeforeDate(LocalDate.now().plusDays(2));
+        item.setId(1);
         return item;
+    }
+
+
+    public ItemNotification createTestItemNotification() {
+
+        return new ItemNotification(null, 1, TimeOffsetUnit.DAYS, 1);
     }
 }
 

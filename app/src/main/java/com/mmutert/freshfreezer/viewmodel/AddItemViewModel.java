@@ -138,38 +138,19 @@ public class AddItemViewModel extends AndroidViewModel {
             if (notification.getNotificationId() == null) {
                 // Notification needs to be scheduled
 
-                LocalTime notificationTime = LocalTime.now(DateTimeZone.forTimeZone(TimeZone.getDefault()));
-                // TODO Set notification time to the one saved in the pending notification object, otherwise used preference
-
-                LocalDateTime goalDateTime = determineGoalDateTime(
-                        notification.getTimeOffsetUnit(),
-                        notification.getOffsetAmount(),
-                        notificationTime
-                );
-
-                if (!LocalDateTime.now().isAfter(goalDateTime)) {
                     UUID uuid = NotificationHelper.scheduleNotification(
                             getApplication(),
                             currentItem,
-                            NOTIFICATION_OFFSET_TIMEUNIT,
-                            goalDateTime
+                            notification
                     );
 
-                    notification.setNotificationId(uuid);
-                    notification.setItemId(currentItem.getId());
-                    mItemRepository.addNotification(notification);
+                    if(uuid != null) {
+                        notification.setNotificationId(uuid);
+                        notification.setItemId(currentItem.getId());
+                        mItemRepository.addNotification(notification);
 
-                    Log.d(TAG, "Scheduled a notification with UUID: " + uuid);
-                } else {
-                    Log.e(
-                            TAG,
-                            "Could not schedule notification for item " + currentItem.getName()
-                                    + ". The scheduled time "
-                                    + DateTimeFormat.fullDate().print(goalDateTime) +
-                                    " is in the past. Current time is "
-                                    + DateTimeFormat.fullDate().print(LocalDateTime.now())
-                    );
-                }
+                        Log.d(TAG, "Scheduled a notification with UUID: " + uuid);
+                    }
 
             } else {
                 // Notification got scheduled before
@@ -178,27 +159,7 @@ public class AddItemViewModel extends AndroidViewModel {
     }
 
 
-    private LocalDateTime determineGoalDateTime(
-            final TimeOffsetUnit timeUnit,
-            final int offsetAmount,
-            final LocalTime notificationTime) {
 
-        // TODO Fix: Currently one day off
-        LocalDateTime goalDateTime = currentItem.getBestBeforeDate().toLocalDateTime(notificationTime);
-
-        switch (timeUnit) {
-            case DAYS:
-                goalDateTime = goalDateTime.minusDays(offsetAmount);
-                break;
-            case WEEKS:
-                goalDateTime = goalDateTime.minusWeeks(offsetAmount);
-                break;
-            case MONTHS:
-                goalDateTime = goalDateTime.minusMonths(offsetAmount);
-                break;
-        }
-        return goalDateTime;
-    }
 
 
     public FrozenItem getItem() {

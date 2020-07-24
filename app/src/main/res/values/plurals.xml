@@ -8,7 +8,7 @@
         <item quantity="one">Day before</item>
         <item quantity="other">Days before</item>
     </plurals>
-    <plurals name="notification_list_entry_days_capitalized">
+    <plurals name="notification_list_entry_days_before_capitalized">
         <item quantity="one">%d Day before</item>
         <item quantity="other">%d Days before</item>
     </plurals>
@@ -21,7 +21,7 @@
         <item quantity="one">Week before</item>
         <item quantity="other">Weeks before</item>
     </plurals>
-    <plurals name="notification_list_entry_weeks_capitalized">
+    <plurals name="notification_list_entry_weeks_before_capitalized">
         <item quantity="one">%d Week before</item>
         <item quantity="other">%d Weeks before</item>
     </plurals>
@@ -34,13 +34,13 @@
         <item quantity="one">Month before</item>
         <item quantity="other">Months before</item>
     </plurals>
-    <plurals name="notification_list_entry_months_capitalized">
+    <plurals name="notification_list_entry_months_before_capitalized">
         <item quantity="one">%d Month before</item>
         <item quantity="other">%d Months before</item>
     </plurals>
 
     <plurals name="best_before_notification_text_long">
-        <item quantity="one">The best before date for %s is coming up soon. There is %s %s left.</item>
-        <item quantity="other">The best before date for %s is coming up soon. There are %s %s left.</item>
+        <item quantity="one">The best before date for %s is in %s %s (%s). There is %s %s left.</item>
+        <item quantity="other">The best before date for %s is in %s %s (%s). There are %s %s left.</item>
     </plurals>
 </resources>

@@ -85,7 +85,7 @@
     <string name="dialog_take_button_cancel_label">Abbrechen</string>
     <string name="menu_item_enable_dark_mode">Dunkles Design</string>
     <string name="add_item_add_freezing_date">Einfrierdatum hinzufügen (optional)</string>
-    <string name="best_before_notification_title">Mindesthaltbarkeit wird bald überschritten!</string>
-    <string name="best_before_notification_text_short">Das MHD für %s ist bald überschritten.</string>
+    <string name="best_before_notification_title">MHD für %s ist in %s %s!</string>
+    <string name="best_before_notification_text_short">Das MHD ist am %s. Es sind noch %s %s übrig.</string>
     <string name="fragment_add_item_label_editing">Eintrag bearbeiten</string>
 </resources>

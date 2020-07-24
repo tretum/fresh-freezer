@@ -73,8 +73,8 @@
     <string name="dialog_take_from_default_amount" translatable="false">1</string>
 
     <!-- Notifications -->
-    <string name="best_before_notification_title">Best Before Date coming up!</string>
-    <string name="best_before_notification_text_short">The date for %s is coming up soon.</string>
+    <string name="best_before_notification_title">BBD for %s is in %s %s!</string>
+    <string name="best_before_notification_text_short">The best before date is on the %s. There is still %s %s remaining.</string>
 
 
     <!-- Units -->

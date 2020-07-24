@@ -8,7 +8,7 @@
         <item quantity="one">Tag davor</item>
         <item quantity="other">Tage davor</item>
     </plurals>
-    <plurals name="notification_list_entry_days_capitalized">
+    <plurals name="notification_list_entry_days_before_capitalized">
         <item quantity="one">%d Tag davor</item>
         <item quantity="other">%d Tage davor</item>
     </plurals>
@@ -21,7 +21,7 @@
         <item quantity="one">Woche davor</item>
         <item quantity="other">Wochen davor</item>
     </plurals>
-    <plurals name="notification_list_entry_weeks_capitalized">
+    <plurals name="notification_list_entry_weeks_before_capitalized">
         <item quantity="one">%d Woche davor</item>
         <item quantity="other">%d Wochen davor</item>
     </plurals>
@@ -34,13 +34,13 @@
         <item quantity="one">Monat davor</item>
         <item quantity="other">Monate davor</item>
     </plurals>
-    <plurals name="notification_list_entry_months_capitalized">
+    <plurals name="notification_list_entry_months_before_capitalized">
         <item quantity="one">%d Monat davor</item>
         <item quantity="other">%d Monate davor</item>
     </plurals>
 
     <plurals name="best_before_notification_text_long">
-        <item quantity="one">Das MHD für %s ist bald überschritten Es ist noch %s %s übrig.</item>
-        <item quantity="other">Das MHD für %s ist bald überschritten. Es sind noch %s %s übrig.</item>
+        <item quantity="one">Das MHD für %s ist in %s %s (%s). Es ist noch %s %s übrig.</item>
+        <item quantity="other">Das MHD für %s ist in %s %s (%s). Es sind noch %s %s übrig.</item>
     </plurals>
 </resources>
