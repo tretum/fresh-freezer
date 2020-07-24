@@ -105,8 +105,6 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
 
     private void setupNewItemFAB() {
         mBinding.fab.setOnClickListener(view2 -> {
-            // TODO Check if setting to invisible is still necessary
-            mBinding.fab.setVisibility(View.GONE);
 
             String title = getString(R.string.fragment_add_item_label);
             ItemListFragmentDirections.ActionOpenAddItemView navDirections
