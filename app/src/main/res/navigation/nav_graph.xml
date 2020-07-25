@@ -22,10 +22,18 @@
         <action
             android:id="@+id/action_settings"
             app:destination="@id/settingsFragment"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out" />
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_about"
+            app:destination="@id/aboutFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/item_list" />
     </fragment>
 
     <fragment
@@ -49,5 +57,9 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.mmutert.freshfreezer.ui.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="Settings" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.mmutert.freshfreezer.ui.AboutFragment"
+        android:label="About" />
 </navigation>
