@@ -44,4 +44,13 @@
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 
+    <style name="fragment_about_list_entry">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:layout_marginVertical">4dp</item>
+        <item name="android:textSize">@dimen/about_entry_text_size</item>
+    </style>
+
 </resources>

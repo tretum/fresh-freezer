@@ -16,7 +16,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -227,7 +230,7 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
 //            NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
 //                    .findFragmentById(R.id.nav_host_fragment);
 //            navHostFragment.getNavController().navigate(R.id.action_settings);
-            return true;
+            return false;
         } else if (id == R.id.app_bar_filter) {
             ListSortingDialogFragment listSortingDialogFragment = new ListSortingDialogFragment(
                     getContext(),
@@ -236,6 +239,7 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
                     mItemListAdapter
             );
             listSortingDialogFragment.show(getParentFragmentManager(), "set sorting option");
+            return true;
         } else if (id == R.id.action_toggle_dark_mode) {
             if (item.isChecked()) {
                 saveDarkModePreference(false);
@@ -246,9 +250,12 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
                 item.setChecked(true);
                 applyDarkMode(true);
             }
+            return true;
+        } else if(id == R.id.menu_item_about) {
+            Navigation.findNavController(mBinding.getRoot()).navigate(R.id.action_about);
         }
 
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     /**
