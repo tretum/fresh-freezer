@@ -23,7 +23,7 @@
                     android:id="@+id/iv_about_logo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_snowflake_24px_black"
+                    android:src="@drawable/ic_snowflake_24px"
                     android:contentDescription="@string/fragment_about_icon_description" />
 
                 <TextView
@@ -67,7 +67,7 @@
 
                 <TextView
                     android:id="@+id/tv_about_github"
-                    android:drawableStart="@drawable/ic_brand_github_24px_black"
+                    android:drawableStart="@drawable/ic_brand_github_24px"
                     android:text="@string/fragment_about_view_source_button_label"
                     style="@style/fragment_about_list_entry" />
 
@@ -79,7 +79,7 @@
 
                 <TextView
                     android:id="@+id/tv_about_report_bug"
-                    android:drawableStart="@drawable/ic_bug_24px_black"
+                    android:drawableStart="@drawable/ic_bug_24px"
                     android:text="@string/fragment_about_bug_report_button_label"
                     style="@style/fragment_about_list_entry" />
             </LinearLayout>
