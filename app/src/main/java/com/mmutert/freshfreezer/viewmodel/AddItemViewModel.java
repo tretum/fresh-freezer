@@ -17,6 +17,7 @@ import com.mmutert.freshfreezer.data.ItemNotification;
 import com.mmutert.freshfreezer.data.ItemRepository;
 import com.mmutert.freshfreezer.data.TimeOffsetUnit;
 import com.mmutert.freshfreezer.notification.NotificationHelper;
+import com.mmutert.freshfreezer.util.TimeHelper;
 
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
@@ -204,11 +205,11 @@ public class AddItemViewModel extends AndroidViewModel {
 
         // If the creation date was not set before, i.e. the item not edited, set the date
         if (currentItem.getItemCreationDate() == null) {
-            currentItem.setItemCreationDate(LocalDateTime.now());
+            currentItem.setItemCreationDate(TimeHelper.getCurrentDateTimeLocalized());
         }
 
         // Always update the last changed at date
-        currentItem.setLastChangedAtDate(LocalDateTime.now());
+        currentItem.setLastChangedAtDate(TimeHelper.getCurrentDateTimeLocalized());
         mItemRepository.insertItem(currentItem);
 
         // TODO Check for weird LiveData updates and possible problems with scheduling and deleting

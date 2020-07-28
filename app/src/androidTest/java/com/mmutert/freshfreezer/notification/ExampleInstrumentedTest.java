@@ -70,11 +70,11 @@ public class ExampleInstrumentedTest {
 //        frozenItem.setName("NotificationTestItem");
 //
 //        Log.d(TAG, "Scheduling...");
-//        Log.d(TAG, "Current time is ..." + LocalDateTime.now().toString());
+//        Log.d(TAG, "Current time is ..." + TimeHelper.getCurrentDateTimeLocalized().toString());
 //
 //        TimeUnit timeUnit = TimeUnit.SECONDS;
-//        LocalDateTime startDate = LocalDateTime.now();
-//        LocalDateTime scheduledOn = LocalDateTime.now().plusSeconds(1);
+//        LocalDateTime startDate = TimeHelper.getCurrentDateTimeLocalized();
+//        LocalDateTime scheduledOn = TimeHelper.getCurrentDateTimeLocalized().plusSeconds(1);
 //        long offset = NotificationHelper.calculateOffset(timeUnit, startDate, scheduledOn);
 //
 //        OneTimeWorkRequest workRequest = NotificationHelper.createWorkRequest(frozenItem, offset, timeUnit);

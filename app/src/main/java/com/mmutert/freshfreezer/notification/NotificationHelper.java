@@ -56,7 +56,7 @@ public class NotificationHelper {
         );
 
         // Precondition: Notification has to be scheduled after current date
-        if (TimeHelper.getCurrentDateLocalized().isAfter(goalDateTime)) {
+        if (TimeHelper.getCurrentDateTimeLocalized().isAfter(goalDateTime)) {
             String name = item.getName() != null && !item.getName().isEmpty()
                     ? item.getName()
                     : context.getString(R.string.empty_name_placeholder);
@@ -66,13 +66,13 @@ public class NotificationHelper {
                             + ". The scheduled time "
                             + DateTimeFormat.fullDate().print(goalDateTime) +
                             " is in the past. Current time is "
-                            + DateTimeFormat.fullDate().print(LocalDateTime.now())
+                            + DateTimeFormat.fullDate().print(TimeHelper.getCurrentDateTimeLocalized())
             );
 
             return null;
         }
 
-        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime startDate = TimeHelper.getCurrentDateTimeLocalized();
         long offset = calculateOffset(NOTIFICATION_OFFSET_TIMEUNIT, startDate, goalDateTime);
 
         Data inputData = createInputDataForItem(context, item, notification);
