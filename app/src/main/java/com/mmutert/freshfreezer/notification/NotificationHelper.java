@@ -57,9 +57,12 @@ public class NotificationHelper {
 
         // Precondition: Notification has to be scheduled after current date
         if (TimeHelper.getCurrentDateLocalized().isAfter(goalDateTime)) {
+            String name = item.getName() != null && !item.getName().isEmpty()
+                    ? item.getName()
+                    : context.getString(R.string.empty_name_placeholder);
             Log.e(
                     TAG,
-                    "Could not schedule notification for item " + item.getName()
+                    "Could not schedule notification for item " + name
                             + ". The scheduled time "
                             + DateTimeFormat.fullDate().print(goalDateTime) +
                             " is in the past. Current time is "
@@ -138,8 +141,12 @@ public class NotificationHelper {
                 break;
         }
 
+        String name = item.getName() != null && !item.getName().isEmpty()
+                ? item.getName()
+                : context.getString(R.string.empty_name_placeholder);
+
         return new Data.Builder()
-                .putString(NotificationConstants.KEY_ITEM_NAME, item.getName())
+                .putString(NotificationConstants.KEY_ITEM_NAME, name)
                 .putFloat(NotificationConstants.KEY_ITEM_AMOUNT, item.getAmount())
                 .putInt(NotificationConstants.KEY_ITEM_ID, (int) item.getId())
                 .putString(NotificationConstants.KEY_ITEM_AMOUNT_UNIT, item.getUnit().toString())

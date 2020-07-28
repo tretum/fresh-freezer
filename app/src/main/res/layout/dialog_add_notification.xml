@@ -36,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:counterEnabled="false"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/dialog_layout_vertical_margin"
                     app:hintAnimationEnabled="false"
                     app:hintEnabled="false"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -48,14 +48,14 @@
                         android:inputType="number"
                         android:text="@{`` + selectedOffset}"
                         android:selectAllOnFocus="true"
-                        android:textSize="18sp" />
+                        android:textSize="@dimen/dialog_text_input_text_size" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <RadioGroup
                     android:id="@+id/rg_add_notification_radio_group"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="16dp">
+                    android:layout_marginTop="@dimen/dialog_layout_vertical_margin">
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/radio_button_days"

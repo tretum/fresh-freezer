@@ -6,31 +6,40 @@
     <dimen name="add_item_pad_title_top">8dp</dimen>
     <dimen name="add_item_pad_vertical">8dp</dimen>
     <dimen name="add_item_margin_vertical">8dp</dimen>
+    <dimen name="add_item_margin_horizontal">8dp</dimen>
+    <dimen name="add_item_icon_margin_horizontal">16dp</dimen>
+    <dimen name="add_item_divider_height">1dp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="list_item_side_margin">16dp</dimen>
     <dimen name="list_item_vertical_margin">8dp</dimen>
     <dimen name="list_item_card_vertical_margin">4dp</dimen>
-    <dimen name="list_item_title_text_size">20sp</dimen>
-    <dimen name="list_item_label_text_size">16sp</dimen>
-    <dimen name="list_item_value_text_size">18sp</dimen>
+    <dimen name="list_item_title_text_size">18sp</dimen>
+    <dimen name="list_item_label_text_size">14sp</dimen>
+    <dimen name="list_item_value_text_size">16sp</dimen>
+    <dimen name="list_item_card_horizontal_margin">4dp</dimen>
+    <dimen name="list_item_swipe_icon_margin_horizontal">10dp</dimen>
 
+    <!-- Dialog layout -->
     <dimen name="dialog_card_padding">8dp</dimen>
     <dimen name="dialog_card_corner_radius">4dp</dimen>
     <dimen name="dialog_layout_horizontal_margin">16dp</dimen>
-    <dimen name="dialog_layout_vertical_margin">8dp</dimen>
-    <dimen name="dialog_title_text_size">22sp</dimen>
-
-    <dimen name="dialog_radio_button_label_text_size">18sp</dimen>
+    <dimen name="dialog_layout_vertical_margin">16dp</dimen>
     <dimen name="dialog_padding_horizontal">8dp</dimen>
+    <dimen name="dialog_layout_small_horizontal_margin">8dp</dimen>
 
-    <dimen name="take_dialog_text_size">20sp</dimen>
-    <dimen name="add_item_margin_horizontal">8dp</dimen>
-    <dimen name="list_item_swipe_icon_margin_horizontal">10dp</dimen>
-    <dimen name="add_item_divider_height">1dp</dimen>
-    <dimen name="add_item_icon_margin_horizontal">16dp</dimen>
-    <dimen name="list_item_card_horizontal_margin">4dp</dimen>
+    <!-- Dialog text sizes-->
+    <dimen name="dialog_title_text_size">20sp</dimen>
+    <dimen name="dialog_text_input_text_size">18sp</dimen>
+
+    <dimen name="dialog_take_item_label_text_size">16sp</dimen>
+    <dimen name="dialog_take_item_text_size">18sp</dimen>
+
+    <dimen name="dialog_radio_button_label_text_size">16sp</dimen>
+
+    <!-- About fragment-->
     <dimen name="about_section_header_text_size">16sp</dimen>
     <dimen name="about_entry_text_size">18sp</dimen>
+
 </resources>

@@ -70,7 +70,7 @@
     <!-- Take from item dialog fragment -->
     <string name="dialog_take_out_title">Entnehmen</string>
     <string name="dialog_take_out_divider_text">von</string>
-    <string name="dialog_take_from_selected_item_text">Ausgewählter Artikel</string>
+    <string name="dialog_take_from_selected_item_text">Ausgewählter Artikel:</string>
 
     <!-- Units -->
     <string name="unit_grams">g</string>
