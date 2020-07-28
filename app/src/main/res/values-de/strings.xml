@@ -96,4 +96,7 @@
     <string name="fragment_about_bug_report_button_label">Problem melden</string>
     <string name="fragment_about_icon_description">Das Symbol der Fresh Freezer App</string>
     <string name="fragment_about_version_text">Version %s</string>
+    <string name="empty_name_placeholder">(Kein Name)</string>
+    <string name="fragment_add_item_bbd_before_freezing_date_error">MHD ist vor dem Einfrierdatum</string>
+    <string name="fragment_add_item_bbd_before_current_date_error">Das MHD ist vor dem aktuellen Datum. Bitte die Eingabe überprüfen</string>
 </resources>

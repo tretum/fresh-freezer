@@ -22,7 +22,6 @@ public class FrozenItem {
     @PrimaryKey(autoGenerate = true)
     private long id;
 
-    @NonNull
     private String name;
 
     private float amount;
@@ -72,12 +71,11 @@ public class FrozenItem {
         this.id = id;
     }
 
-    @NonNull
     public String getName() {
         return name;
     }
 
-    public void setName(@NonNull String name) {
+    public void setName(String name) {
         this.name = name;
     }
 

@@ -340,16 +340,16 @@ public class AddItemFragment extends Fragment {
 
             boolean invalidInput = false;
 
-            // Input check: Name may not be empty
-            if (item.getName().isEmpty()) {
-                mBinding.addItemNameLayout.setErrorEnabled(true);
-                mBinding.addItemNameLayout.setError("Name may not be empty");
+            // Input Check: The best before date should not be after the freezing date, if that is specified
+            if (item.getFrozenAtDate() != null && item.getFrozenAtDate().isAfter(item.getBestBeforeDate())) {
+                Snackbar.make(getView(), R.string.fragment_add_item_bbd_before_freezing_date_error, Snackbar.LENGTH_SHORT)
+                        .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
+                        .show();
                 invalidInput = true;
             }
 
-            // Input Check: The best before date should not be after the freezing date, if that is specified
-            if (item.getFrozenAtDate() != null && item.getFrozenAtDate().isAfter(item.getBestBeforeDate())) {
-                Snackbar.make(getView(), "Best before date is before freezing date", Snackbar.LENGTH_SHORT)
+            if(item.getBestBeforeDate().isBefore(TimeHelper.getCurrentDateLocalized())) {
+                Snackbar.make(getView(), R.string.fragment_add_item_bbd_before_current_date_error, Snackbar.LENGTH_SHORT)
                         .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
                         .show();
                 invalidInput = true;

@@ -71,24 +71,22 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:elevation="5dp"
                 app:cardCornerRadius="8dp">
-<!--                app:cardBackgroundColor="@color/list_item_background"-->
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/tv_title"
+                        android:id="@+id/tv_item_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/list_item_side_margin"
                         android:layout_marginTop="@dimen/list_item_vertical_margin"
-                        android:text="@{item.name}"
+                        android:text="@string/empty_name_placeholder"
                         android:textSize="@dimen/list_item_title_text_size"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Chicken" />
+                        app:layout_constraintTop_toTopOf="parent"/>
 
                     <TextView
                         android:id="@+id/tv_amount"
@@ -97,8 +95,8 @@
                         android:layout_marginEnd="8dp"
                         android:textSize="@dimen/list_item_value_text_size"
                         app:layout_constraintEnd_toStartOf="@+id/tv_amount_unit"
-                        app:layout_constraintTop_toTopOf="@+id/tv_title"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+                        app:layout_constraintTop_toTopOf="@+id/tv_item_name"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_item_name"
                         tools:text="2" />
 
                     <TextView
@@ -107,8 +105,8 @@
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/list_item_value_text_size"
                         app:layout_constraintEnd_toEndOf="@+id/tv_date_frozen"
-                        app:layout_constraintTop_toTopOf="@+id/tv_title"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+                        app:layout_constraintTop_toTopOf="@+id/tv_item_name"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_item_name"
                         tools:text="pcs" />
 
                     <TextView
@@ -119,7 +117,7 @@
                         android:textSize="@dimen/list_item_label_text_size"
                         android:labelFor="@id/tv_date_frozen"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_date_frozen"
-                        app:layout_constraintStart_toStartOf="@+id/tv_title"
+                        app:layout_constraintStart_toStartOf="@+id/tv_item_name"
                         app:layout_constraintTop_toTopOf="@+id/tv_date_frozen" />
 
                     <TextView

@@ -78,6 +78,11 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
         binding.setItem(itemForPosition);
 
+        // Set name of the item
+        if(itemForPosition.getName() != null && !itemForPosition.getName().isEmpty()) {
+            binding.tvItemName.setText(itemForPosition.getName());
+        }
+
         AmountUnit unit = itemForPosition.getUnit();
         binding.tvAmountUnit.setText(context.getResources().getString(unit.getStringResId()));
 

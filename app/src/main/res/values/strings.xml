@@ -104,6 +104,9 @@
     <string name="support_email" translatable="false">contact@michaelmutert.com</string>
     <string name="support_email_subject" translatable="false">Fresh Freezer Feedback</string>
     <string name="github_repository_url" translatable="false">https://github.com/tretum/fresh-freezer</string>
+    <string name="empty_name_placeholder">(No Name)</string>
+    <string name="fragment_add_item_bbd_before_freezing_date_error">Best before date is before freezing date</string>
+    <string name="fragment_add_item_bbd_before_current_date_error">The BBD is before the current date. Make sure it is entered correctly.</string>
 
     <!-- Unsorted strings -->
 </resources>
