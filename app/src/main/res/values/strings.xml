@@ -101,9 +101,9 @@
     <string name="fragment_about_icon_description">The icon of the Fresh Freezer app.</string>
     <string name="fragment_about_joda_time_button_label" translatable="false">Joda-Time</string>
     <string name="fragment_about_version_text">Version %s</string>
-    <string name="support_email">contact@michaelmutert.com</string>
-    <string name="support_email_subject">Fresh Freezer Feedback</string>
-    <string name="github_repository_url">https://github.com/tretum/fresh-freezer</string>
+    <string name="support_email" translatable="false">contact@michaelmutert.com</string>
+    <string name="support_email_subject" translatable="false">Fresh Freezer Feedback</string>
+    <string name="github_repository_url" translatable="false">https://github.com/tretum/fresh-freezer</string>
 
     <!-- Unsorted strings -->
 </resources>
