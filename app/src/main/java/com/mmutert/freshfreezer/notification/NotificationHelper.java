@@ -13,6 +13,7 @@ import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.data.ItemNotification;
 import com.mmutert.freshfreezer.data.TimeOffsetUnit;
+import com.mmutert.freshfreezer.util.TimeHelper;
 
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
@@ -55,7 +56,7 @@ public class NotificationHelper {
         );
 
         // Precondition: Notification has to be scheduled after current date
-        if (LocalDateTime.now().isAfter(goalDateTime)) {
+        if (TimeHelper.getCurrentDateLocalized().isAfter(goalDateTime)) {
             Log.e(
                     TAG,
                     "Could not schedule notification for item " + item.getName()

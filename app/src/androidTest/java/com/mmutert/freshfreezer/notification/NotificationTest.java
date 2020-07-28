@@ -17,6 +17,7 @@ import com.mmutert.freshfreezer.data.AmountUnit;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.data.ItemNotification;
 import com.mmutert.freshfreezer.data.TimeOffsetUnit;
+import com.mmutert.freshfreezer.util.TimeHelper;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -73,7 +74,7 @@ public class NotificationTest {
         item.setUnit(AmountUnit.LITERS);
         item.setAmount(10.532f);
         item.setName("NotificationTestItem");
-        item.setBestBeforeDate(LocalDate.now().plusDays(2));
+        item.setBestBeforeDate(TimeHelper.getCurrentDateLocalized().plusDays(2));
         item.setId(1);
         return item;
     }

@@ -30,6 +30,7 @@ import com.mmutert.freshfreezer.data.ItemNotification;
 import com.mmutert.freshfreezer.data.TimeOffsetUnit;
 import com.mmutert.freshfreezer.databinding.FragmentAddItemBinding;
 import com.mmutert.freshfreezer.util.Keyboard;
+import com.mmutert.freshfreezer.util.TimeHelper;
 import com.mmutert.freshfreezer.viewmodel.AddItemViewModel;
 
 import org.joda.time.LocalDate;
@@ -246,7 +247,7 @@ public class AddItemFragment extends Fragment {
      */
     private void setUpDatePickers() {
 
-        LocalDate currentDate = LocalDate.now();
+        LocalDate currentDate = TimeHelper.getCurrentDateLocalized();
         FrozenItem item = addItemViewModel.getItem();
 
         // Set up the frozen date picker
