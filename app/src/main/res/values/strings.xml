@@ -107,6 +107,8 @@
     <string name="empty_name_placeholder">(No Name)</string>
     <string name="fragment_add_item_bbd_before_freezing_date_error">Best before date is before freezing date</string>
     <string name="fragment_add_item_bbd_before_current_date_error">The BBD is before the current date. Make sure it is entered correctly.</string>
+    <string name="nav_header_subtitle">Food and grocery management app</string>
+    <string name="nav_header_desc">The header image of the navigation drawer.</string>
 
     <!-- Unsorted strings -->
 </resources>

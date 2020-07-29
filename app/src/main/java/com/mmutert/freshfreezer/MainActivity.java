@@ -6,25 +6,31 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.navigation.NavigationView;
 import com.mmutert.freshfreezer.util.Keyboard;
 
+import androidx.annotation.IdRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-
 import static com.mmutert.freshfreezer.notification.NotificationConstants.CHANNEL_ID;
+
 
 public class MainActivity extends AppCompatActivity {
 
+
+    private AppBarConfiguration mAppBarConfiguration;
+    private NavigationView mNavigationView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         getWindow().setWindowAnimations(R.style.WindowAnimationTransition);
@@ -33,21 +39,52 @@ public class MainActivity extends AppCompatActivity {
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        AppBarConfiguration appBarConfiguration =
-                new AppBarConfiguration.Builder(navController.getGraph()).build();
+
+        mNavigationView = findViewById(R.id.nav_view);
+
+        mAppBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph())
+                .setOpenableLayout(drawer)
+                .build();
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(
-                toolbar, navController, appBarConfiguration);
+//                mNavigationView, navController);
+                toolbar, navController, mAppBarConfiguration);
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if(getCurrentFocus() != null) {
+            if (getCurrentFocus() != null) {
                 Keyboard.hideKeyboardFrom(this, getCurrentFocus());
             }
+        });
+
+        mNavigationView.setNavigationItemSelectedListener(menuItem -> {
+            @IdRes
+            int id = menuItem.getItemId();
+            NavOptions.Builder optionsBuilder = new NavOptions.Builder();
+
+            optionsBuilder
+                    .setEnterAnim(R.anim.slide_in_right)
+                    .setExitAnim(R.anim.slide_out_left)
+                    .setPopEnterAnim(R.anim.slide_in_left)
+                    .setPopExitAnim(R.anim.slide_out_right);
+            switch (id) {
+                case R.id.aboutFragment:
+                case R.id.settingsFragment:
+                    navController.navigate(id, null, optionsBuilder.build());
+                    break;
+            }
+
+            // Do not forget to close the drawer
+             drawer.closeDrawers();
+            return true;
         });
 
         // Create the notification channel for the app on android versions above O
         createNotificationChannel();
     }
+
 
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
@@ -63,5 +100,14 @@ public class MainActivity extends AppCompatActivity {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
     }
 }
