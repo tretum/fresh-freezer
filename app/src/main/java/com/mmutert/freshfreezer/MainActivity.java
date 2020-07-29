@@ -4,6 +4,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
+import android.view.View;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
@@ -40,10 +44,20 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        int childCount = drawer.getChildCount();
+        View childAt = drawer.getChildAt(0);
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
         mNavigationView = findViewById(R.id.nav_view);
+        Menu menu = mNavigationView.getMenu();
+
+        // TODO Remove test for programatic addition of entries
+        MenuItem item = menu.findItem(R.id.nav_drawer_group_categories_title);
+        SubMenu categoriesMenu = item.getSubMenu();
+        categoriesMenu.add(R.id.nav_drawer_group_categories, View.generateViewId(), Menu.NONE, "Chilled");
+        categoriesMenu.add(R.id.nav_drawer_group_categories, View.generateViewId(), Menu.NONE, "Fruit");
+        categoriesMenu.add(R.id.nav_drawer_group_categories, View.generateViewId(), Menu.NONE, "Vegetable");
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph())
                 .setOpenableLayout(drawer)
