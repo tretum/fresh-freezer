@@ -19,21 +19,15 @@ import com.mmutert.freshfreezer.data.TimeOffsetUnit;
 import com.mmutert.freshfreezer.notification.NotificationHelper;
 import com.mmutert.freshfreezer.util.TimeHelper;
 
-import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.Executors;
-
-import static com.mmutert.freshfreezer.notification.NotificationConstants.NOTIFICATION_OFFSET_TIMEUNIT;
 
 
 public class AddItemViewModel extends AndroidViewModel {
@@ -44,7 +38,7 @@ public class AddItemViewModel extends AndroidViewModel {
     private FrozenItem currentItem;
     private boolean editing = false;
 
-    private ItemRepository mItemRepository;
+    private final ItemRepository mItemRepository;
     private List<ItemNotification> notifications;
     private List<ItemNotification> notificationsToDelete;
 
