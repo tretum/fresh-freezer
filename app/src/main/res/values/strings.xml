@@ -112,6 +112,8 @@
     <string name="nav_drawer_settings_section_title"><![CDATA[Settings & Co]]></string>
     <string name="nav_drawer_categories_section_title">Categories</string>
     <string name="nav_drawer_item_no_filter">All items</string>
+    <string name="preference_category_design_title"><![CDATA[Design & Themeing]]></string>
+    <string name="pref_night_mode_title">Night mode</string>
 
     <!-- Unsorted strings -->
 </resources>

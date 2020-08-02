@@ -1,1 +1,13 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"/>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="@string/preference_category_design_title">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_night_mode"
+            android:title="@string/pref_night_mode_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:key="pref_category_notifications" android:title="Notifications">
+        
+    </PreferenceCategory>
+</PreferenceScreen>
