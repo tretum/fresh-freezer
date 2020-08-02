@@ -44,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        int childCount = drawer.getChildCount();
-        View childAt = drawer.getChildAt(0);
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
