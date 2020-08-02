@@ -6,10 +6,10 @@
     <group android:id="@+id/grp1" android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:title="All items" />
+            android:title="@string/nav_drawer_item_no_filter" />
     </group>
 
-    <item android:title="Categories" android:id="@+id/nav_drawer_group_categories_title">
+    <item android:title="@string/nav_drawer_categories_section_title" android:id="@+id/nav_drawer_group_categories_title">
         <menu>
             <group android:id="@+id/nav_drawer_group_categories">
                 <item android:title="Frozen"/>
@@ -17,7 +17,7 @@
         </menu>
     </item>
 
-    <item android:title="Settings &amp; Co">
+    <item android:title="@string/nav_drawer_settings_section_title">
         <menu>
             <group android:id="@+id/nav_group_other" android:checkableBehavior="single">
                 <item

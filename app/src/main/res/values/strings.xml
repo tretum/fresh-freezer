@@ -109,6 +109,9 @@
     <string name="fragment_add_item_bbd_before_current_date_error">The BBD is before the current date. Make sure it is entered correctly.</string>
     <string name="nav_header_subtitle">Food and grocery management app</string>
     <string name="nav_header_desc">The header image of the navigation drawer.</string>
+    <string name="nav_drawer_settings_section_title"><![CDATA[Settings & Co]]></string>
+    <string name="nav_drawer_categories_section_title">Categories</string>
+    <string name="nav_drawer_item_no_filter">All items</string>
 
     <!-- Unsorted strings -->
 </resources>
