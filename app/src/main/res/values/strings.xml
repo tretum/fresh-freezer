@@ -114,8 +114,8 @@
     <string name="nav_drawer_item_no_filter">All items</string>
     <string name="preference_category_design_title"><![CDATA[Design & Themeing]]></string>
     <string name="pref_night_mode_title">Night mode</string>
-    <string name="pref_persistent_notifications_key">pref_persistent_notifications</string>
-    <string name="pref_night_mode_key">pref_night_mode</string>
+    <string name="pref_persistent_notifications_key" translatable="false">pref_persistent_notifications</string>
+    <string name="pref_night_mode_key" translatable="false">pref_night_mode</string>
     <string name="pref_persistent_notifications_summary_off">Remove notification when pressed</string>
     <string name="pref_persistent_notifications_summary_on">Keep notification when pressed</string>
     <string name="pref_persistent_notifications_switch_text_off">Notifications disappear when clicked</string>

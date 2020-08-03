@@ -99,4 +99,21 @@
     <string name="empty_name_placeholder">(Kein Name)</string>
     <string name="fragment_add_item_bbd_before_freezing_date_error">MHD ist vor dem Einfrierdatum</string>
     <string name="fragment_add_item_bbd_before_current_date_error">Das MHD ist vor dem aktuellen Datum. Bitte die Eingabe überprüfen</string>
+    <string name="theme_label_light">Tag</string>
+    <string name="theme_label_dark">Nacht</string>
+    <string name="theme_label_default">Durch Energiesparmodus bestimmt</string>
+    <string name="pref_night_mode_summary_on">Nachtmodus aktiviert</string>
+    <string name="pref_night_mode_summary_off">Tagmodus aktiviert</string>
+    <string name="nav_header_subtitle">Essens- und Lebensmittelverwaltung</string>
+    <string name="nav_header_desc">Das Hintergrundbild des Titels der Navigationsleiste</string>
+    <string name="nav_drawer_settings_section_title">Eintstellungen und Weiteres</string>
+    <string name="nav_drawer_categories_section_title">Kategorien</string>
+    <string name="nav_drawer_item_no_filter">Alle Einträge</string>
+    <string name="preference_category_design_title">Design und Thema</string>
+    <string name="pref_night_mode_title">Nachtmodus</string>
+    <string name="pref_persistent_notifications_summary_off">Benachrichtigung bei Berührung entfernen</string>
+    <string name="pref_persistent_notifications_summary_on">Benachrichtigung behalten</string>
+    <string name="pref_persistent_notifications_switch_text_off">Benachrichtigung bei Berührung entfernen</string>
+    <string name="pref_persistent_notifications_switch_text_on">Benachrichtigung behalten</string>
+    <string name="pref_persistent_notifications_title">Dauerhafte Benachrichtigungen</string>
 </resources>
