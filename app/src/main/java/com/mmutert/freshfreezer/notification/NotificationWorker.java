@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -11,6 +12,7 @@ import android.text.style.StyleSpan;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.preference.PreferenceManager;
 import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
@@ -81,13 +83,19 @@ public class NotificationWorker extends Worker {
                 amountUnitFormatted
         );
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean persistentNotification = sharedPreferences.getBoolean(
+                context.getString(R.string.pref_persistent_notifications_key),
+                false
+        );
+        boolean autoCancel = !persistentNotification;
         Notification build = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notifications_none_24px)
                 .setContentTitle(formattedTitleText)
                 .setContentText(content)
                 .setPriority(NotificationConstants.NOTIFICATION_PRIORITY)
                 .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
+                .setAutoCancel(autoCancel)
                 .build();
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
