@@ -114,6 +114,24 @@
     <string name="nav_drawer_item_no_filter">All items</string>
     <string name="preference_category_design_title"><![CDATA[Design & Themeing]]></string>
     <string name="pref_night_mode_title">Night mode</string>
+    <string name="pref_persistent_notifications_key">pref_persistent_notifications</string>
+    <string name="pref_night_mode_key">pref_night_mode</string>
+    <string name="pref_persistent_notifications_summary_off">Remove notification when pressed</string>
+    <string name="pref_persistent_notifications_summary_on">Keep notification when pressed</string>
+    <string name="pref_persistent_notifications_switch_text_off">Notifications disappear when clicked</string>
+    <string name="pref_persistent_notifications_switch_text_on">Notifications stay when clicked</string>
+    <string name="pref_persistent_notifications_title">Persistent Notifications</string>
+    <string name="pref_night_mode_summary_off">Light mode enabled</string>
+    <string name="pref_night_mode_summary_on">Night mode enabled</string>
+
+
+    <string name="theme_label_light">Light</string>
+    <string name="theme_label_dark">Dark</string>
+    <string name="theme_label_default">Set by Battery Saver</string>
+
+    <string name="theme_value_light" translatable="false">light</string>
+    <string name="theme_value_dark" translatable="false">dark</string>
+    <string name="theme_value_default" translatable="false">default</string>
 
     <!-- Unsorted strings -->
 </resources>

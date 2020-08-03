@@ -59,9 +59,6 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
     ) {
         // Inflate the layout for this fragment
 
-        boolean darkModeEnabled = getDarkModeEnabledPreference();
-        applyDarkMode(darkModeEnabled);
-
         mBinding = FragmentFrozenItemListBinding.inflate(inflater, container, false);
 
         return mBinding.getRoot();
@@ -213,10 +210,6 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.menu_item_list, menu);
-
-        boolean darkModeEnabled = getDarkModeEnabledPreference();
-        MenuItem item = menu.findItem(R.id.action_toggle_dark_mode);
-        item.setChecked(darkModeEnabled);
     }
 
     @Override
@@ -226,12 +219,7 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-//            NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-//                    .findFragmentById(R.id.nav_host_fragment);
-//            navHostFragment.getNavController().navigate(R.id.action_settings);
-            return false;
-        } else if (id == R.id.app_bar_filter) {
+        if (id == R.id.app_bar_filter) {
             ListSortingDialogFragment listSortingDialogFragment = new ListSortingDialogFragment(
                     getContext(),
                     mViewModel.getSortingOption(),
@@ -240,53 +228,11 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
             );
             listSortingDialogFragment.show(getParentFragmentManager(), "set sorting option");
             return true;
-        } else if (id == R.id.action_toggle_dark_mode) {
-            if (item.isChecked()) {
-                saveDarkModePreference(false);
-                item.setChecked(false);
-                applyDarkMode(false);
-            } else {
-                saveDarkModePreference(true);
-                item.setChecked(true);
-                applyDarkMode(true);
-            }
-            return true;
-        } else if(id == R.id.menu_item_about) {
-            Navigation.findNavController(mBinding.getRoot()).navigate(R.id.action_about);
         }
 
         return false;
     }
 
-    /**
-     * Returns the saved value for the preference of dark mode.
-     *
-     * @return The saved value.
-     */
-    private boolean getDarkModeEnabledPreference() {
-        SharedPreferences defaultSharedPreferences
-                = PreferenceManager.getDefaultSharedPreferences(getContext());
-        return defaultSharedPreferences.getBoolean("darkMode", false);
-    }
-
-    private void saveDarkModePreference(boolean enabled) {
-        SharedPreferences defaultSharedPreferences
-                = PreferenceManager.getDefaultSharedPreferences(getContext());
-        defaultSharedPreferences.edit().putBoolean("darkMode", enabled).apply();
-    }
-
-    /**
-     * Applies the given status to dark mode
-     *
-     * @param enabled
-     */
-    private void applyDarkMode(boolean enabled) {
-        if (enabled) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        }
-    }
 
     @Override
     public void onClick(FrozenItem item) {

@@ -2,8 +2,12 @@ package com.mmutert.freshfreezer;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.transition.Transition;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -14,20 +18,25 @@ import com.google.android.material.navigation.NavigationView;
 import com.mmutert.freshfreezer.util.Keyboard;
 
 import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.preference.PreferenceManager;
 
 import static com.mmutert.freshfreezer.notification.NotificationConstants.CHANNEL_ID;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
 
+    private static final String TAG = "MainActivity";
+    public static final String DARK_MODE_ENABLED = "mDarkModeEnabled";
     private AppBarConfiguration mAppBarConfiguration;
     private NavigationView mNavigationView;
 
@@ -37,9 +46,9 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        getWindow().setWindowAnimations(R.style.WindowAnimationTransition);
-
+        // Set content view after applying the theme
         setContentView(R.layout.activity_main);
+
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -50,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         mNavigationView = findViewById(R.id.nav_view);
         Menu menu = mNavigationView.getMenu();
 
-        // TODO Remove test for programatic addition of entries
+        // TODO Remove test for programmatic addition of entries
         MenuItem item = menu.findItem(R.id.nav_drawer_group_categories_title);
         SubMenu categoriesMenu = item.getSubMenu();
         categoriesMenu.add(R.id.nav_drawer_group_categories, View.generateViewId(), Menu.NONE, "Chilled");
@@ -61,9 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 .setOpenableLayout(drawer)
                 .build();
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(
-//                mNavigationView, navController);
-                toolbar, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(toolbar, navController, mAppBarConfiguration);
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             if (getCurrentFocus() != null) {
@@ -89,12 +96,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Do not forget to close the drawer
-             drawer.closeDrawers();
+            drawer.closeDrawers();
             return true;
         });
 
         // Create the notification channel for the app on android versions above O
         createNotificationChannel();
+
     }
 
 
@@ -121,5 +129,19 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+
+    /**
+     * Applies the given status to dark mode
+     *
+     * @param nightModeEnabled True, iff night mode should be enabled
+     */
+    private void applyDarkMode(boolean nightModeEnabled) {
+        if (nightModeEnabled) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
     }
 }
