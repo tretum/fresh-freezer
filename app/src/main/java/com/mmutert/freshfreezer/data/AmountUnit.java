@@ -17,7 +17,7 @@ public enum AmountUnit {
     LITERS(R.string.unit_liters),
     MILLILITERS(R.string.unit_milliliters);
 
-    private int stringResId;
+    private final int stringResId;
 
     AmountUnit(int stringResId) {
         this.stringResId = stringResId;

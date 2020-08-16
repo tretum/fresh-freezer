@@ -1,6 +1,5 @@
 package com.mmutert.freshfreezer.ui;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -120,10 +119,10 @@ public class ListSortingDialogFragment extends DialogFragment {
 
         return new MaterialAlertDialogBuilder(context)
                 .setView(binging.getRoot())
-                .setPositiveButton(R.string.dialog_sort_select_button_label, (dialog, which) -> {
+                .setPositiveButton(R.string.dialog_sorting_options_select_button_label, (dialog, which) -> {
                     listener.listOptionClicked(currentOption, currentOrder);
                 })
-                .setNegativeButton(R.string.dialog_sort_close_button_label, (dialog, which) -> {
+                .setNegativeButton(R.string.dialog_sorting_options_close_button_label, (dialog, which) -> {
                     // Noop
                 })
                 .create();

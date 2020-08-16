@@ -2,6 +2,7 @@
     <string name="app_name">Fresh Freezer</string>
     <string name="action_settings">Settings</string>
 
+
     <!--  Add item fragment  -->
     <string name="fragment_add_item_label">Add Item</string>
     <string name="add_item_title_hint">Name of the item</string>
@@ -16,6 +17,11 @@
     <string name="add_item_best_before_date_picker_title_text">Select Best Before Date</string>
     <string name="add_item_frozen_at_date_picker_title_text">Select Frozen At Date</string>
     <string name="add_item_new_notification_placeholder_label">New notification</string>
+    <string name="add_item_add_freezing_date">Add Freezing Date (Optional)</string>
+    <string name="add_item_label_editing">Edit the item</string>
+    <string name="add_item_bbd_before_freezing_date_error">Best before date is before freezing date</string>
+    <string name="add_item_bbd_before_current_date_error">The BBD is before the current date. Make sure it is entered correctly.</string>
+
 
     <!-- Add notification dialog fragment-->
     <string name="dialog_add_notification_enter_amount_hint">Enter amount</string>
@@ -24,6 +30,7 @@
     <string name="dialog_add_notification_days_button_title">Days</string>
     <string name="dialog_add_notification_weeks_button_title">Weeks</string>
     <string name="dialog_add_notification_months_button_title">Months</string>
+
 
     <!-- Sorting options dialog fragment -->
     <string name="dialog_sorting_options_sort_by_title">Sort by</string>
@@ -35,6 +42,9 @@
     <string name="dialog_sorting_options_order_title">Order</string>
     <string name="dialog_sorting_options_ascending_button_label">Ascending</string>
     <string name="dialog_sorting_options_descending_button_label">Descending</string>
+    <string name="dialog_sorting_options_select_button_label">Select</string>
+    <string name="dialog_sorting_options_close_button_label">Close</string>
+
 
     <!-- List item -->
     <string name="list_item_frozen_at_title">Frozen at:</string>
@@ -43,9 +53,11 @@
     <string name="list_item_best_before_title">Best before:</string>
     <string name="fragment_item_list_label">Item List</string>
 
+
     <!-- Notifications -->
     <string name="notification_channel_title">Best Before Date Updates</string>
     <string name="notification_channel_description">Notifications for items in your freezer with a best before date that is coming up soon.</string>
+
 
     <!-- Time units -->
     <string name="days">days</string>
@@ -63,14 +75,20 @@
     <string name="month_capitalized">Month</string>
     <string name="months_capitalized">Months</string>
 
+
     <!-- Menu Items -->
     <string name="menu_item_filter">Sort</string>
+
 
     <!-- Take from item dialog fragment -->
     <string name="dialog_take_out_title">Take out</string>
     <string name="dialog_take_out_divider_text">of</string>
     <string name="dialog_take_from_selected_item_text">Selected Item:</string>
     <string name="dialog_take_from_default_amount" translatable="false">1</string>
+    <string name="dialog_take_accept_button_label">OK</string>
+    <string name="dialog_take_button_take_all_label">Take all</string>
+    <string name="dialog_take_button_cancel_label">Cancel</string>
+
 
     <!-- Notifications -->
     <string name="best_before_notification_title">BBD for %s is in %s %s!</string>
@@ -83,16 +101,31 @@
     <string name="unit_liters">l</string>
     <string name="unit_milliliters">ml</string>
     <string name="unit_pieces">pcs</string>
-    <string name="dialog_sort_select_button_label">Select</string>
-    <string name="dialog_sort_close_button_label">Close</string>
-    <string name="dialog_take_accept_button_label">Ok</string>
-    <string name="dialog_take_button_take_all_label">Take all</string>
-    <string name="dialog_take_button_cancel_label">Cancel</string>
-    <string name="menu_item_enable_dark_mode">Enable Dark Mode</string>
-    <string name="add_item_add_freezing_date">Add Freezing Date (Optional)</string>
-    <string name="fragment_add_item_label_editing">Edit the item</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="menu_item_about_label">About</string>
+
+
+    <!-- Preferences -->
+    <string name="preference_category_design_title"><![CDATA[Design & Themeing]]></string>
+    <string name="pref_night_mode_title">Night mode</string>
+    <string name="pref_night_mode_summary_off">Light mode enabled</string>
+    <string name="pref_night_mode_summary_on">Night mode enabled</string>
+    <string name="pref_night_mode_key" translatable="false">pref_night_mode</string>
+
+    <string name="theme_label_light">Light</string>
+    <string name="theme_label_dark">Dark</string>
+    <string name="theme_label_default">Set by Battery Saver</string>
+    <string name="theme_value_light" translatable="false">light</string>
+    <string name="theme_value_dark" translatable="false">dark</string>
+    <string name="theme_value_default" translatable="false">default</string>
+
+    <string name="pref_persistent_notifications_key" translatable="false">pref_persistent_notifications</string>
+    <string name="pref_persistent_notifications_summary_off">Remove notification when pressed</string>
+    <string name="pref_persistent_notifications_summary_on">Keep notification when pressed</string>
+    <string name="pref_persistent_notifications_switch_text_off">Notifications disappear when clicked</string>
+    <string name="pref_persistent_notifications_switch_text_on">Notifications stay when clicked</string>
+    <string name="pref_persistent_notifications_title">Persistent Notifications</string>
+
+
+    <!-- About fragment -->
     <string name="fragment_about_licenses_header_title">Third-Party Libraries and Licenses</string>
     <string name="fragment_about_links_header_title">Links</string>
     <string name="fragment_about_send_feedback_button_label">Send feedback</string>
@@ -104,34 +137,22 @@
     <string name="support_email" translatable="false">contact@michaelmutert.com</string>
     <string name="support_email_subject" translatable="false">Fresh Freezer Feedback</string>
     <string name="github_repository_url" translatable="false">https://github.com/tretum/fresh-freezer</string>
-    <string name="empty_name_placeholder">(No Name)</string>
-    <string name="fragment_add_item_bbd_before_freezing_date_error">Best before date is before freezing date</string>
-    <string name="fragment_add_item_bbd_before_current_date_error">The BBD is before the current date. Make sure it is entered correctly.</string>
+
+
+    <!-- Navigation Drawer -->
     <string name="nav_header_subtitle">Food and grocery management app</string>
     <string name="nav_header_desc">The header image of the navigation drawer.</string>
     <string name="nav_drawer_settings_section_title"><![CDATA[Settings & Co]]></string>
-    <string name="nav_drawer_categories_section_title">Categories</string>
+    <string name="nav_drawer_categories_section_title">Storage Condition</string>
     <string name="nav_drawer_item_no_filter">All items</string>
-    <string name="preference_category_design_title"><![CDATA[Design & Themeing]]></string>
-    <string name="pref_night_mode_title">Night mode</string>
-    <string name="pref_persistent_notifications_key" translatable="false">pref_persistent_notifications</string>
-    <string name="pref_night_mode_key" translatable="false">pref_night_mode</string>
-    <string name="pref_persistent_notifications_summary_off">Remove notification when pressed</string>
-    <string name="pref_persistent_notifications_summary_on">Keep notification when pressed</string>
-    <string name="pref_persistent_notifications_switch_text_off">Notifications disappear when clicked</string>
-    <string name="pref_persistent_notifications_switch_text_on">Notifications stay when clicked</string>
-    <string name="pref_persistent_notifications_title">Persistent Notifications</string>
-    <string name="pref_night_mode_summary_off">Light mode enabled</string>
-    <string name="pref_night_mode_summary_on">Night mode enabled</string>
+    <string name="menu_item_about_label">About</string>
 
 
-    <string name="theme_label_light">Light</string>
-    <string name="theme_label_dark">Dark</string>
-    <string name="theme_label_default">Set by Battery Saver</string>
-
-    <string name="theme_value_light" translatable="false">light</string>
-    <string name="theme_value_dark" translatable="false">dark</string>
-    <string name="theme_value_default" translatable="false">default</string>
+    <!-- Conditions -->
+    <string name="condition_frozen">Frozen</string>
+    <string name="condition_chilled">Chilled</string>
+    <string name="condition_room_temp">Room Temp</string>
 
     <!-- Unsorted strings -->
+    <string name="empty_name_placeholder">(No Name)</string>
 </resources>

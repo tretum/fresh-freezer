@@ -342,14 +342,14 @@ public class AddItemFragment extends Fragment {
 
             // Input Check: The best before date should not be after the freezing date, if that is specified
             if (item.getFrozenAtDate() != null && item.getFrozenAtDate().isAfter(item.getBestBeforeDate())) {
-                Snackbar.make(getView(), R.string.fragment_add_item_bbd_before_freezing_date_error, Snackbar.LENGTH_SHORT)
+                Snackbar.make(getView(), R.string.add_item_bbd_before_freezing_date_error, Snackbar.LENGTH_SHORT)
                         .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
                         .show();
                 invalidInput = true;
             }
 
             if(item.getBestBeforeDate().isBefore(TimeHelper.getCurrentDateLocalized())) {
-                Snackbar.make(getView(), R.string.fragment_add_item_bbd_before_current_date_error, Snackbar.LENGTH_SHORT)
+                Snackbar.make(getView(), R.string.add_item_bbd_before_current_date_error, Snackbar.LENGTH_SHORT)
                         .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
                         .show();
                 invalidInput = true;

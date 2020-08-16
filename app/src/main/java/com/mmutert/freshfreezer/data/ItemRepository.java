@@ -3,7 +3,10 @@ package com.mmutert.freshfreezer.data;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -12,26 +15,53 @@ public class ItemRepository {
     private ItemDao mItemDao;
     private LiveData<List<FrozenItem>> mAllActiveFrozenItems;
     private LiveData<List<FrozenItem>> mAllArchivedFrozenItems;
+    private LiveData<List<ItemNotification>> mAllNotifications;
+
 
     public ItemRepository(Application app) {
+
         ItemDatabase database = ItemDatabase.getDatabase(app);
-        mItemDao              = database.itemDao();
-        mAllActiveFrozenItems = mItemDao.getAllActiveItems();
+        mItemDao                = database.itemDao();
+        mAllActiveFrozenItems   = mItemDao.getAllActiveItems();
         mAllArchivedFrozenItems = mItemDao.getArchivedItems();
+        mAllNotifications = mItemDao.getAllNotificationsLiveData();
     }
 
+
+    /**
+     * Get all the items that are not marked as archived.
+     * @return The active items
+     */
     public LiveData<List<FrozenItem>> getAllActiveFrozenItems() {
+
         return mAllActiveFrozenItems;
     }
 
+    public LiveData<List<FrozenItem>> getFrozenItemInConditions(Collection<Condition> conditions) {
+
+        return Transformations.map(mAllActiveFrozenItems, (List<FrozenItem> input) -> {
+            ArrayList<FrozenItem> result = new ArrayList<>();
+            for (FrozenItem item : input) {
+                if(conditions.contains(item.getCondition())) {
+                    result.add(item);
+                }
+            }
+            return result;
+        });
+    }
+
+
     public void insertItem(final FrozenItem itemToInsert) {
+
         ItemDatabase.databaseWriteExecutor.execute(() -> {
             long rowId = mItemDao.insertItem(itemToInsert);
             itemToInsert.setId(rowId);
         });
     }
 
+
     public void deleteItem(FrozenItem itemToDelete) {
+
         List<ItemNotification> allNotifications = getAllNotificationsLiveData(itemToDelete).getValue();
 
         ItemDatabase.databaseWriteExecutor.execute(() -> {
@@ -43,57 +73,93 @@ public class ItemRepository {
         }
     }
 
+
     public void updateItem(final FrozenItem item) {
+
         ItemDatabase.databaseWriteExecutor.execute(() -> mItemDao.updateFrozenItem(item));
     }
 
+
     public void archiveItem(FrozenItem itemToArchive) {
-        if(!itemToArchive.isArchived()) {
+
+        if (!itemToArchive.isArchived()) {
             itemToArchive.setArchived(true);
 
             ItemDatabase.databaseWriteExecutor.execute(() -> mItemDao.updateFrozenItem(itemToArchive));
         }
     }
 
-    public void restoreItem(FrozenItem itemToRestore){
-        if(itemToRestore.isArchived()){
+
+    public void restoreItem(FrozenItem itemToRestore) {
+
+        if (itemToRestore.isArchived()) {
             itemToRestore.setArchived(false);
 
             ItemDatabase.databaseWriteExecutor.execute(() -> mItemDao.updateFrozenItem(itemToRestore));
         }
     }
 
-    public ItemAndNotifications getItem(long itemId) {
+
+    public ItemAndNotifications getItemAndNotifications(long itemId) {
+
         return mItemDao.getItemAndNotifications(itemId);
     }
 
-    public LiveData<List<ItemNotification>> getNotifications(){
-        return mItemDao.getAllNotificationsLiveData();
+
+    public LiveData<List<ItemNotification>> getNotifications() {
+
+        return mAllNotifications;
     }
 
+
     public LiveData<List<ItemNotification>> getAllNotificationsLiveData(FrozenItem item) {
+
+        // TODO Refactor as Transformation on the notification live data member
         return mItemDao.getAllNotificationsLiveData(item);
     }
+
+
     public List<ItemNotification> getAllNotifications(FrozenItem item) {
+
         return mItemDao.getAllNotifications(item);
     }
 
+
+    /**
+     * Add the notification to the database
+     *
+     * @param notification The notification to add
+     */
     public void addNotification(final ItemNotification notification) {
+
         ItemDatabase.databaseWriteExecutor.execute(() -> {
             mItemDao.addNotification(notification);
         });
     }
+
+
+    /**
+     * Remove the given notification from the database
+     *
+     * @param notification The notification to remove
+     */
     public void deleteNotification(ItemNotification notification) {
+
         ItemDatabase.databaseWriteExecutor.execute(() -> {
             mItemDao.deleteNotification(notification);
         });
     }
 
+
     public LiveData<List<FrozenItem>> getAllArchivedFrozenItems() {
+
         return mAllArchivedFrozenItems;
     }
 
+
     public LiveData<ItemAndNotifications> getItemAndNotificationsLiveData(final long itemId) {
+
+        // TODO Refactor as Transformation on the notification live data member and create the member
         return mItemDao.getItemAndNotificationsLiveData(itemId);
     }
 }

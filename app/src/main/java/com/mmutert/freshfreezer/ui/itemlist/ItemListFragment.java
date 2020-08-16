@@ -1,6 +1,5 @@
 package com.mmutert.freshfreezer.ui.itemlist;
 
-import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,14 +12,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -237,7 +231,7 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
     @Override
     public void onClick(FrozenItem item) {
         Log.d("ListFragment", "Clicked on item " + item.getName());
-        String title = getString(R.string.fragment_add_item_label_editing);
+        String title = getString(R.string.add_item_label_editing);
         ItemListFragmentDirections.ActionOpenAddItemView navDirections
                 = ItemListFragmentDirections.actionOpenAddItemView(title);
         navDirections.setItemId(item.getId());

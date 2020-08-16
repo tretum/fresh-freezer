@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.mmutert.freshfreezer.data.converters.AmountUnitConverter;
+import com.mmutert.freshfreezer.data.converters.ConditionConverter;
 import com.mmutert.freshfreezer.data.converters.LocalDateConverter;
 import com.mmutert.freshfreezer.data.converters.LocalDateTimeConverter;
 
@@ -46,6 +47,9 @@ public class FrozenItem {
     private LocalDateTime lastChangedAtDate;
 
     private String notes;
+
+    @TypeConverters(value = {ConditionConverter.class})
+    private Condition condition;
 
 
     @ColumnInfo(defaultValue = "false")
@@ -135,6 +139,19 @@ public class FrozenItem {
         this.lastChangedAtDate = lastChangedAtDate;
     }
 
+
+    public Condition getCondition() {
+
+        return condition;
+    }
+
+
+    public void setCondition(final Condition condition) {
+
+        this.condition = condition;
+    }
+
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -153,7 +170,8 @@ public class FrozenItem {
                 Objects.equals(bestBeforeDate, that.bestBeforeDate) &&
                 itemCreationDate.equals(that.itemCreationDate) &&
                 lastChangedAtDate.equals(that.lastChangedAtDate) &&
-                Objects.equals(notes, that.notes);
+                Objects.equals(notes, that.notes) &&
+                condition == that.condition;
     }
 
     @Override
@@ -168,7 +186,8 @@ public class FrozenItem {
                 itemCreationDate,
                 lastChangedAtDate,
                 notes,
-                archived
+                archived,
+                condition
         );
     }
 }

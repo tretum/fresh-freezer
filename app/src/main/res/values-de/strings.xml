@@ -78,16 +78,15 @@
     <string name="unit_liters">l</string>
     <string name="unit_milliliters">ml</string>
     <string name="unit_pieces">Stk</string>
-    <string name="dialog_sort_select_button_label">Ok</string>
-    <string name="dialog_sort_close_button_label">Abbrechen</string>
+    <string name="dialog_sorting_options_select_button_label">Ok</string>
+    <string name="dialog_sorting_options_close_button_label">Abbrechen</string>
     <string name="dialog_take_accept_button_label">Ok</string>
     <string name="dialog_take_button_take_all_label">Alles nehmen</string>
     <string name="dialog_take_button_cancel_label">Abbrechen</string>
-    <string name="menu_item_enable_dark_mode">Dunkles Design</string>
     <string name="add_item_add_freezing_date">Einfrierdatum hinzufügen (optional)</string>
     <string name="best_before_notification_title">MHD für %s ist in %s %s!</string>
     <string name="best_before_notification_text_short">Das MHD ist am %s. Es sind noch %s %s übrig.</string>
-    <string name="fragment_add_item_label_editing">Eintrag bearbeiten</string>
+    <string name="add_item_label_editing">Eintrag bearbeiten</string>
     <string name="menu_item_about_label">Über die App</string>
     <string name="fragment_about_licenses_header_title">Drittanbieter Lizenzen und Bibliotheken</string>
     <string name="fragment_about_links_header_title">Links</string>
@@ -97,8 +96,8 @@
     <string name="fragment_about_icon_description">Das Symbol der Fresh Freezer App</string>
     <string name="fragment_about_version_text">Version %s</string>
     <string name="empty_name_placeholder">(Kein Name)</string>
-    <string name="fragment_add_item_bbd_before_freezing_date_error">MHD ist vor dem Einfrierdatum</string>
-    <string name="fragment_add_item_bbd_before_current_date_error">Das MHD ist vor dem aktuellen Datum. Bitte die Eingabe überprüfen</string>
+    <string name="add_item_bbd_before_freezing_date_error">MHD ist vor dem Einfrierdatum</string>
+    <string name="add_item_bbd_before_current_date_error">Das MHD ist vor dem aktuellen Datum. Bitte die Eingabe überprüfen</string>
     <string name="theme_label_light">Tag</string>
     <string name="theme_label_dark">Nacht</string>
     <string name="theme_label_default">Durch Energiesparmodus bestimmt</string>
@@ -107,7 +106,7 @@
     <string name="nav_header_subtitle">Essens- und Lebensmittelverwaltung</string>
     <string name="nav_header_desc">Das Hintergrundbild des Titels der Navigationsleiste</string>
     <string name="nav_drawer_settings_section_title">Eintstellungen und Weiteres</string>
-    <string name="nav_drawer_categories_section_title">Kategorien</string>
+    <string name="nav_drawer_categories_section_title">Lagerung</string>
     <string name="nav_drawer_item_no_filter">Alle Einträge</string>
     <string name="preference_category_design_title">Design und Thema</string>
     <string name="pref_night_mode_title">Nachtmodus</string>
@@ -116,4 +115,7 @@
     <string name="pref_persistent_notifications_switch_text_off">Benachrichtigung bei Berührung entfernen</string>
     <string name="pref_persistent_notifications_switch_text_on">Benachrichtigung behalten</string>
     <string name="pref_persistent_notifications_title">Dauerhafte Benachrichtigungen</string>
+    <string name="condition_frozen">Eingefroren</string>
+    <string name="condition_chilled">Gekühlt</string>
+    <string name="condition_room_temp">Zimmertemperatur</string>
 </resources>
