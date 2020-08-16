@@ -24,7 +24,7 @@ public abstract class ItemDatabase extends RoomDatabase {
             synchronized (ItemDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            ItemDatabase.class, "word_database")
+                            ItemDatabase.class, "item_database")
                             .build();
                 }
             }

@@ -30,4 +30,10 @@
         <item>@string/theme_value_default</item>
     </string-array>
 
+    <string-array name="conditions">
+        <item>@string/condition_frozen</item>
+        <item>@string/condition_chilled</item>
+        <item>@string/condition_room_temp</item>
+    </string-array>
+
 </resources>

@@ -51,7 +51,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <View
-                    android:id="@+id/divider"
+                    android:id="@+id/divider5"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/add_item_divider_height"
                     android:layout_marginTop="@dimen/add_item_margin_vertical"
@@ -60,6 +60,43 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/add_item_name_layout" />
+
+
+                <TextView
+                    android:id="@+id/tv_condition_label"
+                    android:paddingStart="@dimen/add_item_pad_horizontal"
+                    android:paddingEnd="@dimen/add_item_pad_horizontal"
+                    android:paddingTop="@dimen/add_item_pad_vertical"
+                    android:paddingBottom="@dimen/add_item_pad_vertical"
+                    android:layout_marginTop="@dimen/add_item_margin_vertical"
+                    android:text="Condition"
+                    android:textSize="@dimen/add_item_label_text_size"
+                    app:layout_constraintTop_toBottomOf="@id/divider5"
+                    app:layout_constraintStart_toStartOf="@id/guideline"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
+
+                <Spinner
+                    android:id="@+id/sp_add_item_condition"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/add_item_margin_horizontal"
+                    android:layout_marginEnd="@dimen/add_item_margin_horizontal"
+                    android:entries="@array/conditions"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_condition_label"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_condition_label" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/add_item_divider_height"
+                    android:layout_marginTop="@dimen/add_item_margin_vertical"
+                    android:background="?android:attr/listDivider"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/sp_add_item_condition" />
 
                 <ImageView
                     android:id="@+id/iv_frozen_date_cal_icon"

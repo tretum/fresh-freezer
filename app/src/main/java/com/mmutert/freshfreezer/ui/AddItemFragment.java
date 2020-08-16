@@ -25,6 +25,7 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.snackbar.Snackbar;
 import com.mmutert.freshfreezer.R;
 import com.mmutert.freshfreezer.data.AmountUnit;
+import com.mmutert.freshfreezer.data.Condition;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.data.ItemNotification;
 import com.mmutert.freshfreezer.data.TimeOffsetUnit;
@@ -50,6 +51,7 @@ public class AddItemFragment extends Fragment {
     private FragmentAddItemBinding mBinding;
     private MaterialDatePicker<Long> freezingDatePicker;
     private UnitArrayAdapter spinnerUnitAdapter;
+    private ConditionArrayAdapter conditionSpinnerAdapter;
     private NotificationListAdapter mNotificationListAdapter;
     private MaterialDatePicker<Long> bestBeforeDatePicker;
 
@@ -83,10 +85,15 @@ public class AddItemFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (savedInstanceState == null || !savedInstanceState.getBoolean("editing")) {
+            // This is not a recreation of the fragment due to rotation or something similar
+            // Therefore we either need to load the item in the model or prepare for a new item
+
             long itemId = AddItemFragmentArgs.fromBundle(getArguments()).getItemId();
             if (itemId == -1) {
+                // No item to edit => Prepare for new item
                 addItemViewModel.reset();
             } else {
+                // Prepare to edit the requested item
                 addItemViewModel
                         .getItemAndNotifications(itemId)
                         .observe(getViewLifecycleOwner(), itemAndNotifications -> {
@@ -113,6 +120,7 @@ public class AddItemFragment extends Fragment {
         setUpFreezingDateButton();
         setUpAddNotificationButton();
         setUpUnitSpinner();
+        setUpConditionSpinner();
 
         updateWithNewData();
     }
@@ -127,8 +135,10 @@ public class AddItemFragment extends Fragment {
 
         mBinding.setCurrentItem(item);
 
-        // Unit spinner
+        // Spinners
         mBinding.spAddItemsUnitSelection.setSelection(spinnerUnitAdapter.getIndexOfUnit(item.getUnit()));
+        mBinding.spAddItemCondition.setSelection(conditionSpinnerAdapter.getIndexOfUnit(
+                item.getCondition() != null ? item.getCondition() : Condition.ROOM_TEMP));
 
         setUpDatePickers();
     }
@@ -141,6 +151,16 @@ public class AddItemFragment extends Fragment {
 
         mBinding.tvAddFreezingDate.setVisibility(View.GONE);
         mBinding.rlFreezingDateLayout.setVisibility(View.VISIBLE);
+    }
+
+
+    /**
+     * Hides all UI elements regarding the freezing date
+     */
+    private void hideFreezingDateElements() {
+
+        mBinding.tvAddFreezingDate.setVisibility(View.GONE);
+        mBinding.rlFreezingDateLayout.setVisibility(View.GONE);
     }
 
 
@@ -182,6 +202,44 @@ public class AddItemFragment extends Fragment {
     }
 
 
+    private void setUpConditionSpinner() {
+
+        conditionSpinnerAdapter = new ConditionArrayAdapter(
+                getContext(),
+                android.R.layout.simple_spinner_dropdown_item
+        );
+        mBinding.spAddItemCondition.setAdapter(conditionSpinnerAdapter);
+
+
+        mBinding.spAddItemCondition.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                Condition selectedCondition = conditionSpinnerAdapter.getSelectedUnit(position);
+
+                switch (selectedCondition) {
+                    case FROZEN:
+                        showAddFreezingDateButton();
+                        break;
+                    case CHILLED:
+                    case ROOM_TEMP:
+                        hideFreezingDateElements();
+                        break;
+                }
+
+                addItemViewModel.setCondition(selectedCondition);
+            }
+
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+                addItemViewModel.setCondition(Condition.ROOM_TEMP);
+            }
+        });
+    }
+
+
     @Override
     public void onSaveInstanceState(@NonNull final Bundle outState) {
 
@@ -206,9 +264,10 @@ public class AddItemFragment extends Fragment {
                 Log.d(TAG, "Selected Unit: " + offSetUnitTime);
 
                 ItemNotification notification = addItemViewModel.addNotification(enteredOffset, offSetUnitTime);
-                if(notification != null) {
+                if (notification != null) {
                     mNotificationListAdapter.addNotificationEntry(notification);
-                } {
+                }
+                {
                     Log.d(TAG, "The selected offset already exists. Not adding a second copy.");
                 }
             }).show(getParentFragmentManager(), "add notification");
@@ -259,7 +318,6 @@ public class AddItemFragment extends Fragment {
             showFreezingDate();
         } else {
             mBinding.etAddItemFrozenDate.setText(addItemViewModel.DATE_FORMATTER.print(currentDate));
-            showAddFreezingDateButton();
         }
 
         // Set up the freezing date picker
@@ -348,7 +406,7 @@ public class AddItemFragment extends Fragment {
                 invalidInput = true;
             }
 
-            if(item.getBestBeforeDate().isBefore(TimeHelper.getCurrentDateLocalized())) {
+            if (item.getBestBeforeDate().isBefore(TimeHelper.getCurrentDateLocalized())) {
                 Snackbar.make(getView(), R.string.add_item_bbd_before_current_date_error, Snackbar.LENGTH_SHORT)
                         .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
                         .show();
@@ -356,7 +414,7 @@ public class AddItemFragment extends Fragment {
             }
 
 
-            if(!invalidInput) {
+            if (!invalidInput) {
                 addItemViewModel.save();
 
                 Keyboard.hideKeyboardFrom(getActivity(), fab);

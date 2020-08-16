@@ -11,6 +11,7 @@ import androidx.work.Operation;
 import androidx.work.WorkManager;
 
 import com.mmutert.freshfreezer.data.AmountUnit;
+import com.mmutert.freshfreezer.data.Condition;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.data.ItemAndNotifications;
 import com.mmutert.freshfreezer.data.ItemNotification;
@@ -168,6 +169,10 @@ public class AddItemViewModel extends AndroidViewModel {
         currentItem.setUnit(selectedUnit);
     }
 
+    public void setCondition(final Condition condition) {
+        currentItem.setCondition(condition);
+    }
+
 
     public LiveData<ItemAndNotifications> getItemAndNotifications(long itemId) {
 
@@ -200,6 +205,10 @@ public class AddItemViewModel extends AndroidViewModel {
         // If the creation date was not set before, i.e. the item not edited, set the date
         if (currentItem.getItemCreationDate() == null) {
             currentItem.setItemCreationDate(TimeHelper.getCurrentDateTimeLocalized());
+        }
+
+        if(!currentItem.getCondition().equals(Condition.FROZEN)) {
+            currentItem.setFrozenAtDate(null);
         }
 
         // Always update the last changed at date
