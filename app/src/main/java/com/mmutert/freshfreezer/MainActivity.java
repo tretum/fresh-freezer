@@ -59,13 +59,6 @@ public class MainActivity extends AppCompatActivity{
         mNavigationView = findViewById(R.id.nav_view);
         Menu menu = mNavigationView.getMenu();
 
-        // TODO Remove test for programmatic addition of entries
-        MenuItem item = menu.findItem(R.id.nav_drawer_group_categories_title);
-        SubMenu categoriesMenu = item.getSubMenu();
-        categoriesMenu.add(R.id.nav_drawer_group_categories, View.generateViewId(), Menu.NONE, "Chilled");
-        categoriesMenu.add(R.id.nav_drawer_group_categories, View.generateViewId(), Menu.NONE, "Fruit");
-        categoriesMenu.add(R.id.nav_drawer_group_categories, View.generateViewId(), Menu.NONE, "Vegetable");
-
         mAppBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph())
                 .setOpenableLayout(drawer)
                 .build();
