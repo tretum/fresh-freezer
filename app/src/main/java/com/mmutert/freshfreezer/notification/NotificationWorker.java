@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -12,6 +13,7 @@ import android.text.style.StyleSpan;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.navigation.NavDeepLinkBuilder;
 import androidx.preference.PreferenceManager;
 import androidx.work.Data;
 import androidx.work.Worker;
@@ -46,12 +48,21 @@ public class NotificationWorker extends Worker {
         Data inputData = getInputData();
         String itemName = inputData.getString(NotificationConstants.KEY_ITEM_NAME);
         float itemAmount = inputData.getFloat(NotificationConstants.KEY_ITEM_AMOUNT, 0);
-        int itemId = inputData.getInt(NotificationConstants.KEY_ITEM_ID, 0);
+        long itemId = inputData.getLong(NotificationConstants.KEY_ITEM_ID, 0);
         AmountUnit itemAmountUnit = AmountUnit.valueOf(inputData.getString(NotificationConstants.KEY_ITEM_AMOUNT_UNIT));
 
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+//        Intent intent = new Intent(context, MainActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+        Bundle args = new Bundle();
+        args.putLong("itemId", itemId);
+        PendingIntent pendingIntent = new NavDeepLinkBuilder(context)
+                .setGraph(R.navigation.nav_graph)
+                .setDestination(R.id.addItemFragment)
+                .setArguments(args)
+                .createPendingIntent();
+
 
         NumberFormat formatterForUnit = AmountUnit.getFormatterForUnit(itemAmountUnit);
         String amountFormatted = formatterForUnit.format(itemAmount);
@@ -99,7 +110,7 @@ public class NotificationWorker extends Worker {
                 .build();
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(itemId, build);
+        notificationManager.notify((int) itemId, build);
 
         return Result.success();
     }

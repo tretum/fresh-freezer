@@ -148,7 +148,7 @@ public class NotificationHelper {
         return new Data.Builder()
                 .putString(NotificationConstants.KEY_ITEM_NAME, name)
                 .putFloat(NotificationConstants.KEY_ITEM_AMOUNT, item.getAmount())
-                .putInt(NotificationConstants.KEY_ITEM_ID, (int) item.getId())
+                .putLong(NotificationConstants.KEY_ITEM_ID, item.getId())
                 .putString(NotificationConstants.KEY_ITEM_AMOUNT_UNIT, item.getUnit().toString())
                 .putString(
                         NotificationConstants.KEY_ITEM_BEST_BEFORE_DATE,
