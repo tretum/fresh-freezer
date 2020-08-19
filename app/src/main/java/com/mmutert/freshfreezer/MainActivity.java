@@ -15,6 +15,9 @@ import android.view.View;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
+import com.mmutert.freshfreezer.data.Condition;
+import com.mmutert.freshfreezer.ui.itemlist.ItemListFragment;
+import com.mmutert.freshfreezer.ui.itemlist.ItemListFragmentDirections;
 import com.mmutert.freshfreezer.util.Keyboard;
 
 import androidx.annotation.IdRes;
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity{
     private AppBarConfiguration mAppBarConfiguration;
     private NavigationView mNavigationView;
 
+    public static final int NO_FILTER_ID = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +85,30 @@ public class MainActivity extends AppCompatActivity{
                     .setExitAnim(R.anim.slide_out_left)
                     .setPopEnterAnim(R.anim.slide_in_left)
                     .setPopExitAnim(R.anim.slide_out_right);
+
+            ItemListFragmentDirections.ActionItemListFragmentFilter direction;
+
             switch (id) {
                 case R.id.aboutFragment:
                 case R.id.settingsFragment:
                     navController.navigate(id, null, optionsBuilder.build());
+                    break;
+                case R.id.nav_drawer_all_items:
+                    direction = ItemListFragmentDirections.actionItemListFragmentFilter(NO_FILTER_ID).setTitle(getString(R.string.app_name));
+                    navController.navigate(direction);
+                    break;
+                case R.id.drawer_item_condition_frozen:
+                    direction = ItemListFragmentDirections.actionItemListFragmentFilter(1).setTitle(getString(R.string.frozen_items_title));
+                    navController.navigateUp();
+                    navController.navigate(direction);
+                    break;
+                case R.id.drawer_item_condition_chilled:
+                    direction = ItemListFragmentDirections.actionItemListFragmentFilter(2).setTitle(getString(R.string.chilled_items_title));
+                    navController.navigate(direction);
+                    break;
+                case R.id.drawer_item_condition_room_temp:
+                    direction = ItemListFragmentDirections.actionItemListFragmentFilter(3).setTitle(getString(R.string.room_temp_items_title));
+                    navController.navigate(direction);
                     break;
             }
 

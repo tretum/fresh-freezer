@@ -7,14 +7,18 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 import androidx.preference.PreferenceManager;
 import androidx.work.WorkManager;
 
+import com.mmutert.freshfreezer.data.Condition;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.data.ItemNotification;
 import com.mmutert.freshfreezer.data.ItemRepository;
 import com.mmutert.freshfreezer.util.SortingOption;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,6 +46,22 @@ public class ItemListViewModel extends AndroidViewModel {
         loadSortingOptionPreference();
     }
 
+
+    public void filterItems(Collection<Condition> conditions) {
+        this.mFrozenItems = Transformations.map(mFrozenItems, (List<FrozenItem> input) -> {
+            ArrayList<FrozenItem> result = new ArrayList<>();
+            for (FrozenItem item : input) {
+                if(conditions.contains(item.getCondition())) {
+                    result.add(item);
+                }
+            }
+            return result;
+        });
+    }
+
+    public void resetFilter() {
+        this.mFrozenItems = mItemRepository.getAllActiveFrozenItems();
+    }
 
     public void loadSortingOrderPreference() {
 

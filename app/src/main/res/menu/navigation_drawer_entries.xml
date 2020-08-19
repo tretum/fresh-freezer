@@ -7,7 +7,7 @@
         android:id="@+id/grp1"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/nav_drawer_all_items"
             android:title="@string/nav_drawer_item_no_filter" />
     </group>
 
@@ -16,7 +16,7 @@
         android:title="@string/nav_drawer_categories_section_title">
 
         <menu>
-            <group android:id="@+id/nav_drawer_group_condition">
+            <group android:id="@+id/nav_drawer_group_condition" android:checkableBehavior="all">
                 <item
                     android:id="@+id/drawer_item_condition_frozen"
                     android:title="@string/condition_frozen" />

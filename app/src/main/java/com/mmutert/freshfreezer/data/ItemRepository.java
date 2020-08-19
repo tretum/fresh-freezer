@@ -52,7 +52,7 @@ public class ItemRepository {
      */
     public LiveData<List<FrozenItem>> getAllActiveFrozenItems() {
 
-        return mAllItems;
+        return mAllActiveItems;
     }
 
 

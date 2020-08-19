@@ -21,13 +21,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.mmutert.freshfreezer.MainActivity;
 import com.mmutert.freshfreezer.R;
+import com.mmutert.freshfreezer.data.Condition;
 import com.mmutert.freshfreezer.data.FrozenItem;
 import com.mmutert.freshfreezer.databinding.FragmentFrozenItemListBinding;
 import com.mmutert.freshfreezer.databinding.ListItemBinding;
+import com.mmutert.freshfreezer.ui.AddItemFragmentArgs;
 import com.mmutert.freshfreezer.ui.ListSortingDialogFragment;
 import com.mmutert.freshfreezer.ui.TakeOutDialogFragment;
 import com.mmutert.freshfreezer.viewmodel.ItemListViewModel;
+
+import java.util.Arrays;
 
 
 /**
@@ -42,9 +47,11 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
 
     @Override
     public View onCreateView(
@@ -58,9 +65,12 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
         return mBinding.getRoot();
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+
         super.onViewCreated(view, savedInstanceState);
+
 
         // RecyclerView setup
         LinearLayoutManager layoutManager =
@@ -68,6 +78,31 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
         mBinding.rvFrozenItemList.setLayoutManager(layoutManager);
 
         mViewModel = new ViewModelProvider(this).get(ItemListViewModel.class);
+        Bundle arguments = getArguments();
+        int conditionArg = arguments.getInt("condition", MainActivity.NO_FILTER_ID);
+//        ItemListFragmentArgs itemListFragmentArgs = ItemListFragmentArgs.fromBundle(arguments);
+//        if (itemListFragmentArgs.getCondition() != null && !itemListFragmentArgs.getCondition().isEmpty()) {
+        if (conditionArg != MainActivity.NO_FILTER_ID) {
+            Condition requestedCondition;
+            switch (conditionArg) {
+                case 1:
+                    requestedCondition = Condition.FROZEN;
+                    break;
+                case 2:
+                    requestedCondition = Condition.CHILLED;
+                    break;
+                case 3:
+                    requestedCondition = Condition.ROOM_TEMP;
+                    break;
+                default:
+                    requestedCondition = Condition.FROZEN;
+                    break;
+            }
+//            requestedCondition = Condition.valueOf(itemListFragmentArgs.getCondition());
+            mViewModel.filterItems(Arrays.asList(requestedCondition));
+        }
+        String title = arguments.getString("title", getString(R.string.app_name));
+
 
         mItemListAdapter = new ItemListAdapter(mViewModel, this, getContext());
 
@@ -83,6 +118,7 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
         mBinding.rvFrozenItemList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+
                 if (dy > 0) {
                     mBinding.fab.hide();
                 } else {
@@ -97,7 +133,9 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
         setupNewItemFAB();
     }
 
+
     private void setupNewItemFAB() {
+
         mBinding.fab.setOnClickListener(view2 -> {
 
             String title = getString(R.string.fragment_add_item_label);
@@ -109,12 +147,14 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
         });
     }
 
+
     /**
      * Creates the ItemTouchHelper that archives items in the item list on swipe to the right.
      *
      * @return The item touch helper
      */
     private ItemTouchHelper createSwipeHelper() {
+
         return new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
                 0,
                 ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT
@@ -124,8 +164,10 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
                     @NonNull final RecyclerView recyclerView,
                     @NonNull final RecyclerView.ViewHolder viewHolder,
                     @NonNull final RecyclerView.ViewHolder target) {
+
                 return false;
             }
+
 
             @Override
             public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, final int direction) {
@@ -140,6 +182,7 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
                 }
             }
 
+
             @Override
             public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
 
@@ -150,6 +193,7 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
                     getDefaultUIUtil().onSelected(foregroundView);
                 }
             }
+
 
             @Override
             public void onChildDrawOver(
@@ -176,6 +220,7 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
                 getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
             }
 
+
             @Override
             public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
 
@@ -183,6 +228,7 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
                 final View foregroundView = binding.listItemForeground;
                 getDefaultUIUtil().clearView(foregroundView);
             }
+
 
             @Override
             public void onChildDraw(
@@ -198,13 +244,16 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
         });
     }
 
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+
         Log.d(ItemListFragment.class.getCanonicalName(), "Creating list options menu");
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.menu_item_list, menu);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -230,6 +279,7 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
 
     @Override
     public void onClick(FrozenItem item) {
+
         Log.d("ListFragment", "Clicked on item " + item.getName());
         String title = getString(R.string.add_item_label_editing);
         ItemListFragmentDirections.ActionOpenAddItemView navDirections
@@ -271,6 +321,7 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
         mDeleteSnackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
             @Override
             public void onDismissed(final Snackbar transientBottomBar, final int event) {
+
                 if (event == DISMISS_EVENT_TIMEOUT
                         || event == DISMISS_EVENT_CONSECUTIVE
                         || event == DISMISS_EVENT_SWIPE
@@ -284,6 +335,7 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
         mDeleteSnackbar.show();
     }
 
+
     /**
      * For the given item take the specified amount and use the view model to update the item in the database.
      *
@@ -291,6 +343,7 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
      * @param amountTaken The amount that was taken from the item
      */
     private void takeFromItem(FrozenItem item, float amountTaken) {
+
         mViewModel.takeFromItem(item, amountTaken);
 
         // TODO Possibly a hack. The amount was not updated because the current item is changed in the view model.
@@ -298,20 +351,26 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
         mItemListAdapter.notifyItemChanged(mItemListAdapter.getPositionOfItem(item));
     }
 
+
     private class TakeListener implements TakeOutDialogFragment.TakeOutDialogClickListener {
 
         @Override
         public void onPositiveClicked(final TakeOutDialogFragment dialog) {
+
             takeFromItem(dialog.getItem(), dialog.getSelectionAmount());
         }
 
+
         @Override
         public void onTakeAllClicked(final TakeOutDialogFragment dialog) {
+
             takeFromItem(dialog.getItem(), dialog.getItem().getAmount());
         }
 
+
         @Override
         public void onCancelClicked(final TakeOutDialogFragment dialog) {
+
             mItemListAdapter.notifyDataSetChanged();
         }
     }

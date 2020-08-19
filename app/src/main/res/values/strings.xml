@@ -155,4 +155,8 @@
 
     <!-- Unsorted strings -->
     <string name="empty_name_placeholder">(No Name)</string>
+    <string name="all_items_title">All Items</string>
+    <string name="frozen_items_title">Frozen Items</string>
+    <string name="chilled_items_title">Chilled Items</string>
+    <string name="room_temp_items_title">Room Temp Items</string>
 </resources>
