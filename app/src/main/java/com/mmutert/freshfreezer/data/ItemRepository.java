@@ -13,17 +13,35 @@ import java.util.List;
 public class ItemRepository {
 
     private ItemDao mItemDao;
-    private LiveData<List<FrozenItem>> mAllActiveFrozenItems;
-    private LiveData<List<FrozenItem>> mAllArchivedFrozenItems;
-    private LiveData<List<ItemNotification>> mAllNotifications;
+    private final LiveData<List<FrozenItem>> mAllItems;
+    private final LiveData<List<FrozenItem>> mAllActiveItems;
+    private final LiveData<List<FrozenItem>> mAllArchivedFrozenItems;
+    private final LiveData<List<ItemNotification>> mAllNotifications;
 
 
     public ItemRepository(Application app) {
 
         ItemDatabase database = ItemDatabase.getDatabase(app);
         mItemDao                = database.itemDao();
-        mAllActiveFrozenItems   = mItemDao.getAllActiveItems();
-        mAllArchivedFrozenItems = mItemDao.getArchivedItems();
+        mAllItems   = mItemDao.getAllItems();
+        mAllArchivedFrozenItems = Transformations.map(mAllItems, input -> {
+            ArrayList<FrozenItem> result = new ArrayList<>();
+            for (FrozenItem item : input) {
+                if(item.isArchived()) {
+                    result.add(item);
+                }
+            }
+            return result;
+        });
+        mAllActiveItems = Transformations.map(mAllItems, input -> {
+            ArrayList<FrozenItem> result = new ArrayList<>();
+            for (FrozenItem item : input) {
+                if(!item.isArchived()) {
+                    result.add(item);
+                }
+            }
+            return result;
+        });
         mAllNotifications = mItemDao.getAllNotificationsLiveData();
     }
 
@@ -34,20 +52,7 @@ public class ItemRepository {
      */
     public LiveData<List<FrozenItem>> getAllActiveFrozenItems() {
 
-        return mAllActiveFrozenItems;
-    }
-
-    public LiveData<List<FrozenItem>> getFrozenItemInConditions(Collection<Condition> conditions) {
-
-        return Transformations.map(mAllActiveFrozenItems, (List<FrozenItem> input) -> {
-            ArrayList<FrozenItem> result = new ArrayList<>();
-            for (FrozenItem item : input) {
-                if(conditions.contains(item.getCondition())) {
-                    result.add(item);
-                }
-            }
-            return result;
-        });
+        return mAllItems;
     }
 
 

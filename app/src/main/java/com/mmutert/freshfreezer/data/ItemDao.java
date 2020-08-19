@@ -22,17 +22,14 @@ public abstract class ItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract long insertItem(FrozenItem item);
 
-    @Query("SELECT * FROM items where archived IS 0")
-    public abstract LiveData<List<FrozenItem>> getAllActiveItems();
+    @Query("SELECT * FROM items")
+    public abstract LiveData<List<FrozenItem>> getAllItems();
 
     @Query("SELECT * FROM items WHERE name = :name AND archived is 0")
     public abstract LiveData<List<FrozenItem>> getAllActiveItemsWithName(String name);
 
     @Query("SELECT * FROM items where archived is 0 ORDER BY best_before_date ASC LIMIT :numResults")
     public abstract LiveData<List<FrozenItem>> getClosestBestBefore(int numResults);
-
-    @Query("SELECT * FROM items Where archived IS 1")
-    public abstract LiveData<List<FrozenItem>> getArchivedItems();
 
     @Delete
     public abstract void deleteItem(FrozenItem item);
