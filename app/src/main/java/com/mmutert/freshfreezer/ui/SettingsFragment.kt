@@ -12,11 +12,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
         val nightModePref = findPreference<ListPreference>(getString(R.string.pref_night_mode_key))
         if (nightModePref != null) {
-            nightModePref.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference: Preference?, newValue: Any? ->
-                val themeOption = newValue as String?
-                ThemeHelper.applyTheme(themeOption, activity)
-                true
-            }
+            nightModePref.onPreferenceChangeListener =
+                    Preference.OnPreferenceChangeListener { preference: Preference, newValue: Any ->
+                        ThemeHelper.applyTheme(newValue as String, requireContext())
+                        true
+                    }
         }
     }
 }

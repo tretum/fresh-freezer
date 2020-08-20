@@ -44,18 +44,18 @@ object NotificationHelper {
         )
 
         // Precondition: Notification has to be scheduled after current date
-        if (TimeHelper.getCurrentDateTimeLocalized().isAfter(goalDateTime)) {
+        if (TimeHelper.currentDateTimeLocalized.isAfter(goalDateTime)) {
             val name = if (item.name.isNotEmpty()) item.name else context.getString(R.string.empty_name_placeholder)
             Log.e(
                     TAG,
-                    "Could not schedule notification for item $name. The scheduled time ${DateTimeFormat.fullDate().print(goalDateTime)} is in the past. Current time is ${DateTimeFormat.fullDate().print(TimeHelper.getCurrentDateTimeLocalized())}"
+                    "Could not schedule notification for item $name. The scheduled time ${DateTimeFormat.fullDate().print(goalDateTime)} is in the past. Current time is ${DateTimeFormat.fullDate().print(TimeHelper.currentDateTimeLocalized)}"
             )
             return null
         }
-        val startDate = TimeHelper.getCurrentDateTimeLocalized()
-        val offset = calculateOffset(NotificationConstants.NOTIFICATION_OFFSET_TIMEUNIT, startDate, goalDateTime)
+        val startDate = TimeHelper.currentDateTimeLocalized
+        val offset = calculateOffset(NotificationConstants.NOTIFICATION_OFFSET_TIME_UNIT, startDate, goalDateTime)
         val inputData = createInputDataForItem(context, item, notification)
-        val notificationRequest = createWorkRequest(inputData, offset, NotificationConstants.NOTIFICATION_OFFSET_TIMEUNIT)
+        val notificationRequest = createWorkRequest(inputData, offset, NotificationConstants.NOTIFICATION_OFFSET_TIME_UNIT)
         WorkManager.getInstance(context).enqueue(notificationRequest)
         Log.d(TAG, "Enqueued the notification worker with uuid: " + notificationRequest.id)
         return notificationRequest.id

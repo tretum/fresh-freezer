@@ -46,7 +46,7 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
 
     private fun createNewItem(): FrozenItem {
         val currentDate = LocalDate.now(DateTimeZone.getDefault())
-        val currentDateTime = TimeHelper.getCurrentDateTimeLocalized()
+        val currentDateTime = TimeHelper.currentDateTimeLocalized
         return FrozenItem(
                 0,
                 "",
@@ -151,7 +151,7 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
         }
 
         // Always update the last changed at date
-        currentItem.lastChangedAtDate = TimeHelper.getCurrentDateTimeLocalized()
+        currentItem.lastChangedAtDate = TimeHelper.currentDateTimeLocalized
         mItemRepository.insertItem(currentItem)
 
         // TODO Check for weird LiveData updates and possible problems with scheduling and deleting

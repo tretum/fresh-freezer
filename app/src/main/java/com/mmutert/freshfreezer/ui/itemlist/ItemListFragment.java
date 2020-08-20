@@ -263,7 +263,6 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
 
         if (id == R.id.app_bar_filter) {
             ListSortingDialogFragment listSortingDialogFragment = new ListSortingDialogFragment(
-                    getContext(),
                     mViewModel.getSortingOption(),
                     mViewModel.getSortingOrder(),
                     mItemListAdapter

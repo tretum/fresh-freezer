@@ -97,8 +97,8 @@ public class AddItemFragment extends Fragment {
                 addItemViewModel
                         .getItemAndNotifications(itemId)
                         .observe(getViewLifecycleOwner(), itemAndNotifications -> {
-                            addItemViewModel.setCurrentItem(itemAndNotifications.item);
-                            addItemViewModel.setNotifications(itemAndNotifications.notifications);
+                            addItemViewModel.setCurrentItem(itemAndNotifications.getItem());
+                            addItemViewModel.setNotifications(itemAndNotifications.getNotifications());
                             mNotificationListAdapter.setItems(addItemViewModel.getCurrentNotifications());
                             updateWithNewData();
                         });
