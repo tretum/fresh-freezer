@@ -45,7 +45,7 @@ object NotificationHelper {
 
         // Precondition: Notification has to be scheduled after current date
         if (TimeHelper.getCurrentDateTimeLocalized().isAfter(goalDateTime)) {
-            val name = if (item.name != null && !item.name.isEmpty()) item.name else context.getString(R.string.empty_name_placeholder)
+            val name = if (item.name.isNotEmpty()) item.name else context.getString(R.string.empty_name_placeholder)
             Log.e(
                     TAG,
                     "Could not schedule notification for item $name. The scheduled time ${DateTimeFormat.fullDate().print(goalDateTime)} is in the past. Current time is ${DateTimeFormat.fullDate().print(TimeHelper.getCurrentDateTimeLocalized())}"
@@ -111,7 +111,7 @@ object NotificationHelper {
             )
         }
 
-        val name = if (item.name != null && item.name.isNotEmpty()) item.name else context.getString(R.string.empty_name_placeholder)
+        val name = if (item.name.isNotEmpty()) item.name else context.getString(R.string.empty_name_placeholder)
 
         return Data.Builder()
                 .putString(NotificationConstants.KEY_ITEM_NAME, name)

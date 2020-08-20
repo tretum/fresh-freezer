@@ -25,12 +25,6 @@ public abstract class ItemDao {
     @Query("SELECT * FROM items")
     public abstract LiveData<List<FrozenItem>> getAllItems();
 
-    @Query("SELECT * FROM items WHERE name = :name AND archived is 0")
-    public abstract LiveData<List<FrozenItem>> getAllActiveItemsWithName(String name);
-
-    @Query("SELECT * FROM items where archived is 0 ORDER BY best_before_date ASC LIMIT :numResults")
-    public abstract LiveData<List<FrozenItem>> getClosestBestBefore(int numResults);
-
     @Delete
     public abstract void deleteItem(FrozenItem item);
 

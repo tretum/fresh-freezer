@@ -20,7 +20,9 @@ import com.mmutert.freshfreezer.data.TimeOffsetUnit;
 import com.mmutert.freshfreezer.notification.NotificationHelper;
 import com.mmutert.freshfreezer.util.TimeHelper;
 
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -48,7 +50,7 @@ public class AddItemViewModel extends AndroidViewModel {
 
         super(application);
         mItemRepository       = new ItemRepository(application);
-        currentItem           = new FrozenItem();
+        currentItem           = createNewItem();
         notificationsToDelete = new ArrayList<>();
         notifications         = new ArrayList<>();
     }
@@ -59,11 +61,31 @@ public class AddItemViewModel extends AndroidViewModel {
      */
     public void reset() {
 
-        currentItem           = new FrozenItem();
+        currentItem           = createNewItem();
         notificationsToDelete = new ArrayList<>();
         notifications         = new ArrayList<>();
         editing               = false;
         // TODO Notifications
+    }
+
+
+    public FrozenItem createNewItem() {
+
+        LocalDate currentDate = LocalDate.now(DateTimeZone.getDefault());
+        LocalDateTime currentDateTime = LocalDateTime.now(DateTimeZone.getDefault());
+        return new FrozenItem(
+                0,
+                "",
+                0f,
+                AmountUnit.GRAMS,
+                null,
+                currentDate,
+                currentDateTime,
+                currentDateTime,
+                null,
+                Condition.ROOM_TEMP,
+                false
+        );
     }
 
 
@@ -134,28 +156,25 @@ public class AddItemViewModel extends AndroidViewModel {
             if (notification.getNotificationId() == null) {
                 // Notification needs to be scheduled
 
-                    UUID uuid = NotificationHelper.scheduleNotification(
-                            getApplication(),
-                            currentItem,
-                            notification
-                    );
+                UUID uuid = NotificationHelper.scheduleNotification(
+                        getApplication(),
+                        currentItem,
+                        notification
+                );
 
-                    if(uuid != null) {
-                        notification.setNotificationId(uuid);
-                        notification.setItemId(currentItem.getId());
-                        mItemRepository.addNotification(notification);
+                if (uuid != null) {
+                    notification.setNotificationId(uuid);
+                    notification.setItemId(currentItem.getId());
+                    mItemRepository.addNotification(notification);
 
-                        Log.d(TAG, "Scheduled a notification with UUID: " + uuid);
-                    }
+                    Log.d(TAG, "Scheduled a notification with UUID: " + uuid);
+                }
 
             } else {
                 // Notification got scheduled before
             }
         }
     }
-
-
-
 
 
     public FrozenItem getItem() {
@@ -169,7 +188,9 @@ public class AddItemViewModel extends AndroidViewModel {
         currentItem.setUnit(selectedUnit);
     }
 
+
     public void setCondition(final Condition condition) {
+
         currentItem.setCondition(condition);
     }
 
@@ -207,7 +228,7 @@ public class AddItemViewModel extends AndroidViewModel {
             currentItem.setItemCreationDate(TimeHelper.getCurrentDateTimeLocalized());
         }
 
-        if(!currentItem.getCondition().equals(Condition.FROZEN)) {
+        if (!currentItem.getCondition().equals(Condition.FROZEN)) {
             currentItem.setFrozenAtDate(null);
         }
 
