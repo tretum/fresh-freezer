@@ -12,13 +12,20 @@ import com.mmutert.freshfreezer.data.converters.ConditionConverter;
 import com.mmutert.freshfreezer.data.converters.LocalDateConverter;
 import com.mmutert.freshfreezer.data.converters.LocalDateTimeConverter;
 import com.mmutert.freshfreezer.data.converters.OffsetUnitConverter;
+import com.mmutert.freshfreezer.data.converters.UUIDConverter;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
 @Database(entities = {FrozenItem.class, ItemNotification.class}, version = 1, exportSchema = false)
-@TypeConverters(value = {LocalDateTimeConverter.class, LocalDateConverter.class, AmountUnitConverter.class, OffsetUnitConverter.class, ConditionConverter.class})
+@TypeConverters(value = {
+        LocalDateTimeConverter.class,
+        LocalDateConverter.class,
+        AmountUnitConverter.class,
+        OffsetUnitConverter.class,
+        ConditionConverter.class,
+        UUIDConverter.class})
 public abstract class ItemDatabase extends RoomDatabase {
     private static ItemDatabase INSTANCE = null;
 
@@ -36,8 +43,9 @@ public abstract class ItemDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (ItemDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                                    ItemDatabase.class, "item_database"
+                    INSTANCE = Room.databaseBuilder(
+                            context.getApplicationContext(),
+                            ItemDatabase.class, "item_database"
                     )
                                    .build();
                 }

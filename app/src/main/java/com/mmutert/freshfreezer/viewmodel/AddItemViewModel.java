@@ -72,7 +72,7 @@ public class AddItemViewModel extends AndroidViewModel {
     public FrozenItem createNewItem() {
 
         LocalDate currentDate = LocalDate.now(DateTimeZone.getDefault());
-        LocalDateTime currentDateTime = LocalDateTime.now(DateTimeZone.getDefault());
+        LocalDateTime currentDateTime = TimeHelper.getCurrentDateTimeLocalized();
         return new FrozenItem(
                 0,
                 "",
@@ -223,11 +223,6 @@ public class AddItemViewModel extends AndroidViewModel {
 
         Log.d(TAG, "Saving the current item...");
 
-        // If the creation date was not set before, i.e. the item not edited, set the date
-        if (currentItem.getItemCreationDate() == null) {
-            currentItem.setItemCreationDate(TimeHelper.getCurrentDateTimeLocalized());
-        }
-
         if (!currentItem.getCondition().equals(Condition.FROZEN)) {
             currentItem.setFrozenAtDate(null);
         }
@@ -260,11 +255,13 @@ public class AddItemViewModel extends AndroidViewModel {
             if (notification.getOffsetAmount() == offsetAmount && notification
                     .getTimeOffsetUnit()
                     .equals(offsetTimeUnit)) {
+                // TODO Check if the existing notification should be returned instead
                 return null;
             }
         }
 
-        ItemNotification itemNotification = new ItemNotification(null, -1, offsetTimeUnit, offsetAmount);
+        // TODO Check if -1 is intended as itemId
+        ItemNotification itemNotification = new ItemNotification(0, null, -1, offsetTimeUnit, offsetAmount);
         this.notifications.add(itemNotification);
         return itemNotification;
     }
@@ -284,7 +281,7 @@ public class AddItemViewModel extends AndroidViewModel {
     public void updateBestBefore(final LocalDate date) {
 
         // Precondition: Date should have changed
-        if (currentItem.getBestBeforeDate() != null && currentItem.getBestBeforeDate().isEqual(date)) {
+        if (currentItem.getBestBeforeDate().isEqual(date)) {
             // Noop
             return;
         }
@@ -296,6 +293,7 @@ public class AddItemViewModel extends AndroidViewModel {
         if (editing) {
             for (ItemNotification notification : notifications) {
                 ItemNotification notificationCopy = new ItemNotification(
+                        0,
                         null,
                         currentItem.getId(),
                         notification.getTimeOffsetUnit(),
@@ -306,9 +304,13 @@ public class AddItemViewModel extends AndroidViewModel {
                 notificationsToDelete.add(notification);
                 Log.d(
                         TAG,
-                        "Marking notification " + notification.getOffsetAmount() + " " + notification
-                                .getTimeOffsetUnit()
-                                .toString() + " as to delete due to best before date change."
+                        String.format(
+                                "Marking notification %d %s as to delete due to best before date change.",
+                                notification.getOffsetAmount(),
+                                notification
+                                        .getTimeOffsetUnit()
+                                        .toString()
+                        )
                 );
 
                 newNotifications.add(notificationCopy);
