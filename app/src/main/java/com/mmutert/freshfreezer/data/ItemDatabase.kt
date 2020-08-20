@@ -25,7 +25,7 @@ abstract class ItemDatabase : RoomDatabase() {
         val databaseWriteExecutor: ExecutorService = Executors.newFixedThreadPool(NUMBER_OF_WRITE_THREADS)
 
         @JvmStatic
-        fun getDatabase(context: Context): ItemDatabase? {
+        fun getDatabase(context: Context): ItemDatabase {
             val tempInstance = INSTANCE
             if (tempInstance != null) {
                 return tempInstance

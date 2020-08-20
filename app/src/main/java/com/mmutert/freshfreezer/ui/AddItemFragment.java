@@ -98,14 +98,14 @@ public class AddItemFragment extends Fragment {
                         .getItemAndNotifications(itemId)
                         .observe(getViewLifecycleOwner(), itemAndNotifications -> {
                             addItemViewModel.setCurrentItem(itemAndNotifications.item);
-                            addItemViewModel.setCurrentNotifications(itemAndNotifications.notifications);
+                            addItemViewModel.setNotifications(itemAndNotifications.notifications);
                             mNotificationListAdapter.setItems(addItemViewModel.getCurrentNotifications());
                             updateWithNewData();
                         });
             }
         }
 
-        mBinding.setCurrentItem(addItemViewModel.getItem());
+        mBinding.setCurrentItem(addItemViewModel.getCurrentItem());
 
         mNotificationListAdapter = new NotificationListAdapter();
         mBinding.rvAddItemNotificationList.setAdapter(mNotificationListAdapter);
@@ -131,14 +131,13 @@ public class AddItemFragment extends Fragment {
      */
     private void updateWithNewData() {
 
-        FrozenItem item = addItemViewModel.getItem();
+        FrozenItem item = addItemViewModel.getCurrentItem();
 
         mBinding.setCurrentItem(item);
 
         // Spinners
         mBinding.spAddItemsUnitSelection.setSelection(spinnerUnitAdapter.getIndexOfUnit(item.getUnit()));
-        mBinding.spAddItemCondition.setSelection(conditionSpinnerAdapter.getIndexOfUnit(
-                item.getCondition() != null ? item.getCondition() : Condition.ROOM_TEMP));
+        mBinding.spAddItemCondition.setSelection(conditionSpinnerAdapter.getIndexOfUnit(item.getCondition()));
 
         setUpDatePickers();
     }
@@ -180,7 +179,7 @@ public class AddItemFragment extends Fragment {
     private void setUpUnitSpinner() {
 
         spinnerUnitAdapter = new UnitArrayAdapter(
-                getContext(),
+                requireContext(),
                 android.R.layout.simple_spinner_dropdown_item
         );
         mBinding.spAddItemsUnitSelection.setAdapter(spinnerUnitAdapter);
@@ -189,14 +188,14 @@ public class AddItemFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 AmountUnit selectedUnit = spinnerUnitAdapter.getSelectedUnit(position);
-                addItemViewModel.setUnit(selectedUnit);
+                addItemViewModel.getCurrentItem().setUnit(selectedUnit);
             }
 
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
-                addItemViewModel.setUnit(AmountUnit.GRAMS);
+                addItemViewModel.getCurrentItem().setUnit(AmountUnit.GRAMS);
             }
         });
     }
@@ -205,7 +204,7 @@ public class AddItemFragment extends Fragment {
     private void setUpConditionSpinner() {
 
         conditionSpinnerAdapter = new ConditionArrayAdapter(
-                getContext(),
+                requireContext(),
                 android.R.layout.simple_spinner_dropdown_item
         );
         mBinding.spAddItemCondition.setAdapter(conditionSpinnerAdapter);
@@ -227,14 +226,14 @@ public class AddItemFragment extends Fragment {
                         break;
                 }
 
-                addItemViewModel.setCondition(selectedCondition);
+                addItemViewModel.getCurrentItem().setCondition(selectedCondition);
             }
 
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
-                addItemViewModel.setCondition(Condition.ROOM_TEMP);
+                addItemViewModel.getCurrentItem().setCondition(Condition.ROOM_TEMP);
             }
         });
     }
@@ -307,7 +306,7 @@ public class AddItemFragment extends Fragment {
     private void setUpDatePickers() {
 
         LocalDate currentDate = TimeHelper.getCurrentDateLocalized();
-        FrozenItem item = addItemViewModel.getItem();
+        FrozenItem item = addItemViewModel.getCurrentItem();
 
         // Set up the frozen date picker
         mBinding.etAddItemFrozenDate.setInputType(InputType.TYPE_NULL);
@@ -323,8 +322,8 @@ public class AddItemFragment extends Fragment {
         // Set up the freezing date picker
         freezingDatePicker = createDatePicker(
                 R.string.add_item_frozen_at_date_picker_title_text,
-                addItemViewModel.getItem().getFrozenAtDate() != null ?
-                        addItemViewModel.getItem().getFrozenAtDate() : currentDate
+                addItemViewModel.getCurrentItem().getFrozenAtDate() != null ?
+                        addItemViewModel.getCurrentItem().getFrozenAtDate() : currentDate
         );
 
         // Add the behavior for the positive button of the freezing date picker
@@ -343,10 +342,6 @@ public class AddItemFragment extends Fragment {
             freezingDatePicker.show(getParentFragmentManager(), freezingDatePicker.toString());
         });
 
-        // Set up the best before date picker
-        if (item.getBestBeforeDate() == null) {
-            item.setBestBeforeDate(currentDate);
-        }
         String bestBeforeDateFormatted =
                 addItemViewModel.DATE_FORMATTER.print(item.getBestBeforeDate());
         mBinding.etAddItemBestBefore.setText(bestBeforeDateFormatted);
@@ -394,20 +389,20 @@ public class AddItemFragment extends Fragment {
         mBinding.floatingActionButton.setOnClickListener(fab -> {
             // TODO Check validity of inputs
             Log.d("AddItem", "Clicked on Save button");
-            FrozenItem item = addItemViewModel.getItem();
+            FrozenItem item = addItemViewModel.getCurrentItem();
 
             boolean invalidInput = false;
 
             // Input Check: The best before date should not be after the freezing date, if that is specified
             if (item.getFrozenAtDate() != null && item.getFrozenAtDate().isAfter(item.getBestBeforeDate())) {
-                Snackbar.make(getView(), R.string.add_item_bbd_before_freezing_date_error, Snackbar.LENGTH_SHORT)
+                Snackbar.make(requireView(), R.string.add_item_bbd_before_freezing_date_error, Snackbar.LENGTH_SHORT)
                         .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
                         .show();
                 invalidInput = true;
             }
 
             if (item.getBestBeforeDate().isBefore(TimeHelper.getCurrentDateLocalized())) {
-                Snackbar.make(getView(), R.string.add_item_bbd_before_current_date_error, Snackbar.LENGTH_SHORT)
+                Snackbar.make(requireView(), R.string.add_item_bbd_before_current_date_error, Snackbar.LENGTH_SHORT)
                         .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
                         .show();
                 invalidInput = true;
@@ -417,7 +412,7 @@ public class AddItemFragment extends Fragment {
             if (!invalidInput) {
                 addItemViewModel.save();
 
-                Keyboard.hideKeyboardFrom(getActivity(), fab);
+                Keyboard.hideKeyboardFrom(requireActivity(), fab);
                 Navigation.findNavController(fab).navigate(R.id.action_new_item_save);
             }
         });
@@ -470,11 +465,9 @@ public class AddItemFragment extends Fragment {
                     @NonNull ItemNotification oldNotification, @NonNull ItemNotification newNotification) {
                 // Notification properties may have changed if reloaded from the DB, but ID is fixed
                 // TODO Fix
-                boolean same = oldNotification.getOffsetAmount() == newNotification.getOffsetAmount() && oldNotification
+                return oldNotification.getOffsetAmount() == newNotification.getOffsetAmount() && oldNotification
                         .getTimeOffsetUnit()
                         .equals(newNotification.getTimeOffsetUnit());
-//                return oldNotification.getId() == newNotification.getId();
-                return same;
             }
 
 
@@ -574,7 +567,7 @@ public class AddItemFragment extends Fragment {
          */
         private class NotificationListAdapterViewHolder extends RecyclerView.ViewHolder {
 
-            private TextView entry;
+            private final TextView entry;
 
 
             public NotificationListAdapterViewHolder(@NonNull final View itemView) {

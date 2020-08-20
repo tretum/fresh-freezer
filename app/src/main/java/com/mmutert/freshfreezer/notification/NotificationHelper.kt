@@ -88,7 +88,7 @@ object NotificationHelper {
     @JvmStatic
     fun createInputDataForItem(context: Context, item: FrozenItem, notification: ItemNotification): Data {
         val offsetAmount = notification.offsetAmount
-        var offsetUnitFormatted = when (notification.timeOffsetUnit) {
+        val offsetUnitFormatted = when (notification.timeOffsetUnit) {
             TimeOffsetUnit.DAYS -> context.resources.getQuantityString(
                     R.plurals.days_capitalized,
                     offsetAmount,
@@ -101,11 +101,6 @@ object NotificationHelper {
             )
             TimeOffsetUnit.MONTHS -> context.resources.getQuantityString(
                     R.plurals.months_capitalized,
-                    offsetAmount,
-                    offsetAmount
-            )
-            null -> context.resources.getQuantityString(
-                    R.plurals.days_capitalized,
                     offsetAmount,
                     offsetAmount
             )
