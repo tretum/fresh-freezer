@@ -101,7 +101,6 @@ public class ItemListFragment extends Fragment implements ListItemClickedCallbac
 //            requestedCondition = Condition.valueOf(itemListFragmentArgs.getCondition());
             mViewModel.filterItems(Arrays.asList(requestedCondition));
         }
-        String title = arguments.getString("title", getString(R.string.app_name));
 
 
         mItemListAdapter = new ItemListAdapter(mViewModel, this, getContext());

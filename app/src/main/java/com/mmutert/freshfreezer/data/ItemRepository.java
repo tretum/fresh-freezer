@@ -12,8 +12,7 @@ import java.util.List;
 
 public class ItemRepository {
 
-    private ItemDao mItemDao;
-    private final LiveData<List<FrozenItem>> mAllItems;
+    private final ItemDao mItemDao;
     private final LiveData<List<FrozenItem>> mAllActiveItems;
     private final LiveData<List<FrozenItem>> mAllArchivedFrozenItems;
     private final LiveData<List<ItemNotification>> mAllNotifications;
@@ -23,7 +22,7 @@ public class ItemRepository {
 
         ItemDatabase database = ItemDatabase.getDatabase(app);
         mItemDao                = database.itemDao();
-        mAllItems   = mItemDao.getAllItems();
+        LiveData<List<FrozenItem>> mAllItems = mItemDao.getAllItems();
         mAllArchivedFrozenItems = Transformations.map(mAllItems, input -> {
             ArrayList<FrozenItem> result = new ArrayList<>();
             for (FrozenItem item : input) {

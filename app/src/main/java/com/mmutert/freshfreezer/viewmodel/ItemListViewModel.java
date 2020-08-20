@@ -30,7 +30,7 @@ public class ItemListViewModel extends AndroidViewModel {
     private static final String SORTING_ORDER_KEY = "sortingOrder";
     private static final String SORTING_OPTION_KEY = "sortingOption";
 
-    private ItemRepository mItemRepository;
+    private final ItemRepository mItemRepository;
 
     private LiveData<List<FrozenItem>> mFrozenItems;
 
