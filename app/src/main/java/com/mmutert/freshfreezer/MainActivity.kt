@@ -42,8 +42,9 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(toolbar, navController, mAppBarConfiguration)
 
         navController.addOnDestinationChangedListener { controller: NavController?, destination: NavDestination?, arguments: Bundle? ->
-            if (currentFocus != null) {
-                Keyboard.hideKeyboardFrom(this, currentFocus)
+            val currentFocusTemp = currentFocus
+            if (currentFocusTemp != null) {
+                Keyboard.hideKeyboardFrom(this, currentFocusTemp)
             }
         }
 

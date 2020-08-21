@@ -16,8 +16,9 @@ class ListSortingDialogFragment(
         private var currentOption: SortingOption,
         private var currentOrder: SortingOrder,
         private val listener: ListSortingChangedListener) : DialogFragment() {
+
     interface ListSortingChangedListener {
-        fun listOptionClicked(selectedSortingOption: SortingOption?, sortingOrder: SortingOrder?)
+        fun listOptionClicked(selectedSortingOption: SortingOption, sortingOrder: SortingOrder)
     }
 
     private lateinit var mBinding: DialogFilterActionOptionsBinding
