@@ -35,10 +35,13 @@ import java.util.*
 class AddItemFragment : Fragment() {
     private lateinit var addItemViewModel: AddItemViewModel
     private lateinit var mBinding: FragmentAddItemBinding
-    private var freezingDatePicker: MaterialDatePicker<Long>? = null
+
+    private lateinit var mNotificationListAdapter: NotificationListAdapter
+
     private lateinit var spinnerUnitAdapter: UnitArrayAdapter
     private lateinit var conditionSpinnerAdapter: ConditionArrayAdapter
-    private var mNotificationListAdapter: NotificationListAdapter? = null
+
+    private var freezingDatePicker: MaterialDatePicker<Long>? = null
     private var bestBeforeDatePicker: MaterialDatePicker<Long>? = null
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,12 +75,13 @@ class AddItemFragment : Fragment() {
                     .observe(viewLifecycleOwner, { itemAndNotifications: ItemAndNotifications ->
                         addItemViewModel.currentItem = itemAndNotifications.item
                         addItemViewModel.notifications = itemAndNotifications.notifications.toMutableList()
-                        mNotificationListAdapter!!.setItems(addItemViewModel.currentNotifications)
+                        mNotificationListAdapter.setItems(addItemViewModel.currentNotifications)
                         updateWithNewData()
                     })
             }
         }
         mBinding.currentItem = addItemViewModel.currentItem
+
         mNotificationListAdapter = NotificationListAdapter()
         mBinding.rvAddItemNotificationList.adapter = mNotificationListAdapter
         mBinding.rvAddItemNotificationList.layoutManager = LinearLayoutManager(
@@ -202,7 +206,7 @@ class AddItemFragment : Fragment() {
                         val notification =
                                 addItemViewModel.addNotification(enteredOffset, offSetUnitTime)
                         if (notification != null) {
-                            mNotificationListAdapter!!.addNotificationEntry(notification)
+                            mNotificationListAdapter.addNotificationEntry(notification)
                         } else {
                             Log.d(
                                 TAG,
@@ -262,7 +266,10 @@ class AddItemFragment : Fragment() {
         // Set up the freezing date picker
         freezingDatePicker = createDatePicker(
             R.string.add_item_frozen_at_date_picker_title_text,
-            if (addItemViewModel.currentItem.frozenAtDate != null) addItemViewModel.currentItem.frozenAtDate else currentDate
+            when (addItemViewModel.currentItem.frozenAtDate){
+                null -> currentDate
+                else -> addItemViewModel.currentItem.frozenAtDate
+            }
         )
 
         // Add the behavior for the positive button of the freezing date picker
@@ -292,7 +299,7 @@ class AddItemFragment : Fragment() {
         bestBeforeDatePicker!!.addOnPositiveButtonClickListener { selection: Long ->
             val date = convertSelectedDate(selection)
             addItemViewModel.updateBestBefore(date)
-            mNotificationListAdapter!!.setItems(addItemViewModel.currentNotifications)
+            mNotificationListAdapter.setItems(addItemViewModel.currentNotifications)
             val selectedFrozenDateFormatted = addItemViewModel.DATE_FORMATTER.print(date)
             mBinding.etAddItemBestBefore.setText(selectedFrozenDateFormatted)
         }

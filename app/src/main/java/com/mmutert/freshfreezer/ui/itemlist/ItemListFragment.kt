@@ -220,8 +220,8 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
         return false
     }
 
-    override fun onClick(item: FrozenItem?) {
-        Log.d("ListFragment", "Clicked on item " + item!!.name)
+    override fun onClick(item: FrozenItem) {
+        Log.d("ListFragment", "Clicked on item " + item.name)
         val title = getString(R.string.add_item_label_editing)
         val navDirections = ItemListFragmentDirections.actionOpenAddItemView(title)
         navDirections.itemId = item.id

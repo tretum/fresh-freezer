@@ -22,8 +22,7 @@ class ItemListAdapter(
         private val mViewModel: ItemListViewModel,
         private val itemClickedCallback: ListItemClickedCallback,
         private val context: Context) :
-        RecyclerView.Adapter<ItemListAdapterViewHolder>(), ListSortingChangedListener
-{
+        RecyclerView.Adapter<ItemListAdapterViewHolder>(), ListSortingChangedListener {
 
     private val mDiffer = AsyncListDiffer(this, DIFF_CALLBACK)
 
@@ -39,7 +38,7 @@ class ItemListAdapter(
         binding.item = itemForPosition
 
         // Set name of the item
-        if (!itemForPosition.name.isEmpty()) {
+        if (itemForPosition.name.isNotEmpty()) {
             binding.tvItemName.text = itemForPosition.name
         }
         val unit = itemForPosition.unit
@@ -83,8 +82,8 @@ class ItemListAdapter(
         return mDiffer.currentList.indexOf(item)
     }
 
-    override fun listOptionClicked(
-            selectedSortingOption: SortingOption, sortingOrder: SortingOrder) {
+    override fun listOptionClicked(selectedSortingOption: SortingOption,
+                                   sortingOrder: SortingOrder) {
         mViewModel.sortingOption = selectedSortingOption
         mViewModel.sortingOrder = sortingOrder
         itemList = mDiffer.currentList
@@ -139,7 +138,8 @@ class ItemListAdapter(
                     }
                 })
                 SortingOption.NAME -> items.sortWith(Comparator { (_, name), (_, name2) ->
-                    val result = name.toLowerCase().compareTo(name2.toLowerCase())
+                    val result =
+                            name.toLowerCase(Locale.ROOT).compareTo(name2.toLowerCase(Locale.ROOT))
                     if (mViewModel.sortingOrder == SortingOrder.ASCENDING) {
                         return@Comparator result
                     } else {
@@ -161,7 +161,7 @@ class ItemListAdapter(
     /**
      * The view holder
      */
-    inner class ItemListAdapterViewHolder(val binding: ListItemBinding) :
+    class ItemListAdapterViewHolder(val binding: ListItemBinding) :
             RecyclerView.ViewHolder(binding.root)
 
     companion object {
