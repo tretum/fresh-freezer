@@ -23,7 +23,6 @@ import com.mmutert.freshfreezer.ui.TakeOutDialogFragment
 import com.mmutert.freshfreezer.ui.TakeOutDialogFragment.TakeOutDialogClickListener
 import com.mmutert.freshfreezer.ui.itemlist.ItemListAdapter.ItemListAdapterViewHolder
 import com.mmutert.freshfreezer.viewmodel.ItemListViewModel
-import java.util.*
 
 /**
  *
@@ -49,13 +48,10 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mViewModel = ViewModelProvider(this).get(ItemListViewModel::class.java)
 
         // RecyclerView setup
-        val layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
-        mBinding.rvFrozenItemList.layoutManager = layoutManager
-        mViewModel = ViewModelProvider(this).get(ItemListViewModel::class.java)
-        val arguments = arguments
-        val conditionArg = arguments!!.getInt("condition", MainActivity.NO_FILTER_ID)
+        val conditionArg = this.requireArguments().getInt("condition", MainActivity.NO_FILTER_ID)
 //        ItemListFragmentArgs itemListFragmentArgs = ItemListFragmentArgs.fromBundle(arguments);
 //        if (itemListFragmentArgs.getCondition() != null && !itemListFragmentArgs.getCondition().isEmpty()) {
         if (conditionArg != MainActivity.NO_FILTER_ID) {
@@ -74,19 +70,36 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
         mViewModel.frozenItems.observe(
             viewLifecycleOwner,
             { list -> mItemListAdapter.itemList = list })
-        mBinding.rvFrozenItemList.adapter = mItemListAdapter
-        val itemTouchHelper = createSwipeHelper()
-        itemTouchHelper.attachToRecyclerView(mBinding.rvFrozenItemList)
-        mBinding.rvFrozenItemList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 0) {
-                    mBinding.fab.hide()
-                } else {
-                    mBinding.fab.show()
+
+        mBinding.rvFrozenItemList.apply {
+
+            this.layoutManager =
+                    LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
+            adapter = mItemListAdapter
+            val itemTouchHelper = createSwipeHelper()
+            itemTouchHelper.attachToRecyclerView(this)
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (dy > 0) {
+                        mBinding.fab.hide()
+                    } else {
+                        mBinding.fab.show()
+                    }
+                    super.onScrolled(recyclerView, dx, dy)
                 }
-                super.onScrolled(recyclerView, dx, dy)
-            }
-        })
+
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    when(newState){
+                        RecyclerView.SCROLL_STATE_IDLE, RecyclerView.SCROLL_STATE_SETTLING ->
+                            mBinding.fab.show()
+                    }
+                }
+            })
+
+            addItemDecoration(BottomSpaceDecoration(200))
+        }
+
         setupNewItemFAB()
     }
 
