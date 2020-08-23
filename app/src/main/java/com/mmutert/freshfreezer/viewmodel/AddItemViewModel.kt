@@ -4,11 +4,13 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
 import com.mmutert.freshfreezer.data.*
 import com.mmutert.freshfreezer.data.ItemDatabase.Companion.getDatabase
 import com.mmutert.freshfreezer.notification.NotificationHelper.scheduleNotification
 import com.mmutert.freshfreezer.util.TimeHelper
+import kotlinx.coroutines.launch
 import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -19,7 +21,8 @@ import java.util.concurrent.Executors
 class AddItemViewModel(application: Application) : AndroidViewModel(application) {
 
     @JvmField
-    val DATE_FORMATTER : DateTimeFormatter = DateTimeFormat.longDate().withLocale(Locale.getDefault())
+    val DATE_FORMATTER: DateTimeFormatter =
+            DateTimeFormat.longDate().withLocale(Locale.getDefault())
 
     var currentItem: FrozenItem = createNewItem()
         set(value) {
@@ -48,17 +51,17 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
         val currentDate = LocalDate.now(DateTimeZone.getDefault())
         val currentDateTime = TimeHelper.currentDateTimeLocalized
         return FrozenItem(
-                0,
-                "",
-                0f,
-                AmountUnit.GRAMS,
-                null,
-                currentDate,
-                currentDateTime,
-                currentDateTime,
-                null,
-                Condition.ROOM_TEMP,
-                false
+            0,
+            "",
+            0f,
+            AmountUnit.GRAMS,
+            null,
+            currentDate,
+            currentDateTime,
+            currentDateTime,
+            null,
+            Condition.ROOM_TEMP,
+            false
         )
     }
 
@@ -69,9 +72,9 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
      */
     fun addNotificationToDelete(notification: ItemNotification) {
         Log.d(
-                TAG,
-                "Adding notification " + notification.offsetAmount + notification.timeOffsetUnit
-                        + " to the delete list."
+            TAG,
+            "Adding notification " + notification.offsetAmount + notification.timeOffsetUnit
+                    + " to the delete list."
         )
         notificationsToDelete.add(notification)
         notifications.remove(notification)
@@ -85,13 +88,17 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
             // Remove notification workers
             if (notification.notificationId != null) {
                 val workManager = WorkManager
-                        .getInstance(getApplication())
+                    .getInstance(getApplication())
                 val operation = workManager
-                        .cancelWorkById(notification.notificationId!!)
+                    .cancelWorkById(notification.notificationId!!)
                 operation.result.addListener({
-                    Log.d(TAG, "Cancelled the notification worker with uuid: " + notification.notificationId)
-                    Log.d(TAG, "For notification with offset " + notification.timeOffsetUnit.toString()
-                            + " and amount " + notification.offsetAmount
+                    Log.d(
+                        TAG,
+                        "Cancelled the notification worker with uuid: " + notification.notificationId)
+                    Log.d(
+                        TAG,
+                        "For notification with offset " + notification.timeOffsetUnit.toString()
+                                + " and amount " + notification.offsetAmount
                     )
                 }, Executors.newSingleThreadExecutor())
             }
@@ -103,11 +110,13 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
 
     fun deleteNotificationFromRepository(notification: ItemNotification) {
         Log.d(
-                TAG,
-                "Deleting notification from repository. " + notification.offsetAmount
-                        + notification.timeOffsetUnit + " " + notification.notificationId
+            TAG,
+            "Deleting notification from repository. " + notification.offsetAmount
+                    + notification.timeOffsetUnit + " " + notification.notificationId
         )
-        mItemRepository.deleteNotification(notification)
+        viewModelScope.launch {
+            mItemRepository.deleteNotification(notification)
+        }
     }
 
     /**
@@ -120,14 +129,16 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
             if (notification.notificationId == null) {
                 // Notification needs to be scheduled
                 val uuid = scheduleNotification(
-                        getApplication(),
-                        currentItem,
-                        notification
+                    getApplication(),
+                    currentItem,
+                    notification
                 )
                 if (uuid != null) {
                     notification.notificationId = uuid
                     notification.itemId = currentItem.id
-                    mItemRepository.addNotification(notification)
+                    viewModelScope.launch {
+                        mItemRepository.addNotification(notification)
+                    }
                     Log.d(TAG, "Scheduled a notification with UUID: $uuid")
                 }
             } else {
@@ -152,7 +163,7 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
 
         // Always update the last changed at date
         currentItem.lastChangedAtDate = TimeHelper.currentDateTimeLocalized
-        mItemRepository.insertItem(currentItem)
+        viewModelScope.launch { mItemRepository.insertItem(currentItem) }
 
         // TODO Check for weird LiveData updates and possible problems with scheduling and deleting
         //  Might need switching these instructions around or possibly more effort
@@ -205,23 +216,23 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
         if (editing) {
             for (notification in notifications) {
                 val notificationCopy = ItemNotification(
-                        0,
-                        null,
-                        currentItem.id,
-                        notification.timeOffsetUnit,
-                        notification.offsetAmount
+                    0,
+                    null,
+                    currentItem.id,
+                    notification.timeOffsetUnit,
+                    notification.offsetAmount
                 )
 
                 // TODO Check if the delete thing should be here
                 notificationsToDelete.add(notification)
                 Log.d(
-                        TAG, String.format(
+                    TAG, String.format(
                         "Marking notification %d %s as to delete due to best before date change.",
                         notification.offsetAmount,
                         notification
-                                .timeOffsetUnit
-                                .toString()
-                ))
+                            .timeOffsetUnit
+                            .toString()
+                    ))
                 newNotifications.add(notificationCopy)
             }
             notifications = newNotifications

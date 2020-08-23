@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import com.mmutert.freshfreezer.data.Condition
@@ -14,7 +15,7 @@ import com.mmutert.freshfreezer.data.ItemNotification
 import com.mmutert.freshfreezer.data.ItemRepository
 import com.mmutert.freshfreezer.util.SortingOption
 import com.mmutert.freshfreezer.util.SortingOption.SortingOrder
-import java.util.*
+import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 import kotlin.math.max
 
@@ -22,7 +23,7 @@ class ItemListViewModel(application: Application) : AndroidViewModel(application
 
     private val mItemRepository: ItemRepository = ItemRepository(getDatabase(application).itemDao())
 
-    var frozenItems: LiveData<List<FrozenItem>>  = mItemRepository.allActiveFrozenItems
+    var frozenItems: LiveData<List<FrozenItem>> = mItemRepository.allActiveFrozenItems
         private set
 
     var sortingOrder = loadSortingOrderPreference()
@@ -46,7 +47,7 @@ class ItemListViewModel(application: Application) : AndroidViewModel(application
         frozenItems = mItemRepository.allActiveFrozenItems
     }
 
-    private fun loadSortingOrderPreference() : SortingOrder {
+    private fun loadSortingOrderPreference(): SortingOrder {
         val preferences = PreferenceManager.getDefaultSharedPreferences(getApplication())
         val orderString = preferences.getString(SORTING_ORDER_KEY, "ASCENDING")
         return SortingOrder.valueOf(orderString!!)
@@ -57,7 +58,7 @@ class ItemListViewModel(application: Application) : AndroidViewModel(application
         preferences.edit().putString(SORTING_ORDER_KEY, sortingOrder.toString()).apply()
     }
 
-    private fun loadSortingOptionPreference() : SortingOption{
+    private fun loadSortingOptionPreference(): SortingOption {
         val preferences = PreferenceManager.getDefaultSharedPreferences(getApplication())
         val orderString = preferences.getString(SORTING_OPTION_KEY, "DATE_BEST_BEFORE")
 
@@ -70,19 +71,27 @@ class ItemListViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun updateItem(item: FrozenItem) {
-        mItemRepository.updateItem(item)
+        viewModelScope.launch {
+            mItemRepository.updateItem(item)
+        }
     }
 
     fun delete(item: FrozenItem) {
-        mItemRepository.deleteItem(item)
+        viewModelScope.launch {
+            mItemRepository.deleteItem(item)
+        }
     }
 
     fun archive(item: FrozenItem) {
-        mItemRepository.archiveItem(item)
+        viewModelScope.launch {
+            mItemRepository.archiveItem(item)
+        }
     }
 
     fun restore(item: FrozenItem) {
-        mItemRepository.restoreItem(item)
+        viewModelScope.launch {
+            mItemRepository.restoreItem(item)
+        }
     }
 
 

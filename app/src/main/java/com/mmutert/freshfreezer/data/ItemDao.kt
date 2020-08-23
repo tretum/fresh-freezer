@@ -7,16 +7,16 @@ import androidx.room.*
 interface ItemDao {
     // ============================== Items ====================================
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertItem(item: FrozenItem): Long
+    suspend fun insertItem(item: FrozenItem): Long
 
     @get:Query("SELECT * FROM items")
     val allItems: LiveData<List<FrozenItem>>
 
     @Delete
-    fun deleteItem(item: FrozenItem?)
+    suspend fun deleteItem(item: FrozenItem?)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateFrozenItem(item: FrozenItem?)
+    suspend fun updateFrozenItem(item: FrozenItem?)
 
     // ============================ Notifications =================================
     @get:Query("Select * from notifications")
@@ -37,10 +37,10 @@ interface ItemDao {
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addNotification(notification: ItemNotification?)
+    suspend fun addNotification(notification: ItemNotification?)
 
     @Delete
-    fun deleteNotification(notification: ItemNotification?)
+    suspend fun deleteNotification(notification: ItemNotification?)
 
     // ========================= Combined Items and Notifications ============================
     @Transaction

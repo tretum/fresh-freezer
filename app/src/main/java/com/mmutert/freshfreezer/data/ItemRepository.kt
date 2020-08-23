@@ -2,6 +2,8 @@ package com.mmutert.freshfreezer.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ItemRepository(private val mItemDao: ItemDao) {
 
@@ -10,45 +12,56 @@ class ItemRepository(private val mItemDao: ItemDao) {
      * @return The active items
      */
     private val mAllItems = mItemDao.allItems
-    val allActiveFrozenItems: LiveData<List<FrozenItem>> = Transformations.map(mAllItems) { input: List<FrozenItem> ->
-        input.filter { !it.isArchived }
-    }
+    val allActiveFrozenItems: LiveData<List<FrozenItem>> =
+            Transformations.map(mAllItems) { input: List<FrozenItem> ->
+                input.filter { !it.isArchived }
+            }
 
-    val allArchivedFrozenItems: LiveData<List<FrozenItem>> = Transformations.map(mAllItems) { input: List<FrozenItem> ->
-        input.filter { it.isArchived }
-    }
+    val allArchivedFrozenItems: LiveData<List<FrozenItem>> =
+            Transformations.map(mAllItems) { input: List<FrozenItem> ->
+                input.filter { it.isArchived }
+            }
     val notifications: LiveData<List<ItemNotification>> = mItemDao.allNotificationsLiveData
 
-    fun insertItem(itemToInsert: FrozenItem) {
-        ItemDatabase.databaseWriteExecutor.execute {
+    suspend fun insertItem(itemToInsert: FrozenItem) {
+        withContext(Dispatchers.IO) {
             val rowId = mItemDao.insertItem(itemToInsert)
             itemToInsert.id = rowId
         }
     }
 
-    fun deleteItem(itemToDelete: FrozenItem?) {
+    suspend fun deleteItem(itemToDelete: FrozenItem?) {
         val allNotifications = getAllNotificationsLiveData(itemToDelete).value!!
-        ItemDatabase.databaseWriteExecutor.execute { mItemDao.deleteItem(itemToDelete) }
+
+        withContext(Dispatchers.IO) {
+            mItemDao.deleteItem(itemToDelete)
+        }
         for (allNotification in allNotifications) {
             deleteNotification(allNotification)
         }
     }
 
-    fun updateItem(item: FrozenItem?) {
-        ItemDatabase.databaseWriteExecutor.execute { mItemDao.updateFrozenItem(item) }
-    }
-
-    fun archiveItem(itemToArchive: FrozenItem) {
-        if (!itemToArchive.isArchived) {
-            itemToArchive.isArchived = true
-            ItemDatabase.databaseWriteExecutor.execute { mItemDao.updateFrozenItem(itemToArchive) }
+    suspend fun updateItem(item: FrozenItem?) {
+        withContext(Dispatchers.IO) {
+            mItemDao.updateFrozenItem(item)
         }
     }
 
-    fun restoreItem(itemToRestore: FrozenItem) {
+    suspend fun archiveItem(itemToArchive: FrozenItem) {
+        if (!itemToArchive.isArchived) {
+            itemToArchive.isArchived = true
+            withContext(Dispatchers.IO) {
+                mItemDao.updateFrozenItem(itemToArchive)
+            }
+        }
+    }
+
+    suspend fun restoreItem(itemToRestore: FrozenItem) {
         if (itemToRestore.isArchived) {
             itemToRestore.isArchived = false
-            ItemDatabase.databaseWriteExecutor.execute { mItemDao.updateFrozenItem(itemToRestore) }
+            withContext(Dispatchers.IO) {
+                mItemDao.updateFrozenItem(itemToRestore)
+            }
         }
     }
 
@@ -71,8 +84,8 @@ class ItemRepository(private val mItemDao: ItemDao) {
      *
      * @param notification The notification to add
      */
-    fun addNotification(notification: ItemNotification?) {
-        ItemDatabase.databaseWriteExecutor.execute { mItemDao.addNotification(notification) }
+    suspend fun addNotification(notification: ItemNotification?) {
+        withContext(Dispatchers.IO) { mItemDao.addNotification(notification) }
     }
 
     /**
@@ -80,8 +93,8 @@ class ItemRepository(private val mItemDao: ItemDao) {
      *
      * @param notification The notification to remove
      */
-    fun deleteNotification(notification: ItemNotification?) {
-        ItemDatabase.databaseWriteExecutor.execute { mItemDao.deleteNotification(notification) }
+    suspend fun deleteNotification(notification: ItemNotification?) {
+        withContext(Dispatchers.IO) { mItemDao.deleteNotification(notification) }
     }
 
     fun getItemAndNotificationsLiveData(itemId: Long): LiveData<ItemAndNotifications> {
