@@ -106,7 +106,7 @@
     <string name="nav_header_subtitle">Essens- und Lebensmittelverwaltung</string>
     <string name="nav_header_desc">Das Hintergrundbild des Titels der Navigationsleiste</string>
     <string name="nav_drawer_settings_section_title">Eintstellungen und Weiteres</string>
-    <string name="nav_drawer_categories_section_title">Lagerung</string>
+    <string name="nav_drawer_categories_section_title">Zustand</string>
     <string name="nav_drawer_item_no_filter">Alle Einträge</string>
     <string name="preference_category_design_title">Design und Thema</string>
     <string name="pref_night_mode_title">Nachtmodus</string>
@@ -123,4 +123,5 @@
     <string name="chilled_items_title">Gekühlte Artikel</string>
     <string name="room_temp_items_title">Ungekühlte Artikel</string>
     <string name="undo_button_label">Rückgängig</string>
+    <string name="condition">Zustand</string>
 </resources>

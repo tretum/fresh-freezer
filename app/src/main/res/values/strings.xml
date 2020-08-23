@@ -143,7 +143,7 @@
     <string name="nav_header_subtitle">Food and grocery management app</string>
     <string name="nav_header_desc">The header image of the navigation drawer.</string>
     <string name="nav_drawer_settings_section_title"><![CDATA[Settings & Co]]></string>
-    <string name="nav_drawer_categories_section_title">Storage Condition</string>
+    <string name="nav_drawer_categories_section_title">Condition</string>
     <string name="nav_drawer_item_no_filter">All items</string>
     <string name="menu_item_about_label">About</string>
 
@@ -160,4 +160,5 @@
     <string name="chilled_items_title">Chilled Items</string>
     <string name="room_temp_items_title">Room Temp Items</string>
     <string name="undo_button_label">Undo</string>
+    <string name="condition">Condition</string>
 </resources>
