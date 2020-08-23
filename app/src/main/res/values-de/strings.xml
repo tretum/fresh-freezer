@@ -118,4 +118,9 @@
     <string name="condition_frozen">Eingefroren</string>
     <string name="condition_chilled">Gekühlt</string>
     <string name="condition_room_temp">Zimmertemperatur</string>
+    <string name="all_items_title">Alle Einträge</string>
+    <string name="frozen_items_title">Gefrorene Artikel</string>
+    <string name="chilled_items_title">Gekühlte Artikel</string>
+    <string name="room_temp_items_title">Ungekühlte Artikel</string>
+    <string name="undo_button_label">Rückgängig</string>
 </resources>

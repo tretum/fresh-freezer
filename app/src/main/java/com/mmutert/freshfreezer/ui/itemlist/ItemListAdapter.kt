@@ -60,7 +60,7 @@ class ItemListAdapter(
             binding.tvFrozenDateTitle.visibility = View.GONE
             binding.tvDateFrozen.visibility = View.GONE
         }
-        binding.root.setOnClickListener { v: View? -> itemClickedCallback.onClick(itemForPosition) }
+        binding.root.setOnClickListener { itemClickedCallback.onClick(itemForPosition) }
         binding.listItemDeleteBackground.visibility = View.INVISIBLE
         binding.listItemTakeBackground.visibility = View.INVISIBLE
     }

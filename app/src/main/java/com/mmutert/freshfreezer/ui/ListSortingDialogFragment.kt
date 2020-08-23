@@ -41,49 +41,49 @@ class ListSortingDialogFragment(
             SortingOption.DATE_BEST_BEFORE -> mBinding.rbSortOptionBestBefore.isChecked = true
             SortingOption.NAME -> mBinding.rbSortOptionName.isChecked = true
         }
-        mBinding.rbSortOrderAscending.setOnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean ->
+        mBinding.rbSortOrderAscending.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {
                 currentOrder = SortingOrder.ASCENDING
             }
         }
-        mBinding.rbSortOrderDescending.setOnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean ->
+        mBinding.rbSortOrderDescending.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {
                 currentOrder = SortingOrder.DESCENDING
             }
         }
-        mBinding.rbSortOptionName.setOnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean ->
+        mBinding.rbSortOptionName.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {
                 currentOption = SortingOption.NAME
             }
         }
-        mBinding.rbSortOptionAddedDate.setOnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean ->
+        mBinding.rbSortOptionAddedDate.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {
                 currentOption = SortingOption.DATE_ADDED
             }
         }
-        mBinding.rbSortOptionLastChangedDate.setOnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean ->
+        mBinding.rbSortOptionLastChangedDate.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {
                 currentOption = SortingOption.DATE_CHANGED
             }
         }
-        mBinding.rbSortOptionBestBefore.setOnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean ->
+        mBinding.rbSortOptionBestBefore.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {
                 currentOption = SortingOption.DATE_BEST_BEFORE
             }
         }
-        mBinding.rbSortOptionFrozenAt.setOnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean ->
+        mBinding.rbSortOptionFrozenAt.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {
                 currentOption = SortingOption.DATE_FROZEN_AT
             }
         }
         return MaterialAlertDialogBuilder(requireContext())
             .setView(mBinding.root)
-            .setPositiveButton(R.string.dialog_sorting_options_select_button_label) { dialog: DialogInterface?, which: Int ->
+            .setPositiveButton(R.string.dialog_sorting_options_select_button_label) { _: DialogInterface?, _: Int ->
                 listener.listOptionClicked(
                     currentOption,
                     currentOrder)
             }
-            .setNegativeButton(R.string.dialog_sorting_options_close_button_label) { dialog: DialogInterface?, which: Int -> }
+            .setNegativeButton(R.string.dialog_sorting_options_close_button_label) { _: DialogInterface?, _: Int -> }
             .create()
     }
 }
