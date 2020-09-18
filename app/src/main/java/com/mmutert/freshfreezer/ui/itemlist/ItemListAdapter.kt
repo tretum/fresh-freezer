@@ -23,7 +23,7 @@ class ItemListAdapter(
         private val context: Context) :
         RecyclerView.Adapter<ItemListAdapterViewHolder>(), ListSortingChangedListener {
 
-    private val mDiffer = AsyncListDiffer(this, DIFF_CALLBACK)
+    private val mDiffer = AsyncListDiffer(this, DiffCallBack())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemListAdapterViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -33,35 +33,23 @@ class ItemListAdapter(
 
     override fun onBindViewHolder(holder: ItemListAdapterViewHolder, position: Int) {
         val binding = holder.binding
-        val itemForPosition = getItemAtPosition(position)
-        binding.item = itemForPosition
+        val itemAtPosition = getItemAtPosition(position)
 
-        // Set name of the item
-        if (itemForPosition.name.isNotEmpty()) {
-            binding.tvItemName.text = itemForPosition.name
-        }
-        val unit = itemForPosition.unit
-        binding.tvAmountUnit.text = context.resources.getString(unit.stringResId)
-        val numberInstance = getFormatterForUnit(itemForPosition.unit)
-        val amountText = numberInstance.format(itemForPosition.amount.toDouble())
-        binding.tvAmount.text = amountText
         val formatter = DateTimeFormat.longDate().withLocale(Locale.getDefault())
-        val bestBeforeDate = itemForPosition.bestBeforeDate
-        val bestBeforeFormatted = formatter.print(bestBeforeDate)
-        binding.tvBestBeforeDate.text = bestBeforeFormatted
-        val frozenDate = itemForPosition.frozenAtDate
-        if (frozenDate != null) {
-            binding.tvDateFrozen.visibility = View.VISIBLE
-            binding.tvFrozenDateTitle.visibility = View.VISIBLE
-            val frozenFormatted = formatter.print(frozenDate)
-            binding.tvDateFrozen.text = frozenFormatted
-        } else {
-            binding.tvFrozenDateTitle.visibility = View.GONE
-            binding.tvDateFrozen.visibility = View.GONE
+        val numberInstance = getFormatterForUnit(itemAtPosition.unit)
+        
+        binding.apply {
+            item = itemAtPosition
+
+            tvAmount.text = numberInstance.format(item.amount.toDouble())
+            tvBestBeforeDate.text = formatter.print(item.bestBeforeDate)
+            if (item.frozenAtDate != null) {
+                tvDateFrozen.text = formatter.print(item.frozenAtDate)
+            }
+            root.setOnClickListener { itemClickedCallback.onClick(item) }
+            listItemDeleteBackground.visibility = View.INVISIBLE
+            listItemTakeBackground.visibility = View.INVISIBLE
         }
-        binding.root.setOnClickListener { itemClickedCallback.onClick(itemForPosition) }
-        binding.listItemDeleteBackground.visibility = View.INVISIBLE
-        binding.listItemTakeBackground.visibility = View.INVISIBLE
     }
 
     override fun getItemCount(): Int {
@@ -81,10 +69,10 @@ class ItemListAdapter(
         return mDiffer.currentList.indexOf(item)
     }
 
-    override fun listOptionClicked(selectedSortingOption: SortingOption,
+    override fun listOptionClicked(sortingOption: SortingOption,
                                    sortingOrder: SortingOrder) {
-        mViewModel.sortingOption = selectedSortingOption
-        mViewModel.sortingOrder = sortingOrder
+        mViewModel.setSortingOption(sortingOption)
+        mViewModel.setSortingOrder(sortingOrder)
         itemList = mDiffer.currentList
     }
 
@@ -163,24 +151,22 @@ class ItemListAdapter(
     class ItemListAdapterViewHolder(val binding: ItemOverviewItemBinding) :
             RecyclerView.ViewHolder(binding.root)
 
-    companion object {
-        /**
-         * The Callback for the DiffUtil.
-         */
-        private val DIFF_CALLBACK: DiffUtil.ItemCallback<StorageItem> =
-                object : DiffUtil.ItemCallback<StorageItem>() {
-                    override fun areItemsTheSame(
-                            oldStorageItem: StorageItem, newStorageItem: StorageItem): Boolean {
-                        // FrozenItem properties may have changed if reloaded from the DB, but ID is fixed
-                        return oldStorageItem.id == newStorageItem.id
-                    }
+    class DiffCallBack : DiffUtil.ItemCallback<StorageItem>() {
+        override fun areItemsTheSame(
+                oldStorageItem: StorageItem, newStorageItem: StorageItem): Boolean {
+            // FrozenItem properties may have changed if reloaded from the DB, but ID is fixed
+            return oldStorageItem.id == newStorageItem.id
+        }
 
-                    override fun areContentsTheSame(
-                            oldStorageItem: StorageItem, newStorageItem: StorageItem): Boolean {
-                        // NOTE: if you use equals, your object must properly override Object#equals()
-                        // Incorrectly returning false here will result in too many animations.
-                        return oldStorageItem == newStorageItem
-                    }
-                }
+        override fun areContentsTheSame(
+                oldStorageItem: StorageItem, newStorageItem: StorageItem): Boolean {
+            // NOTE: if you use equals, your object must properly override Object#equals()
+            // Incorrectly returning false here will result in too many animations.
+            return oldStorageItem == newStorageItem
+        }
+    }
+
+    companion object {
+        val LOG_TAG = ItemListAdapter::class.simpleName
     }
 }
