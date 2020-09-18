@@ -2,9 +2,10 @@ package com.mmutert.freshfreezer.data
 
 import androidx.room.TypeConverter
 import org.joda.time.LocalDate
+import org.joda.time.LocalDateTime
 import java.util.*
 
-object Converters {
+class Converters {
     @TypeConverter
     fun fromCondition(unit: Condition): String {
         return unit.toString()
@@ -32,6 +33,16 @@ object Converters {
 
     @TypeConverter
     fun fromDate(date: LocalDate): String {
+        return date.toString()
+    }
+
+    @TypeConverter
+    fun toDateTime(dateLong: String): LocalDateTime {
+        return LocalDateTime.parse(dateLong)
+    }
+
+    @TypeConverter
+    fun fromDateTime(date: LocalDateTime): String {
         return date.toString()
     }
 

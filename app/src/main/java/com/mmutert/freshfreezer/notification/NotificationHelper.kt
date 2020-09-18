@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.Constraints
 import androidx.work.Data
-import com.mmutert.freshfreezer.data.FrozenItem
+import com.mmutert.freshfreezer.data.StorageItem
 import com.mmutert.freshfreezer.data.ItemNotification
 import org.joda.time.DateTimeZone
 import com.mmutert.freshfreezer.util.TimeHelper
@@ -32,7 +32,7 @@ object NotificationHelper {
     @JvmStatic
     fun scheduleNotification(
             context: Context,
-            item: FrozenItem,
+            item: StorageItem,
             notification: ItemNotification): UUID? {
         val notificationTime = LocalTime.now(DateTimeZone.forTimeZone(TimeZone.getDefault()))
         // TODO Set notification time to the one saved in the pending notification object, otherwise used preference
@@ -86,7 +86,7 @@ object NotificationHelper {
      * @return The created data object.
      */
     @JvmStatic
-    fun createInputDataForItem(context: Context, item: FrozenItem, notification: ItemNotification): Data {
+    fun createInputDataForItem(context: Context, item: StorageItem, notification: ItemNotification): Data {
         val offsetAmount = notification.offsetAmount
         val offsetUnitFormatted = when (notification.timeOffsetUnit) {
             TimeOffsetUnit.DAYS -> context.resources.getQuantityString(
@@ -142,7 +142,7 @@ object NotificationHelper {
     }
 
     private fun determineGoalDateTime(
-            item: FrozenItem,
+            item: StorageItem,
             timeUnit: TimeOffsetUnit,
             offsetAmount: Int,
             notificationTime: LocalTime): LocalDateTime {

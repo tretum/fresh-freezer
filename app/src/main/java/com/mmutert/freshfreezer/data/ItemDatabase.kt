@@ -5,14 +5,13 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
-@Database(entities = [FrozenItem::class, ItemNotification::class], version = 1, exportSchema = false)
+@Database(entities = [StorageItem::class, ItemNotification::class], version = 1, exportSchema = false)
 @TypeConverters(value = [Converters::class])
 abstract class ItemDatabase : RoomDatabase() {
 
-    abstract fun itemDao(): ItemDao
+    abstract fun itemDao(): StoredItemDao
+    abstract fun notificationDao(): NotificationDao
 
     companion object {
         @Volatile

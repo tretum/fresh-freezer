@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.mmutert.freshfreezer.data.FrozenItem" />
+            type="com.mmutert.freshfreezer.data.StorageItem" />
     </data>
 
     <FrameLayout

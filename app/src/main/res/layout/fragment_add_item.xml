@@ -4,9 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
+
         <variable
             name="currentItem"
-            type="com.mmutert.freshfreezer.data.FrozenItem" />
+            type="com.mmutert.freshfreezer.data.StorageItem" />
+
+        <variable
+            name="viewModel"
+            type="com.mmutert.freshfreezer.ui.additem.AddItemViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

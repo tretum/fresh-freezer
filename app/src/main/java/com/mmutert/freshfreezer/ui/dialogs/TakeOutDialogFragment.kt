@@ -8,11 +8,11 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmutert.freshfreezer.R
 import com.mmutert.freshfreezer.data.AmountUnit.Companion.getFormatterForUnit
-import com.mmutert.freshfreezer.data.FrozenItem
+import com.mmutert.freshfreezer.data.StorageItem
 import com.mmutert.freshfreezer.databinding.DialogTakeItemBinding
 
 class TakeOutDialogFragment(private val listener: TakeOutDialogClickListener,
-                            val item: FrozenItem) : DialogFragment() {
+                            val item: StorageItem) : DialogFragment() {
     private lateinit var binding: DialogTakeItemBinding
 
     interface TakeOutDialogClickListener {

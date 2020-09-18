@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mmutert.freshfreezer.data.AmountUnit.Companion.getFormatterForUnit
-import com.mmutert.freshfreezer.data.FrozenItem
-import com.mmutert.freshfreezer.databinding.ListItemBinding
+import com.mmutert.freshfreezer.data.StorageItem
+import com.mmutert.freshfreezer.databinding.ItemOverviewItemBinding
 import com.mmutert.freshfreezer.ui.dialogs.ListSortingDialogFragment.ListSortingChangedListener
 import com.mmutert.freshfreezer.ui.itemlist.ItemListAdapter.ItemListAdapterViewHolder
 import com.mmutert.freshfreezer.util.SortingOption
@@ -27,7 +27,7 @@ class ItemListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemListAdapterViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ListItemBinding.inflate(inflater, parent, false)
+        val binding = ItemOverviewItemBinding.inflate(inflater, parent, false)
         return ItemListAdapterViewHolder(binding)
     }
 
@@ -68,7 +68,7 @@ class ItemListAdapter(
         return mDiffer.currentList.size
     }
 
-    fun getItemAtPosition(position: Int): FrozenItem {
+    fun getItemAtPosition(position: Int): StorageItem {
         return mDiffer.currentList[position]
     }
 
@@ -77,7 +77,7 @@ class ItemListAdapter(
      * @param item The item to get the position for
      * @return The index of the item.
      */
-    fun getPositionOfItem(item: FrozenItem): Int {
+    fun getPositionOfItem(item: StorageItem): Int {
         return mDiffer.currentList.indexOf(item)
     }
 
@@ -94,7 +94,7 @@ class ItemListAdapter(
      *
      * @param items  The list of items to sort.
      */
-    private fun sortItems(items: MutableList<FrozenItem>) {
+    private fun sortItems(items: MutableList<StorageItem>) {
         if (items.isNotEmpty()) {
             when (mViewModel.sortingOption) {
                 SortingOption.DATE_CHANGED -> items.sortWith(Comparator { (_, _, _, _, _, _, _, lastChangedAtDate1), (_, _, _, _, _, _, _, lastChangedAtDate2) ->
@@ -149,7 +149,7 @@ class ItemListAdapter(
         }
     }
 
-    var itemList: List<FrozenItem>
+    var itemList: List<StorageItem>
         get() = mDiffer.currentList
         set(value) {
             val newItems = value.toMutableList()
@@ -160,26 +160,26 @@ class ItemListAdapter(
     /**
      * The view holder
      */
-    class ItemListAdapterViewHolder(val binding: ListItemBinding) :
+    class ItemListAdapterViewHolder(val binding: ItemOverviewItemBinding) :
             RecyclerView.ViewHolder(binding.root)
 
     companion object {
         /**
          * The Callback for the DiffUtil.
          */
-        private val DIFF_CALLBACK: DiffUtil.ItemCallback<FrozenItem> =
-                object : DiffUtil.ItemCallback<FrozenItem>() {
+        private val DIFF_CALLBACK: DiffUtil.ItemCallback<StorageItem> =
+                object : DiffUtil.ItemCallback<StorageItem>() {
                     override fun areItemsTheSame(
-                            oldFrozenItem: FrozenItem, newFrozenItem: FrozenItem): Boolean {
+                            oldStorageItem: StorageItem, newStorageItem: StorageItem): Boolean {
                         // FrozenItem properties may have changed if reloaded from the DB, but ID is fixed
-                        return oldFrozenItem.id == newFrozenItem.id
+                        return oldStorageItem.id == newStorageItem.id
                     }
 
                     override fun areContentsTheSame(
-                            oldFrozenItem: FrozenItem, newFrozenItem: FrozenItem): Boolean {
+                            oldStorageItem: StorageItem, newStorageItem: StorageItem): Boolean {
                         // NOTE: if you use equals, your object must properly override Object#equals()
                         // Incorrectly returning false here will result in too many animations.
-                        return oldFrozenItem == newFrozenItem
+                        return oldStorageItem == newStorageItem
                     }
                 }
     }

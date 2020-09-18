@@ -24,7 +24,7 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
     val DATE_FORMATTER: DateTimeFormatter =
             DateTimeFormat.longDate().withLocale(Locale.getDefault())
 
-    var currentItem: FrozenItem = createNewItem()
+    var currentItem: StorageItem = createNewItem()
         set(value) {
             field = value
             editing = true
@@ -33,7 +33,9 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
     var notifications: MutableList<ItemNotification> = ArrayList()
 
     private var editing = false
-    private val mItemRepository: ItemRepository = ItemRepository(getDatabase(application).itemDao())
+    private val mItemRepository: ItemRepository = ItemRepository(
+        getDatabase(application).itemDao(),
+        getDatabase(application).notificationDao())
     private var notificationsToDelete: MutableList<ItemNotification> = ArrayList()
 
     /**
@@ -47,10 +49,10 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
         // TODO Notifications
     }
 
-    private fun createNewItem(): FrozenItem {
+    private fun createNewItem(): StorageItem {
         val currentDate = LocalDate.now(DateTimeZone.getDefault())
         val currentDateTime = TimeHelper.currentDateTimeLocalized
-        return FrozenItem(
+        return StorageItem(
             0,
             "",
             0f,

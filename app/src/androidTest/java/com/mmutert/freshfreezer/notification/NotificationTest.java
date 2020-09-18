@@ -4,22 +4,19 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.work.Configuration;
 import androidx.work.Data;
 import androidx.work.ListenableWorker;
 import androidx.work.WorkManager;
 import androidx.work.testing.SynchronousExecutor;
 import androidx.work.testing.TestListenableWorkerBuilder;
-import androidx.work.testing.WorkManagerTestInitHelper;
 
 import com.mmutert.freshfreezer.data.AmountUnit;
-import com.mmutert.freshfreezer.data.FrozenItem;
+import com.mmutert.freshfreezer.data.StorageItem;
 import com.mmutert.freshfreezer.data.ItemNotification;
 import com.mmutert.freshfreezer.data.TimeOffsetUnit;
 import com.mmutert.freshfreezer.util.TimeHelper;
 
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -53,7 +50,7 @@ public class NotificationTest {
     @Test
     public void testNotificationDisplay() throws ExecutionException, InterruptedException {
 
-        FrozenItem item = createTestItem();
+        StorageItem item = createTestItem();
         ItemNotification testItemNotification = createTestItemNotification();
 
         Data inputData = NotificationHelper.createInputDataForItem(context, item, testItemNotification);
@@ -68,9 +65,9 @@ public class NotificationTest {
     }
 
 
-    public FrozenItem createTestItem() {
+    public StorageItem createTestItem() {
 
-        FrozenItem item = new FrozenItem();
+        StorageItem item = new StorageItem();
         item.setUnit(AmountUnit.LITERS);
         item.setAmount(10.532f);
         item.setName("NotificationTestItem");

@@ -23,7 +23,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.mmutert.freshfreezer.R
 import com.mmutert.freshfreezer.data.*
 import com.mmutert.freshfreezer.databinding.FragmentAddItemBinding
-import com.mmutert.freshfreezer.ui.AddItemFragmentArgs
 import com.mmutert.freshfreezer.ui.ConditionArrayAdapter
 import com.mmutert.freshfreezer.ui.dialogs.NotificationOffsetDialogFragment
 import com.mmutert.freshfreezer.ui.additem.AddItemFragment.NotificationListAdapter.NotificationListAdapterViewHolder
@@ -411,7 +410,7 @@ class AddItemFragment : Fragment() {
         override fun onCreateViewHolder(
                 parent: ViewGroup,
                 viewType: Int): NotificationListAdapterViewHolder {
-            val view = layoutInflater.inflate(R.layout.notification_entry, parent, false)
+            val view = layoutInflater.inflate(R.layout.item_notification_entry, parent, false)
             return NotificationListAdapterViewHolder(view)
         }
 

@@ -9,10 +9,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import com.mmutert.freshfreezer.data.Condition
-import com.mmutert.freshfreezer.data.FrozenItem
 import com.mmutert.freshfreezer.data.ItemDatabase.Companion.getDatabase
 import com.mmutert.freshfreezer.data.ItemNotification
 import com.mmutert.freshfreezer.data.ItemRepository
+import com.mmutert.freshfreezer.data.StorageItem
 import com.mmutert.freshfreezer.util.SortingOption
 import com.mmutert.freshfreezer.util.SortingOption.SortingOrder
 import kotlinx.coroutines.launch
@@ -21,9 +21,11 @@ import kotlin.math.max
 
 class ItemListViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val mItemRepository: ItemRepository = ItemRepository(getDatabase(application).itemDao())
+    private val mItemRepository = ItemRepository(
+        getDatabase(application).itemDao(),
+        getDatabase(application).notificationDao())
 
-    var frozenItems: LiveData<List<FrozenItem>> = mItemRepository.allActiveFrozenItems
+    var storageItems: LiveData<List<StorageItem>> = mItemRepository.allActiveStorageItems
         private set
 
     var sortingOrder = loadSortingOrderPreference()
@@ -38,13 +40,13 @@ class ItemListViewModel(application: Application) : AndroidViewModel(application
         }
 
     fun filterItems(conditions: Collection<Condition?>) {
-        frozenItems = Transformations.map(frozenItems) { input: List<FrozenItem> ->
+        storageItems = Transformations.map(storageItems) { input: List<StorageItem> ->
             input.filter { conditions.contains(it.condition) }
         }
     }
 
     fun resetFilter() {
-        frozenItems = mItemRepository.allActiveFrozenItems
+        storageItems = mItemRepository.allActiveStorageItems
     }
 
     private fun loadSortingOrderPreference(): SortingOrder {
@@ -70,25 +72,25 @@ class ItemListViewModel(application: Application) : AndroidViewModel(application
         preferences.edit().putString(SORTING_OPTION_KEY, sortingOption.toString()).apply()
     }
 
-    fun updateItem(item: FrozenItem) {
+    fun updateItem(item: StorageItem) {
         viewModelScope.launch {
             mItemRepository.updateItem(item)
         }
     }
 
-    fun delete(item: FrozenItem) {
+    fun delete(item: StorageItem) {
         viewModelScope.launch {
             mItemRepository.deleteItem(item)
         }
     }
 
-    fun archive(item: FrozenItem) {
+    fun archive(item: StorageItem) {
         viewModelScope.launch {
             mItemRepository.archiveItem(item)
         }
     }
 
-    fun restore(item: FrozenItem) {
+    fun restore(item: StorageItem) {
         viewModelScope.launch {
             mItemRepository.restoreItem(item)
         }
@@ -103,7 +105,7 @@ class ItemListViewModel(application: Application) : AndroidViewModel(application
      * @param item The item to retrieve the scheduled notifications for.
      * @return The list of notifications for the item.
      */
-    fun getAllNotifications(item: FrozenItem): List<ItemNotification> {
+    fun getAllNotifications(item: StorageItem): List<ItemNotification> {
         return mItemRepository.getAllNotifications(item)
     }
 
@@ -111,7 +113,7 @@ class ItemListViewModel(application: Application) : AndroidViewModel(application
      * Cancels all notification workers for the given item.
      * @param itemToArchive The item for which the notification workers should be cancelled.
      */
-    fun cancelNotifications(itemToArchive: FrozenItem) {
+    fun cancelNotifications(itemToArchive: StorageItem) {
         val executor = Executors.newSingleThreadExecutor()
         executor.execute {
             val allNotifications = getAllNotifications(itemToArchive)
@@ -130,7 +132,7 @@ class ItemListViewModel(application: Application) : AndroidViewModel(application
      * @param item The item to take from
      * @param amountTaken The amount that was taken from the item
      */
-    fun takeFromItem(item: FrozenItem, amountTaken: Float) {
+    fun takeFromItem(item: StorageItem, amountTaken: Float) {
         val newAmount = max(0.0f, item.amount - amountTaken)
         // TODO Check for possible side effects and possibly create copy of item first
         item.amount = newAmount

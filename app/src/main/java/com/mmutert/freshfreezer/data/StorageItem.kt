@@ -1,11 +1,13 @@
 package com.mmutert.freshfreezer.data
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
 
 @Entity(tableName = "items")
-data class FrozenItem(
+data class StorageItem(
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
 

@@ -7,7 +7,7 @@
     <data>
         <variable
             name="item"
-            type="com.mmutert.freshfreezer.data.FrozenItem" />
+            type="com.mmutert.freshfreezer.data.StorageItem" />
         <import type="com.mmutert.freshfreezer.ui.databinding.AmountBindingConverter"/>
     </data>
 
