@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -24,14 +23,18 @@ import com.mmutert.freshfreezer.ui.dialogs.ListSortingDialogFragment
 import com.mmutert.freshfreezer.ui.dialogs.TakeOutDialogFragment
 import com.mmutert.freshfreezer.ui.dialogs.TakeOutDialogFragment.TakeOutDialogClickListener
 import com.mmutert.freshfreezer.ui.itemlist.ItemListAdapter.ItemListAdapterViewHolder
+import com.mmutert.freshfreezer.util.getViewModelFactory
 
 /**
  *
  */
 class ItemListFragment : Fragment(), ListItemClickedCallback {
+
+    private val mViewModel: ItemListViewModel by viewModels { getViewModelFactory() }
+
     private lateinit var mBinding: FragmentFrozenItemListBinding
-    private val mViewModel: ItemListViewModel by viewModels()
     private lateinit var mItemListAdapter: ItemListAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -89,7 +92,7 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
 
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
-                    when(newState){
+                    when (newState) {
                         RecyclerView.SCROLL_STATE_IDLE, RecyclerView.SCROLL_STATE_SETTLING ->
                             mBinding.fab.show()
                     }

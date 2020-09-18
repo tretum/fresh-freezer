@@ -12,8 +12,7 @@ import com.mmutert.freshfreezer.data.StorageItem
 import com.mmutert.freshfreezer.databinding.ItemOverviewItemBinding
 import com.mmutert.freshfreezer.ui.dialogs.ListSortingDialogFragment.ListSortingChangedListener
 import com.mmutert.freshfreezer.ui.itemlist.ItemListAdapter.ItemListAdapterViewHolder
-import com.mmutert.freshfreezer.util.SortingOption
-import com.mmutert.freshfreezer.util.SortingOption.SortingOrder
+import com.mmutert.freshfreezer.ui.itemlist.SortingOption.SortingOrder
 import org.joda.time.format.DateTimeFormat
 import java.util.*
 
@@ -41,12 +40,12 @@ class ItemListAdapter(
         binding.apply {
             item = itemAtPosition
 
-            tvAmount.text = numberInstance.format(item.amount.toDouble())
-            tvBestBeforeDate.text = formatter.print(item.bestBeforeDate)
-            if (item.frozenAtDate != null) {
-                tvDateFrozen.text = formatter.print(item.frozenAtDate)
+            tvAmount.text = numberInstance.format(itemAtPosition.amount.toDouble())
+            tvBestBeforeDate.text = formatter.print(itemAtPosition.bestBeforeDate)
+            if (itemAtPosition.frozenAtDate != null) {
+                tvDateFrozen.text = formatter.print(itemAtPosition.frozenAtDate)
             }
-            root.setOnClickListener { itemClickedCallback.onClick(item) }
+            root.setOnClickListener { itemClickedCallback.onClick(itemAtPosition) }
             listItemDeleteBackground.visibility = View.INVISIBLE
             listItemTakeBackground.visibility = View.INVISIBLE
         }
@@ -71,8 +70,8 @@ class ItemListAdapter(
 
     override fun listOptionClicked(sortingOption: SortingOption,
                                    sortingOrder: SortingOrder) {
-        mViewModel.setSortingOption(sortingOption)
-        mViewModel.setSortingOrder(sortingOrder)
+        mViewModel.sortingOption = sortingOption
+        mViewModel.sortingOrder = sortingOrder
         itemList = mDiffer.currentList
     }
 
@@ -85,7 +84,7 @@ class ItemListAdapter(
     private fun sortItems(items: MutableList<StorageItem>) {
         if (items.isNotEmpty()) {
             when (mViewModel.sortingOption) {
-                SortingOption.DATE_CHANGED -> items.sortWith(Comparator { (_, _, _, _, _, _, _, lastChangedAtDate1), (_, _, _, _, _, _, _, lastChangedAtDate2) ->
+                SortingOption.DATE_CHANGED     -> items.sortWith(Comparator { (_, _, _, _, _, _, _, lastChangedAtDate1), (_, _, _, _, _, _, _, lastChangedAtDate2) ->
                     val result = lastChangedAtDate1.compareTo(lastChangedAtDate2)
                     if (mViewModel.sortingOrder == SortingOrder.ASCENDING) {
                         return@Comparator result
@@ -93,7 +92,7 @@ class ItemListAdapter(
                         return@Comparator result * -1
                     }
                 })
-                SortingOption.DATE_ADDED -> items.sortWith(Comparator { (_, _, _, _, _, _, itemCreationDate1), (_, _, _, _, _, _, itemCreationDate2) ->
+                SortingOption.DATE_ADDED       -> items.sortWith(Comparator { (_, _, _, _, _, _, itemCreationDate1), (_, _, _, _, _, _, itemCreationDate2) ->
                     val result = itemCreationDate1.compareTo(itemCreationDate2)
                     if (mViewModel.sortingOrder == SortingOrder.ASCENDING) {
                         return@Comparator result
@@ -101,7 +100,7 @@ class ItemListAdapter(
                         return@Comparator result * -1
                     }
                 })
-                SortingOption.DATE_FROZEN_AT -> items.sortWith(Comparator { (_, _, _, _, frozenAtDate1), (_, _, _, _, frozenAtDate2) ->
+                SortingOption.DATE_FROZEN_AT   -> items.sortWith(Comparator { (_, _, _, _, frozenAtDate1), (_, _, _, _, frozenAtDate2) ->
                     var result = 0
                     if (frozenAtDate1 != null && frozenAtDate2 != null) {
                         result = frozenAtDate1.compareTo(frozenAtDate2)
@@ -124,7 +123,7 @@ class ItemListAdapter(
                         return@Comparator result * -1
                     }
                 })
-                SortingOption.NAME -> items.sortWith(Comparator { (_, name), (_, name2) ->
+                SortingOption.NAME             -> items.sortWith(Comparator { (_, name), (_, name2) ->
                     val result =
                             name.toLowerCase(Locale.ROOT).compareTo(name2.toLowerCase(Locale.ROOT))
                     if (mViewModel.sortingOrder == SortingOrder.ASCENDING) {

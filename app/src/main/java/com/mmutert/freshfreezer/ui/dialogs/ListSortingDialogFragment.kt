@@ -9,8 +9,8 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmutert.freshfreezer.R
 import com.mmutert.freshfreezer.databinding.DialogFilterActionOptionsBinding
-import com.mmutert.freshfreezer.util.SortingOption
-import com.mmutert.freshfreezer.util.SortingOption.SortingOrder
+import com.mmutert.freshfreezer.ui.itemlist.SortingOption
+import com.mmutert.freshfreezer.ui.itemlist.SortingOption.SortingOrder
 
 class ListSortingDialogFragment(
         private var currentOption: SortingOption,
@@ -35,11 +35,11 @@ class ListSortingDialogFragment(
             SortingOrder.DESCENDING -> mBinding.rbSortOrderDescending.isChecked = true
         }
         when (currentOption) {
-            SortingOption.DATE_ADDED -> mBinding.rbSortOptionAddedDate.isChecked = true
-            SortingOption.DATE_CHANGED -> mBinding.rbSortOptionLastChangedDate.isChecked = true
-            SortingOption.DATE_FROZEN_AT -> mBinding.rbSortOptionFrozenAt.isChecked = true
+            SortingOption.DATE_ADDED       -> mBinding.rbSortOptionAddedDate.isChecked = true
+            SortingOption.DATE_CHANGED     -> mBinding.rbSortOptionLastChangedDate.isChecked = true
+            SortingOption.DATE_FROZEN_AT   -> mBinding.rbSortOptionFrozenAt.isChecked = true
             SortingOption.DATE_BEST_BEFORE -> mBinding.rbSortOptionBestBefore.isChecked = true
-            SortingOption.NAME -> mBinding.rbSortOptionName.isChecked = true
+            SortingOption.NAME             -> mBinding.rbSortOptionName.isChecked = true
         }
         mBinding.rbSortOrderAscending.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {

@@ -2,30 +2,25 @@ package com.mmutert.freshfreezer.ui.itemlist
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import com.mmutert.freshfreezer.data.Condition
-import com.mmutert.freshfreezer.data.ItemDatabase.Companion.getDatabase
 import com.mmutert.freshfreezer.data.ItemNotification
 import com.mmutert.freshfreezer.data.ItemRepository
 import com.mmutert.freshfreezer.data.StorageItem
-import com.mmutert.freshfreezer.util.SortingOption
-import com.mmutert.freshfreezer.util.SortingOption.SortingOrder
+import com.mmutert.freshfreezer.ui.itemlist.SortingOption.DATE_BEST_BEFORE
+import com.mmutert.freshfreezer.ui.itemlist.SortingOption.SortingOrder
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 import kotlin.math.max
 
-class ItemListViewModel(application: Application) : AndroidViewModel(application) {
+class ItemListViewModel(
+        private val application: Application,
+        private val savedStateHandle: SavedStateHandle,
+        private val repository: ItemRepository) : ViewModel() {
 
-    private val mItemRepository = ItemRepository(
-        getDatabase(application).itemDao(),
-        getDatabase(application).notificationDao())
-
-    var storageItems: LiveData<List<StorageItem>> = mItemRepository.allActiveStorageItems
+    var storageItems: LiveData<List<StorageItem>> = repository.allActiveStorageItems
         private set
 
     var sortingOrder = loadSortingOrderPreference()
@@ -46,53 +41,53 @@ class ItemListViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun resetFilter() {
-        storageItems = mItemRepository.allActiveStorageItems
+        storageItems = repository.allActiveStorageItems
     }
 
     private fun loadSortingOrderPreference(): SortingOrder {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(getApplication())
+        val preferences = PreferenceManager.getDefaultSharedPreferences(application)
         val orderString = preferences.getString(SORTING_ORDER_KEY, "ASCENDING")
         return SortingOrder.valueOf(orderString!!)
     }
 
     private fun storeSortingOrderPreference() {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(getApplication())
+        val preferences = PreferenceManager.getDefaultSharedPreferences(application)
         preferences.edit().putString(SORTING_ORDER_KEY, sortingOrder.toString()).apply()
     }
 
     private fun loadSortingOptionPreference(): SortingOption {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(getApplication())
+        val preferences = PreferenceManager.getDefaultSharedPreferences(application)
         val orderString = preferences.getString(SORTING_OPTION_KEY, "DATE_BEST_BEFORE")
 
         return SortingOption.valueOf(orderString!!)
     }
 
     private fun storeSortingOptionPreference() {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(getApplication())
+        val preferences = PreferenceManager.getDefaultSharedPreferences(application)
         preferences.edit().putString(SORTING_OPTION_KEY, sortingOption.toString()).apply()
     }
 
     fun updateItem(item: StorageItem) {
         viewModelScope.launch {
-            mItemRepository.updateItem(item)
+            repository.updateItem(item)
         }
     }
 
     fun delete(item: StorageItem) {
         viewModelScope.launch {
-            mItemRepository.deleteItem(item)
+            repository.deleteItem(item)
         }
     }
 
     fun archive(item: StorageItem) {
         viewModelScope.launch {
-            mItemRepository.archiveItem(item)
+            repository.archiveItem(item)
         }
     }
 
     fun restore(item: StorageItem) {
         viewModelScope.launch {
-            mItemRepository.restoreItem(item)
+            repository.restoreItem(item)
         }
     }
 
@@ -106,7 +101,7 @@ class ItemListViewModel(application: Application) : AndroidViewModel(application
      * @return The list of notifications for the item.
      */
     fun getAllNotifications(item: StorageItem): List<ItemNotification> {
-        return mItemRepository.getAllNotifications(item)
+        return repository.getAllNotifications(item)
     }
 
     /**
@@ -119,7 +114,7 @@ class ItemListViewModel(application: Application) : AndroidViewModel(application
             val allNotifications = getAllNotifications(itemToArchive)
 
             // Cancel all notifications
-            val workManager = WorkManager.getInstance(getApplication())
+            val workManager = WorkManager.getInstance(application)
             for ((_, notificationId) in allNotifications) {
                 workManager.cancelWorkById(notificationId!!)
                 Log.d(TAG, "Cancelled the notification worker with uuid: $notificationId")
