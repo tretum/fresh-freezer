@@ -1,4 +1,4 @@
-package com.mmutert.freshfreezer.ui
+package com.mmutert.freshfreezer.ui.additem
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -23,11 +23,14 @@ import com.google.android.material.snackbar.Snackbar
 import com.mmutert.freshfreezer.R
 import com.mmutert.freshfreezer.data.*
 import com.mmutert.freshfreezer.databinding.FragmentAddItemBinding
-import com.mmutert.freshfreezer.ui.AddItemFragment.NotificationListAdapter.NotificationListAdapterViewHolder
-import com.mmutert.freshfreezer.ui.NotificationOffsetDialogFragment.NotificationOffsetDialogClickListener
+import com.mmutert.freshfreezer.ui.AddItemFragmentArgs
+import com.mmutert.freshfreezer.ui.ConditionArrayAdapter
+import com.mmutert.freshfreezer.ui.dialogs.NotificationOffsetDialogFragment
+import com.mmutert.freshfreezer.ui.additem.AddItemFragment.NotificationListAdapter.NotificationListAdapterViewHolder
+import com.mmutert.freshfreezer.ui.dialogs.NotificationOffsetDialogFragment.NotificationOffsetDialogClickListener
+import com.mmutert.freshfreezer.ui.UnitArrayAdapter
 import com.mmutert.freshfreezer.util.Keyboard
 import com.mmutert.freshfreezer.util.TimeHelper.currentDateLocalized
-import com.mmutert.freshfreezer.viewmodel.AddItemViewModel
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
 import java.util.*

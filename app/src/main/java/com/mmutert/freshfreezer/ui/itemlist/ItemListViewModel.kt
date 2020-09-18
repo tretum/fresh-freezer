@@ -1,4 +1,4 @@
-package com.mmutert.freshfreezer.viewmodel
+package com.mmutert.freshfreezer.ui.itemlist
 
 import android.app.Application
 import android.util.Log

@@ -18,11 +18,10 @@ import com.mmutert.freshfreezer.R
 import com.mmutert.freshfreezer.data.Condition
 import com.mmutert.freshfreezer.data.FrozenItem
 import com.mmutert.freshfreezer.databinding.FragmentFrozenItemListBinding
-import com.mmutert.freshfreezer.ui.ListSortingDialogFragment
-import com.mmutert.freshfreezer.ui.TakeOutDialogFragment
-import com.mmutert.freshfreezer.ui.TakeOutDialogFragment.TakeOutDialogClickListener
+import com.mmutert.freshfreezer.ui.dialogs.ListSortingDialogFragment
+import com.mmutert.freshfreezer.ui.dialogs.TakeOutDialogFragment
+import com.mmutert.freshfreezer.ui.dialogs.TakeOutDialogFragment.TakeOutDialogClickListener
 import com.mmutert.freshfreezer.ui.itemlist.ItemListAdapter.ItemListAdapterViewHolder
-import com.mmutert.freshfreezer.viewmodel.ItemListViewModel
 
 /**
  *

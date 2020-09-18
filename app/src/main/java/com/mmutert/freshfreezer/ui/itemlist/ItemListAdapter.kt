@@ -10,11 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mmutert.freshfreezer.data.AmountUnit.Companion.getFormatterForUnit
 import com.mmutert.freshfreezer.data.FrozenItem
 import com.mmutert.freshfreezer.databinding.ListItemBinding
-import com.mmutert.freshfreezer.ui.ListSortingDialogFragment.ListSortingChangedListener
+import com.mmutert.freshfreezer.ui.dialogs.ListSortingDialogFragment.ListSortingChangedListener
 import com.mmutert.freshfreezer.ui.itemlist.ItemListAdapter.ItemListAdapterViewHolder
 import com.mmutert.freshfreezer.util.SortingOption
 import com.mmutert.freshfreezer.util.SortingOption.SortingOrder
-import com.mmutert.freshfreezer.viewmodel.ItemListViewModel
 import org.joda.time.format.DateTimeFormat
 import java.util.*
 
