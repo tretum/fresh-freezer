@@ -22,7 +22,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/AppTheme.Dialog.Layout">
+                style="@style/DialogLayout">
 
                 <TextView
                     android:id="@+id/take_dialog_title"
