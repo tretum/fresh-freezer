@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
 import com.mmutert.freshfreezer.data.ItemRepository
+import com.mmutert.freshfreezer.ui.additem.AddItemViewModel
 import com.mmutert.freshfreezer.ui.itemlist.ItemListViewModel
 
 /**
@@ -26,9 +27,11 @@ class ViewModelFactory constructor(
             handle: SavedStateHandle
     ) = with(modelClass) {
         when {
-            isAssignableFrom(ItemListViewModel::class.java) ->
+            isAssignableFrom(ItemListViewModel::class.java)     ->
                 ItemListViewModel(application, handle, repository)
-            else ->
+            isAssignableFrom(AddItemViewModel::class.java) ->
+                AddItemViewModel(application, handle, repository)
+            else                                                ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     } as T

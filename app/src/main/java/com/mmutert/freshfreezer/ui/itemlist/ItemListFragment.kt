@@ -106,7 +106,7 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
     }
 
     private fun setupNewItemFAB() {
-        mBinding.fab.setOnClickListener { view2: View? ->
+        mBinding.fab.setOnClickListener {
             val title = getString(R.string.fragment_add_item_label)
             val navDirections = ItemListFragmentDirections.actionOpenAddItemView(title)
             navDirections.itemId = -1

@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         mNavigationView = findViewById(R.id.nav_view)
-        val menu = mNavigationView.menu
 
         mAppBarConfiguration =
                 AppBarConfiguration.Builder(navController.graph).setOpenableLayout(drawer).build()

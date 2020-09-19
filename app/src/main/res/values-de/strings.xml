@@ -124,4 +124,5 @@
     <string name="room_temp_items_title">Ungekühlte Artikel</string>
     <string name="undo_button_label">Rückgängig</string>
     <string name="condition">Zustand</string>
+    <string name="error_string">Verpflichtende Angabe</string>
 </resources>

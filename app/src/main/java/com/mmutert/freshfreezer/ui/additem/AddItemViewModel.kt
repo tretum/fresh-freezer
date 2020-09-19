@@ -2,69 +2,112 @@ package com.mmutert.freshfreezer.ui.additem
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
+import androidx.annotation.StringRes
+import androidx.lifecycle.*
 import androidx.work.WorkManager
+import com.mmutert.freshfreezer.Event
+import com.mmutert.freshfreezer.R
 import com.mmutert.freshfreezer.data.*
-import com.mmutert.freshfreezer.data.ItemDatabase.Companion.getDatabase
 import com.mmutert.freshfreezer.notification.NotificationHelper.scheduleNotification
 import com.mmutert.freshfreezer.util.TimeHelper
 import kotlinx.coroutines.launch
-import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
+import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
+import java.lang.Exception
 import java.util.*
 import java.util.concurrent.Executors
+import kotlin.collections.ArrayList
 
-class AddItemViewModel(application: Application) : AndroidViewModel(application) {
+class AddItemViewModel(
+        private val application: Application,
+        private val savedStateHandle: SavedStateHandle,
+        private val repository: ItemRepository
+) : ViewModel() {
 
-    @JvmField
-    val DATE_FORMATTER: DateTimeFormatter =
+    private var isNewItem: Boolean = true
+
+    private val DATE_FORMATTER: DateTimeFormatter =
             DateTimeFormat.longDate().withLocale(Locale.getDefault())
 
-    var currentItem: StorageItem = createNewItem()
-        set(value) {
-            field = value
-            editing = true
-            notificationsToDelete = ArrayList()
-        }
-    var notifications: MutableList<ItemNotification> = ArrayList()
+    private var _notifications: MutableLiveData<List<ItemNotification>> =
+            MutableLiveData(ArrayList())
+    val notifications: LiveData<List<ItemNotification>> = _notifications
 
-    private var editing = false
-    private val mItemRepository: ItemRepository = ItemRepository(
-        getDatabase(application).itemDao(),
-        getDatabase(application).notificationDao())
     private var notificationsToDelete: MutableList<ItemNotification> = ArrayList()
 
-    /**
-     * Resets this ViewModel to the "New Item" state, i.e. not editing another item.
-     */
-    fun reset() {
-        currentItem = createNewItem()
-        notificationsToDelete = ArrayList()
-        notifications = ArrayList()
-        editing = false
-        // TODO Notifications
+    private var editing = false
+
+    private var itemId: Long = 0
+    private var itemCreationDate: LocalDateTime? = null
+
+    val itemName = MutableLiveData("")
+    val itemNotes = MutableLiveData("")
+
+    val storedAmountString = MutableLiveData("0")
+
+    private val _selectedCondition = MutableLiveData(Condition.CHILLED)
+    val selectedCondition: LiveData<Condition> = _selectedCondition
+
+    private val _frozenDate = MutableLiveData(TimeHelper.currentDateLocalized)
+    val frozenDateFormatted = Transformations.map(_frozenDate) {
+        DATE_FORMATTER.print(it)
+    }
+    val frozenDate: LiveData<LocalDate> = _frozenDate
+
+    private val _bestBeforeDate = MutableLiveData(TimeHelper.currentDateLocalized)
+    val bestBeforeDateFormatted = Transformations.map(_bestBeforeDate) {
+        DATE_FORMATTER.print(it)
+    }
+    val bestBeforeDate: LiveData<LocalDate> = _bestBeforeDate
+
+    private val _selectedUnit = MutableLiveData<AmountUnit>()
+    val selectedUnit: LiveData<AmountUnit> = _selectedUnit
+
+    // EVENTS
+    private val _addNotificationEvent = MutableLiveData<Event<Unit>>()
+    val addNotificationEvent: LiveData<Event<Unit>> = _addNotificationEvent
+
+    private val _personSaved = MutableLiveData<Event<Unit>>()
+    val personSaved: LiveData<Event<Unit>> = _personSaved
+
+    private val _snackbarTextId = MutableLiveData<Event<Int>>()
+    val snackbarTextId: LiveData<Event<Int>> = _snackbarTextId
+
+    // FUNCTIONS
+    fun setNotifications(notifications: List<ItemNotification>) {
+        _notifications.value = notifications
     }
 
-    private fun createNewItem(): StorageItem {
-        val currentDate = LocalDate.now(DateTimeZone.getDefault())
-        val currentDateTime = TimeHelper.currentDateTimeLocalized
-        return StorageItem(
-            0,
-            "",
-            0f,
-            AmountUnit.GRAMS,
-            null,
-            currentDate,
-            currentDateTime,
-            currentDateTime,
-            null,
-            Condition.ROOM_TEMP,
-            false
-        )
+
+    fun start(itemId: Long = 0L) {
+        if (itemId > 0L) {
+            this.isNewItem = false
+
+            // Load the transaction
+            viewModelScope.launch {
+                val itemAndNotifications = repository.getItemAndNotifications(itemId)
+                onItemLoaded(itemAndNotifications.item)
+                setNotifications(itemAndNotifications.notifications)
+            }
+        }
+    }
+
+    private fun onItemLoaded(item: StorageItem) {
+        itemNotes.value = item.notes
+        itemName.value = item.name
+        storedAmountString.value = item.amount.toString()
+        _bestBeforeDate.value = item.bestBeforeDate
+        _frozenDate.value = item.frozenAtDate
+        _selectedUnit.value = item.unit
+        _selectedCondition.value = item.condition
+        itemId = item.id
+        itemCreationDate = item.itemCreationDate
+    }
+
+    fun addNotificationClicked() {
+        _addNotificationEvent.value = Event(Unit)
     }
 
     /**
@@ -75,22 +118,24 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
     fun addNotificationToDelete(notification: ItemNotification) {
         Log.d(
             TAG,
-            "Adding notification " + notification.offsetAmount + notification.timeOffsetUnit
-                    + " to the delete list."
+            "Adding notification ${notification.offsetAmount}${notification.timeOffsetUnit} to the delete list."
         )
         notificationsToDelete.add(notification)
-        notifications.remove(notification)
+        // TODO Missing null check, but should work
+        val oldList = _notifications.value!!.toMutableList()
+        oldList.remove(notification)
+        _notifications.value = oldList
     }
 
     /**
      * Cancels notifications pending deletion and removes them from the repository
      */
-    fun removeNotificationsToDelete() {
+    private fun removeNotificationsToDelete() {
         for (notification in notificationsToDelete) {
             // Remove notification workers
             if (notification.notificationId != null) {
                 val workManager = WorkManager
-                    .getInstance(getApplication())
+                    .getInstance(application)
                 val operation = workManager
                     .cancelWorkById(notification.notificationId!!)
                 operation.result.addListener({
@@ -110,36 +155,40 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun deleteNotificationFromRepository(notification: ItemNotification) {
+    private fun deleteNotificationFromRepository(notification: ItemNotification) {
         Log.d(
             TAG,
             "Deleting notification from repository. " + notification.offsetAmount
                     + notification.timeOffsetUnit + " " + notification.notificationId
         )
         viewModelScope.launch {
-            mItemRepository.deleteNotification(notification)
+            repository.deleteNotification(notification)
         }
     }
 
     /**
      * Schedules all non-scheduled notifications.
      */
-    fun scheduleNotifications() {
+    private fun scheduleNotifications(item: StorageItem) {
+
+        if (_notifications.value == null) {
+            return
+        }
 
         // TODO Check for possible race conditions where id for the item might not be set yet
-        for (notification in notifications) {
+        for (notification in _notifications.value!!) {
             if (notification.notificationId == null) {
                 // Notification needs to be scheduled
                 val uuid = scheduleNotification(
-                    getApplication(),
-                    currentItem,
+                    application,
+                    item,
                     notification
                 )
                 if (uuid != null) {
                     notification.notificationId = uuid
-                    notification.itemId = currentItem.id
+                    notification.itemId = itemId
                     viewModelScope.launch {
-                        mItemRepository.addNotification(notification)
+                        repository.addNotification(notification)
                     }
                     Log.d(TAG, "Scheduled a notification with UUID: $uuid")
                 }
@@ -149,29 +198,59 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun getItemAndNotifications(itemId: Long): LiveData<ItemAndNotifications> {
-        return mItemRepository.getItemAndNotificationsLiveData(itemId)
-    }
-
     /**
      * Saves the current item to the repository and performs all necessary operations for correct notification scheduling,
      * considering all the possible changes due to changing dates and added or removed notifications.
      */
     fun save() {
         Log.d(TAG, "Saving the current item...")
-        if (currentItem.condition != Condition.FROZEN) {
-            currentItem.frozenAtDate = null
+
+        if (_bestBeforeDate.value == null) {
+            return
+        }
+
+        // Input Check: The best before date should not be after the freezing date, if that is specified
+        if (_frozenDate.value != null && _frozenDate.value!!.isAfter(_bestBeforeDate.value)) {
+            showSnackbarMessage(R.string.add_item_bbd_before_freezing_date_error)
+            return
+        }
+        if (_bestBeforeDate.value!!.isBefore(TimeHelper.currentDateLocalized)) {
+            showSnackbarMessage(R.string.add_item_bbd_before_current_date_error)
+            return
         }
 
         // Always update the last changed at date
-        currentItem.lastChangedAtDate = TimeHelper.currentDateTimeLocalized
-        viewModelScope.launch { mItemRepository.insertItem(currentItem) }
+        val amount: Float = try {
+            storedAmountString.value?.toFloat()?:0f
+        } catch (e: Exception) {
+            0f
+        }
+
+        val item = StorageItem(
+            itemId,
+            itemName.value ?: "",
+            amount,
+            _selectedUnit.value ?: AmountUnit.GRAMS,
+            _frozenDate.value,
+            _bestBeforeDate.value ?: TimeHelper.currentDateLocalized.plusDays(1),
+            itemCreationDate ?: TimeHelper.currentDateTimeLocalized,
+            TimeHelper.currentDateTimeLocalized,
+            itemNotes.value,
+            _selectedCondition.value ?: Condition.CHILLED,
+            false
+        )
+
+        viewModelScope.launch {
+            repository.insertItem(item)
+        }
 
         // TODO Check for weird LiveData updates and possible problems with scheduling and deleting
         //  Might need switching these instructions around or possibly more effort
         removeNotificationsToDelete()
-        scheduleNotifications()
+        scheduleNotifications(item)
         Log.d(TAG, "Save completed.")
+
+        _personSaved.value = Event(Unit)
     }
 
     /**
@@ -181,63 +260,79 @@ class AddItemViewModel(application: Application) : AndroidViewModel(application)
      * @param offsetTimeUnit The time unit for the notification offset
      * @return Null, if there already is a notification with the given parameters. The new notification, otherwise.
      */
-    fun addNotification(offsetAmount: Int, offsetTimeUnit: TimeOffsetUnit): ItemNotification? {
+    fun addNotification(offsetAmount: Int, offsetTimeUnit: TimeOffsetUnit) {
 
-        // Check if there already is a notification with the selected offset and unit
-        for ((_, _, _, timeOffsetUnit, offsetAmount1) in notifications) {
-            if (offsetAmount1 == offsetAmount && (timeOffsetUnit
-                            == offsetTimeUnit)) {
-                // TODO Check if the existing notification should be returned instead
-                return null
-            }
+        val isNew = _notifications.value?.none {
+            it.offsetAmount == offsetAmount && it.timeOffsetUnit == offsetTimeUnit
         }
 
-        // TODO Check if -1 is intended as itemId
-        val itemNotification = ItemNotification(0, null, -1, offsetTimeUnit, offsetAmount)
-        notifications.add(itemNotification)
-        return itemNotification
+        if (isNew != null && isNew) {
+            // TODO Check if -1 is intended as itemId
+            val newNotification = ItemNotification(0, null, -1, offsetTimeUnit, offsetAmount)
+            val oldList = _notifications.value!!.toMutableList()
+            oldList.add(newNotification)
+            _notifications.value = oldList
+        }
     }
 
-    val currentNotifications: List<ItemNotification>
-        get() = notifications
 
     /**
-     * Remember to update the list in the recyclerview after calling this method since the list in the RV is immutable and needs to be updated
+     * Remember to update the list in the notifications recyclerview after calling this method,
+     *  since the list in the RV is immutable and needs to be updated.
      *
-     * @param date
+     * @param date The new date to set as best before date of the item
      */
-    fun updateBestBefore(date: LocalDate?) {
+    fun setBestBefore(date: LocalDate) {
 
-        // Precondition: Date should have changed
-        if (currentItem.bestBeforeDate.isEqual(date)) {
-            // Noop
+        // PART 1: Update the actual date value if it has changed
+        if (_bestBeforeDate.value == null || _bestBeforeDate.value != date) {
+            _bestBeforeDate.value = date
+        } else {
             return
         }
-        currentItem.bestBeforeDate = date!!
-        val newNotifications = ArrayList<ItemNotification>()
+
+        // PART 2: Update the notifications, if the date has changed
+
         if (editing) {
-            for (notification in notifications) {
-                val notificationCopy = ItemNotification(
-                    0,
-                    null,
-                    currentItem.id,
-                    notification.timeOffsetUnit,
-                    notification.offsetAmount
-                )
+            if (_notifications.value == null) {
+                return
+            }
+
+            val newNotifications = ArrayList<ItemNotification>()
+
+            for (notification in _notifications.value!!) {
+                val notificationCopy = notification.copy(id = 0, notificationId = null)
 
                 // TODO Check if the delete thing should be here
                 notificationsToDelete.add(notification)
                 Log.d(
-                    TAG, String.format(
-                        "Marking notification %d %s as to delete due to best before date change.",
-                        notification.offsetAmount,
-                        notification
-                            .timeOffsetUnit
-                            .toString()
-                    ))
+                    TAG,
+                    "Marking notification ${notification.offsetAmount} ${notification.timeOffsetUnit} as to delete due to best before date change.",
+                )
                 newNotifications.add(notificationCopy)
             }
-            notifications = newNotifications
+            setNotifications(newNotifications)
+        }
+    }
+
+    fun showSnackbarMessage(@StringRes message: Int) {
+        _snackbarTextId.value = Event(message)
+    }
+
+
+    fun setCondition(condition: Condition) {
+        if (_selectedCondition.value == null || _selectedCondition.value != condition) {
+            _selectedCondition.value = condition
+        }
+    }
+
+    fun setFrozenDate(date: LocalDate) {
+        _frozenDate.value = date
+    }
+
+    fun setAmountUnit(selectedUnit: AmountUnit) {
+        if (_selectedUnit.value == null || _selectedUnit.value != selectedUnit) {
+            _selectedUnit.value = selectedUnit
         }
     }
 

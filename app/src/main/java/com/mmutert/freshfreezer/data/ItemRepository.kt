@@ -2,10 +2,13 @@ package com.mmutert.freshfreezer.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ItemRepository(private val mStoredItemDao: StoredItemDao, private val mNotificationDao: NotificationDao) {
+class ItemRepository(private val mStoredItemDao: StoredItemDao,
+                     private val mNotificationDao: NotificationDao,
+                     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO) {
 
     /**
      * Get all the items that are not marked as archived.
@@ -23,17 +26,16 @@ class ItemRepository(private val mStoredItemDao: StoredItemDao, private val mNot
             }
     val notifications: LiveData<List<ItemNotification>> = mNotificationDao.allNotificationsLiveData
 
-    suspend fun insertItem(itemToInsert: StorageItem) {
-        withContext(Dispatchers.IO) {
+    suspend fun insertItem(itemToInsert: StorageItem) =
+        withContext(ioDispatcher) {
             val rowId = mStoredItemDao.insertItem(itemToInsert)
             itemToInsert.id = rowId
         }
-    }
 
-    suspend fun deleteItem(itemToDelete: StorageItem?) {
+    suspend fun deleteItem(itemToDelete: StorageItem) {
         val allNotifications = getAllNotificationsLiveData(itemToDelete).value!!
 
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             mStoredItemDao.deleteItem(itemToDelete)
         }
         for (allNotification in allNotifications) {
@@ -41,16 +43,15 @@ class ItemRepository(private val mStoredItemDao: StoredItemDao, private val mNot
         }
     }
 
-    suspend fun updateItem(item: StorageItem?) {
-        withContext(Dispatchers.IO) {
+    suspend fun updateItem(item: StorageItem) =
+        withContext(ioDispatcher) {
             mStoredItemDao.updateFrozenItem(item)
         }
-    }
 
     suspend fun archiveItem(itemToArchive: StorageItem) {
         if (!itemToArchive.isArchived) {
             itemToArchive.isArchived = true
-            withContext(Dispatchers.IO) {
+            withContext(ioDispatcher) {
                 mStoredItemDao.updateFrozenItem(itemToArchive)
             }
         }
@@ -59,24 +60,25 @@ class ItemRepository(private val mStoredItemDao: StoredItemDao, private val mNot
     suspend fun restoreItem(itemToRestore: StorageItem) {
         if (itemToRestore.isArchived) {
             itemToRestore.isArchived = false
-            withContext(Dispatchers.IO) {
+            withContext(ioDispatcher) {
                 mStoredItemDao.updateFrozenItem(itemToRestore)
             }
         }
     }
 
-    fun getItemAndNotifications(itemId: Long): ItemAndNotifications {
-        return mStoredItemDao.getItemAndNotifications(itemId)
-    }
+    suspend fun getItemAndNotifications(itemId: Long): ItemAndNotifications =
+        withContext(ioDispatcher) {
+            return@withContext mStoredItemDao.getItemAndNotifications(itemId)!!
+        }
 
-    fun getAllNotificationsLiveData(item: StorageItem?): LiveData<List<ItemNotification>> {
+    fun getAllNotificationsLiveData(item: StorageItem): LiveData<List<ItemNotification>> {
 
         // TODO Refactor as Transformation on the notification live data member
-        return mNotificationDao.getAllNotificationsLiveData(item!!)
+        return mNotificationDao.getAllNotificationsLiveData(item)
     }
 
-    fun getAllNotifications(item: StorageItem?): List<ItemNotification> {
-        return mNotificationDao.getAllNotifications(item!!)
+    fun getAllNotifications(item: StorageItem): List<ItemNotification> {
+        return mNotificationDao.getAllNotifications(item)
     }
 
     /**
@@ -84,8 +86,8 @@ class ItemRepository(private val mStoredItemDao: StoredItemDao, private val mNot
      *
      * @param notification The notification to add
      */
-    suspend fun addNotification(notification: ItemNotification?) {
-        withContext(Dispatchers.IO) { mNotificationDao.addNotification(notification) }
+    suspend fun addNotification(notification: ItemNotification) {
+        withContext(ioDispatcher) { mNotificationDao.addNotification(notification) }
     }
 
     /**
@@ -93,8 +95,8 @@ class ItemRepository(private val mStoredItemDao: StoredItemDao, private val mNot
      *
      * @param notification The notification to remove
      */
-    suspend fun deleteNotification(notification: ItemNotification?) {
-        withContext(Dispatchers.IO) { mNotificationDao.deleteNotification(notification) }
+    suspend fun deleteNotification(notification: ItemNotification) {
+        withContext(ioDispatcher) { mNotificationDao.deleteNotification(notification) }
     }
 
     fun getItemAndNotificationsLiveData(itemId: Long): LiveData<ItemAndNotifications> {
@@ -102,4 +104,10 @@ class ItemRepository(private val mStoredItemDao: StoredItemDao, private val mNot
         // TODO Refactor as Transformation on the notification live data member and create the member
         return mStoredItemDao.getItemAndNotificationsLiveData(itemId)
     }
+
+    suspend fun getStorageItem(itemId: Long): StorageItem =
+            // TODO Check to see if there should be some error checking before the assertion
+            withContext(ioDispatcher) {
+                return@withContext mStoredItemDao.getStoredItem(itemId)!!
+            }
 }

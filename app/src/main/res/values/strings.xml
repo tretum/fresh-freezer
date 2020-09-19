@@ -161,4 +161,5 @@
     <string name="room_temp_items_title">Room Temp Items</string>
     <string name="undo_button_label">Undo</string>
     <string name="condition">Condition</string>
+    <string name="error_string">Required field</string>
 </resources>
