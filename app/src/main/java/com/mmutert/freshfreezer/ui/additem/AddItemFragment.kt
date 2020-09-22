@@ -23,6 +23,7 @@ import com.mmutert.freshfreezer.ui.UnitArrayAdapter
 import com.mmutert.freshfreezer.ui.dialogs.NotificationOffsetDialogFragment
 import com.mmutert.freshfreezer.ui.dialogs.NotificationOffsetDialogFragment.NotificationOffsetDialogClickListener
 import com.mmutert.freshfreezer.util.Keyboard
+import com.mmutert.freshfreezer.util.TimeHelper
 import com.mmutert.freshfreezer.util.getViewModelFactory
 import com.mmutert.freshfreezer.util.setupSnackbar
 import org.joda.time.LocalDate
@@ -84,7 +85,7 @@ class AddItemFragment : Fragment() {
      * Shows the freezing date entry in the fragment.
      */
     private fun showFreezingDate() {
-        binding.tvAddFreezingDate.visibility = View.GONE
+        binding.tvAddFreezingDateOverlay.visibility = View.GONE
         binding.rlFreezingDateLayout.visibility = View.VISIBLE
     }
 
@@ -127,10 +128,8 @@ class AddItemFragment : Fragment() {
             spAddItemCondition.adapter = conditionSpinnerAdapter
             spAddItemCondition.onItemSelectedListener = object : OnItemSelectedListener {
 
-                override fun onItemSelected(parent: AdapterView<*>?,
-                                            view: View,
-                                            position: Int,
-                                            id: Long) {
+                override fun onItemSelected(
+                        parent: AdapterView<*>?, view: View, position: Int, id: Long) {
                     val selectedCondition = conditionSpinnerAdapter.getSelectedUnit(position)
                     this@AddItemFragment.viewModel.setCondition(selectedCondition)
                 }
@@ -185,53 +184,53 @@ class AddItemFragment : Fragment() {
             .build()
     }
 
+    private lateinit var freezingDatePicker : MaterialDatePicker<Long>
+
     /**
      * Sets up the date picker dialogs for the date of freezing the item and the best before date.
      */
     private fun setupFreezingDatePicker() {
+        freezingDatePicker = createDatePicker(R.string.add_item_frozen_at_date_picker_title_text, TimeHelper.currentDateLocalized)
+
         viewModel.frozenDate.observe(viewLifecycleOwner) {
             // Set up the freezing date picker
-            val picker = createDatePicker(
+            this@AddItemFragment.freezingDatePicker = createDatePicker(
                 R.string.add_item_frozen_at_date_picker_title_text, it
             )
 
             // Add the behavior for the positive button of the freezing date picker
-            picker.addOnPositiveButtonClickListener { selection: Long ->
+            this@AddItemFragment.freezingDatePicker.addOnPositiveButtonClickListener { selection: Long ->
                 viewModel.setFrozenDate(convertSelectedDate(selection))
             }
 
-            binding.etAddItemFrozenDate.setOnClickListener {
-                // Open the date picker on clicking the row
-                picker.show(parentFragmentManager, "FreezingDate")
-            }
-            binding.rlFreezingDateLayout.setOnClickListener {
-                picker.show(parentFragmentManager, "FreezingDate")
-            }
-            binding.tvAddFreezingDate.setOnClickListener {
-                showFreezingDate()
-                picker.show(parentFragmentManager, "FreezingDate")
-            }
+        }
+
+        viewModel.frozenDateButtonEvent.observe(viewLifecycleOwner, EventObserver {
+            // Open the date picker on clicking the button
+            freezingDatePicker.show(parentFragmentManager, "FreezingDate")
+        })
+
+        binding.tvAddFreezingDateOverlay.setOnClickListener {
+            viewModel.setFrozenDate()
+            freezingDatePicker.show(parentFragmentManager, "FreezingDate")
         }
     }
 
+    private lateinit var bestBeforeDatePicker : MaterialDatePicker<Long>
     private fun setupBestBeforeDatePicker() {
         viewModel.bestBeforeDate.observe(viewLifecycleOwner) {
-            val picker = createDatePicker(
+            bestBeforeDatePicker = createDatePicker(
                 R.string.add_item_best_before_date_picker_title_text, it
             )
 
-            picker.addOnPositiveButtonClickListener { selection: Long ->
+            bestBeforeDatePicker.addOnPositiveButtonClickListener { selection: Long ->
                 viewModel.setBestBefore(convertSelectedDate(selection))
             }
-
-            // Open the date picker on clicking the row
-            binding.etAddItemBestBeforeDate.setOnClickListener {
-                picker.show(parentFragmentManager, "BestBeforeDate")
-            }
-            binding.rlBestBeforeDateLayout.setOnClickListener {
-                picker.show(parentFragmentManager, "BestBeforeDate")
-            }
         }
+
+        viewModel.bestBeforeButtonEvent.observe(viewLifecycleOwner, EventObserver {
+            bestBeforeDatePicker.show(parentFragmentManager, "BestBeforeDate")
+        })
     }
 
     /**

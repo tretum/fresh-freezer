@@ -50,9 +50,11 @@ class AddItemViewModel(
     private val _selectedCondition = MutableLiveData(Condition.CHILLED)
     val selectedCondition: LiveData<Condition> = _selectedCondition
 
-    private val _frozenDate = MutableLiveData(TimeHelper.currentDateLocalized)
+    private val _frozenDate: MutableLiveData<LocalDate> = MutableLiveData()
     val frozenDateFormatted = Transformations.map(_frozenDate) {
-        DATE_FORMATTER.print(it)
+        it?.let {
+            DATE_FORMATTER.print(it)
+        }?:""
     }
     val frozenDate: LiveData<LocalDate> = _frozenDate
 
@@ -74,6 +76,12 @@ class AddItemViewModel(
 
     private val _snackbarTextId = MutableLiveData<Event<Int>>()
     val snackbarTextId: LiveData<Event<Int>> = _snackbarTextId
+
+    private val _bestBeforeButtonEvent = MutableLiveData<Event<Unit>>()
+    val bestBeforeButtonEvent : LiveData<Event<Unit>> = _bestBeforeButtonEvent
+
+    private val _frozenDateButtonEvent = MutableLiveData<Event<Unit>>()
+    val frozenDateButtonEvent : LiveData<Event<Unit>> = _frozenDateButtonEvent
 
     // FUNCTIONS
     fun setNotifications(notifications: List<ItemNotification>) {
@@ -104,10 +112,6 @@ class AddItemViewModel(
         _selectedCondition.value = item.condition
         itemId = item.id
         itemCreationDate = item.itemCreationDate
-    }
-
-    fun addNotificationClicked() {
-        _addNotificationEvent.value = Event(Unit)
     }
 
     /**
@@ -226,12 +230,18 @@ class AddItemViewModel(
             0f
         }
 
+        val frozenDateToStore = if (_selectedCondition.value == Condition.FROZEN) {
+            _frozenDate.value
+        } else {
+            null
+        }
+
         val item = StorageItem(
             itemId,
             itemName.value ?: "",
             amount,
             _selectedUnit.value ?: AmountUnit.GRAMS,
-            _frozenDate.value,
+            frozenDateToStore,
             _bestBeforeDate.value ?: TimeHelper.currentDateLocalized.plusDays(1),
             itemCreationDate ?: TimeHelper.currentDateTimeLocalized,
             TimeHelper.currentDateTimeLocalized,
@@ -315,6 +325,18 @@ class AddItemViewModel(
         }
     }
 
+    fun addNotificationClicked() {
+        _addNotificationEvent.value = Event(Unit)
+    }
+
+    fun bestBeforeButtonClicked() {
+        _bestBeforeButtonEvent.value = Event(Unit)
+    }
+
+    fun frozenDateButtonClicked() {
+        _frozenDateButtonEvent.value = Event(Unit)
+    }
+
     fun showSnackbarMessage(@StringRes message: Int) {
         _snackbarTextId.value = Event(message)
     }
@@ -326,7 +348,7 @@ class AddItemViewModel(
         }
     }
 
-    fun setFrozenDate(date: LocalDate) {
+    fun setFrozenDate(date: LocalDate = TimeHelper.currentDateLocalized) {
         _frozenDate.value = date
     }
 

@@ -27,23 +27,23 @@ class Converters {
     }
 
     @TypeConverter
-    fun toDate(dateLong: String): LocalDate {
-        return LocalDate.parse(dateLong)
+    fun toDate(dateLong: String?): LocalDate? {
+        return if (dateLong == null) null else LocalDate.parse(dateLong)
     }
 
     @TypeConverter
-    fun fromDate(date: LocalDate): String {
-        return date.toString()
+    fun fromDate(date: LocalDate?): String? {
+        return date?.toString()
     }
 
     @TypeConverter
-    fun toDateTime(dateLong: String): LocalDateTime {
-        return LocalDateTime.parse(dateLong)
+    fun toDateTime(dateLong: String?): LocalDateTime? {
+        return if (dateLong == null) null else LocalDateTime.parse(dateLong)
     }
 
     @TypeConverter
-    fun fromDateTime(date: LocalDateTime): String {
-        return date.toString()
+    fun fromDateTime(date: LocalDateTime?): String? {
+        return date?.toString()
     }
 
     @TypeConverter
