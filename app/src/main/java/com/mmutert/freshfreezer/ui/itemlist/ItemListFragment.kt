@@ -99,7 +99,7 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
                 }
             })
 
-            addItemDecoration(BottomSpaceDecoration(200))
+            // TODO Do something else for bottom decoration
         }
 
         setupNewItemFAB()
