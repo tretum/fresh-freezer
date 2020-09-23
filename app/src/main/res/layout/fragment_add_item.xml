@@ -4,9 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
+        <import type="com.mmutert.freshfreezer.data.Condition"/>
+
         <variable
-            name="currentItem"
-            type="com.mmutert.freshfreezer.data.FrozenItem" />
+            name="viewModel"
+            type="com.mmutert.freshfreezer.ui.additem.AddItemViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -25,7 +28,7 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_item_name_layout"
+                    android:id="@+id/til_add_item_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -46,7 +49,7 @@
                         android:paddingLeft="@dimen/add_item_pad_horizontal"
                         android:paddingRight="@dimen/add_item_pad_horizontal"
                         android:paddingTop="12dp"
-                        android:text="@={currentItem.name}"
+                        android:text="@={viewModel.itemName}"
                         android:textSize="@dimen/add_item_name_text_size" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -59,7 +62,7 @@
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/add_item_name_layout" />
+                    app:layout_constraintTop_toBottomOf="@id/til_add_item_name" />
 
 
                 <TextView
@@ -118,34 +121,32 @@
                     android:layout_marginTop="@dimen/add_item_margin_vertical"
                     android:layout_marginEnd="@dimen/add_item_margin_horizontal"
                     android:layout_width="0dp"
+                    android:onClick="@{() -> viewModel.bestBeforeButtonClicked()}"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/tv_add_best_before_date_title"
+                    <TextView android:id="@+id/tv_add_best_before_date_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:labelFor="@id/et_add_item_best_before"
+                        android:labelFor="@id/tv_add_item_best_before_date"
                         android:paddingStart="@dimen/add_item_pad_horizontal"
                         android:paddingEnd="@dimen/add_item_pad_horizontal"
                         android:text="@string/add_item_best_before_date_title"
                         android:textSize="@dimen/add_item_label_text_size"
                         android:layout_alignParentStart="true"
-                        android:layout_alignTop="@id/et_add_item_best_before"
-                        android:layout_alignBottom="@id/et_add_item_best_before"/>
+                        android:layout_alignTop="@id/tv_add_item_best_before_date"
+                        android:layout_alignBottom="@id/tv_add_item_best_before_date"/>
 
-                    <EditText
-                        android:id="@+id/et_add_item_best_before"
+                    <TextView android:id="@+id/tv_add_item_best_before_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:focusable="false"
-                        android:inputType="none"
                         android:paddingLeft="@dimen/add_item_pad_horizontal"
                         android:paddingTop="@dimen/add_item_pad_vertical"
                         android:paddingRight="@dimen/add_item_pad_horizontal"
                         android:paddingBottom="@dimen/add_item_pad_vertical"
                         android:textAlignment="center"
                         android:textSize="@dimen/add_item_label_text_size"
+                        android:text="@{viewModel.bestBeforeDateFormatted}"
                         android:layout_alignParentEnd="true"
                         tools:text="2020-06-01" />
                 </RelativeLayout>
@@ -164,40 +165,40 @@
 
                     <RelativeLayout
                         android:id="@+id/rl_freezing_date_layout"
-                        android:visibility="gone"
+                        android:visibility="@{viewModel.selectedCondition.equals(Condition.FROZEN) &amp;&amp; viewModel.frozenDateFormatted != null &amp;&amp; !viewModel.frozenDateFormatted.isEmpty ? View.VISIBLE : View.GONE }"
+                        tools:visibility="gone"
+                        android:onClick="@{() -> viewModel.frozenDateButtonClicked()}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-                        <TextView
+
+                        <TextView android:id="@+id/tv_add_frozen_date_title"
                             android:layout_alignParentStart="true"
-                            android:layout_alignTop="@id/et_add_item_frozen_date"
-                            android:layout_alignBottom="@id/et_add_item_frozen_date"
-                            android:id="@+id/tv_add_frozen_date_title"
+                            android:layout_alignTop="@id/tv_add_item_frozen_date"
+                            android:layout_alignBottom="@id/tv_add_item_frozen_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:labelFor="@id/et_add_item_frozen_date"
+                            android:labelFor="@id/tv_add_item_frozen_date"
                             android:paddingStart="@dimen/add_item_pad_horizontal"
                             android:paddingEnd="@dimen/add_item_pad_horizontal"
                             android:text="@string/add_item_frozen_date_title"
                             android:textSize="@dimen/add_item_label_text_size"/>
 
-                        <EditText
-                            android:id="@+id/et_add_item_frozen_date"
+                        <TextView android:id="@+id/tv_add_item_frozen_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:focusable="false"
-                            android:inputType="none"
                             android:paddingStart="@dimen/add_item_pad_horizontal"
                             android:paddingEnd="@dimen/add_item_pad_horizontal"
                             android:textAlignment="center"
                             android:textSize="@dimen/add_item_label_text_size"
+                            android:text="@{viewModel.frozenDateFormatted}"
                             android:visibility="visible"
                             android:layout_alignParentEnd="true"
                             tools:text="2020-06-01" />
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/tv_add_freezing_date"
+                        android:id="@+id/tv_add_freezing_date_overlay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
@@ -205,52 +206,8 @@
                         android:paddingTop="@dimen/add_item_pad_title_top"
                         android:text="@string/add_item_add_freezing_date"
                         android:textSize="@dimen/add_item_label_text_size"
-                        android:visibility="visible" />
+                        android:visibility="@{viewModel.selectedCondition.equals(Condition.FROZEN) &amp;&amp; (viewModel.frozenDateFormatted == null || viewModel.frozenDateFormatted.isEmpty) ? View.VISIBLE : View.GONE}" />
                 </FrameLayout>
-
-<!--                <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                    app:layout_constraintStart_toStartOf="@+id/guideline"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/et_add_item_best_before"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    android:layout_marginEnd="@dimen/add_item_margin_horizontal"-->
-<!--                    android:layout_marginTop="@dimen/add_item_margin_vertical"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:id="@+id/rl_freezing_date_layout">-->
-<!--                    -->
-<!--                    <TextView-->
-<!--                        android:id="@+id/tv_add_frozen_date_title"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:gravity="center_vertical"-->
-<!--                        android:labelFor="@id/et_add_item_frozen_date"-->
-<!--                        android:paddingStart="@dimen/add_item_pad_horizontal"-->
-<!--                        android:paddingEnd="@dimen/add_item_pad_horizontal"-->
-<!--                        android:text="@string/add_item_frozen_date_title"-->
-<!--                        android:textSize="@dimen/add_item_label_text_size"-->
-<!--                        app:layout_constraintBottom_toBottomOf="@+id/et_add_item_frozen_date"-->
-<!--                        app:layout_constraintStart_toStartOf="parent"-->
-<!--                        app:layout_constraintTop_toTopOf="@+id/et_add_item_frozen_date" />-->
-<!--                    -->
-<!--                    <EditText-->
-<!--                        android:id="@+id/et_add_item_frozen_date"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:focusable="false"-->
-<!--                        android:inputType="none"-->
-<!--                        android:paddingStart="@dimen/add_item_pad_horizontal"-->
-<!--                        android:paddingEnd="@dimen/add_item_pad_horizontal"-->
-<!--                        android:text="2020"-->
-<!--                        android:textAlignment="center"-->
-<!--                        android:textSize="@dimen/add_item_label_text_size"-->
-<!--                        android:visibility="visible"-->
-<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
-<!--                        app:layout_constraintTop_toTopOf="parent"-->
-<!--                        tools:text="2020-06-01" />-->
-<!--&lt;!&ndash;                        app:layout_constraintStart_toEndOf="@id/tv_add_frozen_date_title"&ndash;&gt;-->
-<!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
-
 
                 <View
                     android:id="@+id/divider2"
@@ -262,34 +219,43 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/add_item_freezing_date_frame" />
 
-
-                <EditText
-                    android:id="@+id/et_add_item_amount"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_add_item_amount"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/add_item_margin_vertical"
-                    android:hint="@string/add_item_amount_hint"
-                    android:inputType="numberDecimal"
-                    android:paddingLeft="@dimen/add_item_pad_horizontal"
-                    android:paddingRight="@dimen/add_item_pad_horizontal"
-                    android:selectAllOnFocus="true"
-                    android:text="@={`` + currentItem.amount}"
-                    android:textAlignment="textEnd"
+                    android:layout_marginEnd="16dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:layout_constraintEnd_toStartOf="@id/sp_add_items_unit_selection"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
-                    app:layout_constraintTop_toBottomOf="@+id/divider2" />
+                    app:layout_constraintTop_toBottomOf="@+id/divider2"
+                    app:hintAnimationEnabled="false"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_add_item_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/add_item_margin_vertical"
+                        android:hint="@string/add_item_amount_hint"
+                        android:inputType="numberDecimal"
+                        android:paddingLeft="@dimen/add_item_pad_horizontal"
+                        android:paddingRight="@dimen/add_item_pad_horizontal"
+                        android:selectAllOnFocus="true"
+                        android:text="@={viewModel.storedAmountString}"
+                        android:textAlignment="textEnd" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <Spinner
                     android:id="@+id/sp_add_items_unit_selection"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginStart="@dimen/add_item_margin_horizontal"
                     android:layout_marginEnd="@dimen/add_item_margin_horizontal"
                     android:entries="@array/units"
-                    app:layout_constraintBottom_toBottomOf="@+id/et_add_item_amount"
+                    app:layout_constraintBottom_toBottomOf="@+id/til_add_item_amount"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/et_add_item_amount"
-                    app:layout_constraintTop_toTopOf="@+id/et_add_item_amount" />
+                    app:layout_constraintTop_toTopOf="@+id/til_add_item_amount" />
 
                 <View
                     android:id="@+id/divider3"
@@ -299,7 +265,7 @@
                     android:background="?android:attr/listDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_add_item_amount" />
+                    app:layout_constraintTop_toBottomOf="@id/til_add_item_amount" />
 
                 <ImageView
                     android:id="@+id/iv_notification_bell_icon"
@@ -315,6 +281,9 @@
                     android:id="@+id/rv_add_item_notification_list"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    tools:listitem="@layout/item_notification_entry"
+                    tools:itemCount="3"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toBottomOf="@id/divider3"
                     app:layout_constraintEnd_toEndOf="@+id/et_add_item_description"
                     app:layout_constraintStart_toStartOf="@+id/guideline"/>
@@ -330,6 +299,7 @@
                     android:paddingTop="@dimen/add_item_pad_title_top"
                     android:text="@string/add_item_add_notification_label"
                     android:textSize="@dimen/add_item_label_text_size"
+                    android:onClick="@{() -> viewModel.addNotificationClicked()}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
                     app:layout_constraintTop_toBottomOf="@id/rv_add_item_notification_list" />
@@ -365,7 +335,7 @@
                     android:paddingLeft="@dimen/add_item_pad_horizontal"
                     android:paddingEnd="@dimen/add_item_pad_horizontal"
                     android:paddingRight="@dimen/add_item_pad_horizontal"
-                    android:text="@={currentItem.notes}"
+                    android:text="@={viewModel.itemNotes}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
                     app:layout_constraintTop_toBottomOf="@+id/divider4" />

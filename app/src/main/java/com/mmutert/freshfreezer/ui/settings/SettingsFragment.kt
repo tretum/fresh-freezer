@@ -1,4 +1,4 @@
-package com.mmutert.freshfreezer.ui
+package com.mmutert.freshfreezer.ui.settings
 
 import android.os.Bundle
 import androidx.preference.ListPreference

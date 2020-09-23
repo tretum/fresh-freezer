@@ -5,8 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,21 +17,24 @@ import com.google.android.material.snackbar.Snackbar
 import com.mmutert.freshfreezer.MainActivity
 import com.mmutert.freshfreezer.R
 import com.mmutert.freshfreezer.data.Condition
-import com.mmutert.freshfreezer.data.FrozenItem
+import com.mmutert.freshfreezer.data.StorageItem
 import com.mmutert.freshfreezer.databinding.FragmentFrozenItemListBinding
-import com.mmutert.freshfreezer.ui.ListSortingDialogFragment
-import com.mmutert.freshfreezer.ui.TakeOutDialogFragment
-import com.mmutert.freshfreezer.ui.TakeOutDialogFragment.TakeOutDialogClickListener
+import com.mmutert.freshfreezer.ui.dialogs.ListSortingDialogFragment
+import com.mmutert.freshfreezer.ui.dialogs.TakeOutDialogFragment
+import com.mmutert.freshfreezer.ui.dialogs.TakeOutDialogFragment.TakeOutDialogClickListener
 import com.mmutert.freshfreezer.ui.itemlist.ItemListAdapter.ItemListAdapterViewHolder
-import com.mmutert.freshfreezer.viewmodel.ItemListViewModel
+import com.mmutert.freshfreezer.util.getViewModelFactory
 
 /**
  *
  */
 class ItemListFragment : Fragment(), ListItemClickedCallback {
+
+    private val mViewModel: ItemListViewModel by viewModels { getViewModelFactory() }
+
     private lateinit var mBinding: FragmentFrozenItemListBinding
-    private lateinit var mViewModel: ItemListViewModel
     private lateinit var mItemListAdapter: ItemListAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -47,8 +51,6 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        mViewModel = ViewModelProvider(this).get(ItemListViewModel::class.java)
 
         // RecyclerView setup
         val conditionArg = this.requireArguments().getInt("condition", MainActivity.NO_FILTER_ID)
@@ -67,7 +69,7 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
         mItemListAdapter = ItemListAdapter(mViewModel, this, requireContext())
 
         // Observe the items in the database that have to get added to the database
-        mViewModel.frozenItems.observe(
+        mViewModel.storageItems.observe(
             viewLifecycleOwner,
             { list -> mItemListAdapter.itemList = list })
 
@@ -90,26 +92,26 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
 
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
-                    when(newState){
+                    when (newState) {
                         RecyclerView.SCROLL_STATE_IDLE, RecyclerView.SCROLL_STATE_SETTLING ->
                             mBinding.fab.show()
                     }
                 }
             })
 
-            addItemDecoration(BottomSpaceDecoration(200))
+            // TODO Do something else for bottom decoration
         }
 
         setupNewItemFAB()
     }
 
     private fun setupNewItemFAB() {
-        mBinding.fab.setOnClickListener { view2: View? ->
+        mBinding.fab.setOnClickListener {
             val title = getString(R.string.fragment_add_item_label)
             val navDirections = ItemListFragmentDirections.actionOpenAddItemView(title)
             navDirections.itemId = -1
-            Navigation.findNavController(view2!!).navigate(navDirections)
-            Log.d("", "Clicked FAB")
+            findNavController().navigate(navDirections)
+            Log.d(LOG_TAG, "Clicked FAB")
         }
     }
 
@@ -210,7 +212,7 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        Log.d(ItemListFragment::class.java.canonicalName, "Creating list options menu")
+        Log.d(LOG_TAG, "Creating list options menu")
         super.onCreateOptionsMenu(menu, inflater)
         menu.clear()
         inflater.inflate(R.menu.menu_item_list, menu)
@@ -233,8 +235,8 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
         return false
     }
 
-    override fun onClick(item: FrozenItem) {
-        Log.d("ListFragment", "Clicked on item " + item.name)
+    override fun onClick(item: StorageItem) {
+        Log.d(LOG_TAG, "Clicked on item " + item.name)
         val title = getString(R.string.add_item_label_editing)
         val navDirections = ItemListFragmentDirections.actionOpenAddItemView(title)
         navDirections.itemId = item.id
@@ -246,7 +248,7 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
      *
      * @param itemToArchive The item to archive.
      */
-    private fun archiveItem(itemToArchive: FrozenItem) {
+    private fun archiveItem(itemToArchive: StorageItem) {
         /**
          * The snackbar that is displayed when an item is deleted in order to allow undoing the action.
          */
@@ -286,7 +288,7 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
      * @param item        The item where the amount was taken from
      * @param amountTaken The amount that was taken from the item
      */
-    private fun takeFromItem(item: FrozenItem, amountTaken: Float) {
+    private fun takeFromItem(item: StorageItem, amountTaken: Float) {
         mViewModel.takeFromItem(item, amountTaken)
 
         // TODO Possibly a hack. The amount was not updated because the current item is changed in the view model.
@@ -306,5 +308,9 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
         override fun onCancelClicked(dialog: TakeOutDialogFragment) {
             mItemListAdapter.notifyDataSetChanged()
         }
+    }
+
+    companion object {
+        val LOG_TAG = ItemListFragment::class.simpleName
     }
 }

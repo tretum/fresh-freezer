@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="item"
-            type="com.mmutert.freshfreezer.data.FrozenItem" />
+            type="com.mmutert.freshfreezer.data.StorageItem" />
     </data>
 
     <FrameLayout
@@ -82,7 +82,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/list_item_side_margin"
                         android:layout_marginTop="@dimen/list_item_vertical_margin"
-                        android:text="@string/empty_name_placeholder"
+                        android:text="@{!item.name.trim().isEmpty() ? item.name : @string/empty_name_placeholder}"
                         android:textSize="@dimen/list_item_title_text_size"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -104,6 +104,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/list_item_value_text_size"
+                        android:text="@{item.unit.stringResId}"
                         app:layout_constraintEnd_toEndOf="@+id/tv_date_frozen"
                         app:layout_constraintTop_toTopOf="@+id/tv_item_name"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_item_name"
@@ -116,6 +117,7 @@
                         android:text="@string/list_item_frozen_at_title"
                         android:textSize="@dimen/list_item_label_text_size"
                         android:labelFor="@id/tv_date_frozen"
+                        android:visibility="@{item.frozenAtDate != null ? View.VISIBLE : View.GONE}"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_date_frozen"
                         app:layout_constraintStart_toStartOf="@+id/tv_item_name"
                         app:layout_constraintTop_toTopOf="@+id/tv_date_frozen" />
@@ -126,6 +128,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:textSize="@dimen/list_item_value_text_size"
+                        android:visibility="@{item.frozenAtDate != null ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="@+id/tv_best_before_date"
                         app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toEndOf="@+id/tv_frozen_date_title"

@@ -4,9 +4,9 @@ import androidx.room.Embedded
 import androidx.room.Relation
 
 class ItemAndNotifications (
-    @Embedded
-    val item: FrozenItem,
+        @Embedded
+    val item: StorageItem,
 
-    @Relation(parentColumn = "id", entityColumn = "item_id")
+        @Relation(parentColumn = "id", entityColumn = "item_id")
     val notifications: List<ItemNotification>
 )

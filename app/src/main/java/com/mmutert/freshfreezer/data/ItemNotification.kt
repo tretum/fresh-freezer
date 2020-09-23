@@ -6,7 +6,7 @@ import java.util.*
 @Entity(tableName = "notifications",
         foreignKeys = [
                 ForeignKey(
-                        entity = FrozenItem::class,
+                        entity = StorageItem::class,
                         parentColumns = ["id"],
                         childColumns = ["item_id"],
                         onUpdate = ForeignKey.CASCADE)

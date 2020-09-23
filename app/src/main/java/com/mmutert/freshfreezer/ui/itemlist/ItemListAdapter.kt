@@ -8,13 +8,11 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mmutert.freshfreezer.data.AmountUnit.Companion.getFormatterForUnit
-import com.mmutert.freshfreezer.data.FrozenItem
-import com.mmutert.freshfreezer.databinding.ListItemBinding
-import com.mmutert.freshfreezer.ui.ListSortingDialogFragment.ListSortingChangedListener
+import com.mmutert.freshfreezer.data.StorageItem
+import com.mmutert.freshfreezer.databinding.ItemOverviewItemBinding
+import com.mmutert.freshfreezer.ui.dialogs.ListSortingDialogFragment.ListSortingChangedListener
 import com.mmutert.freshfreezer.ui.itemlist.ItemListAdapter.ItemListAdapterViewHolder
-import com.mmutert.freshfreezer.util.SortingOption
-import com.mmutert.freshfreezer.util.SortingOption.SortingOrder
-import com.mmutert.freshfreezer.viewmodel.ItemListViewModel
+import com.mmutert.freshfreezer.ui.itemlist.SortingOption.SortingOrder
 import org.joda.time.format.DateTimeFormat
 import java.util.*
 
@@ -24,52 +22,40 @@ class ItemListAdapter(
         private val context: Context) :
         RecyclerView.Adapter<ItemListAdapterViewHolder>(), ListSortingChangedListener {
 
-    private val mDiffer = AsyncListDiffer(this, DIFF_CALLBACK)
+    private val mDiffer = AsyncListDiffer(this, DiffCallBack())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemListAdapterViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ListItemBinding.inflate(inflater, parent, false)
+        val binding = ItemOverviewItemBinding.inflate(inflater, parent, false)
         return ItemListAdapterViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ItemListAdapterViewHolder, position: Int) {
         val binding = holder.binding
-        val itemForPosition = getItemAtPosition(position)
-        binding.item = itemForPosition
+        val itemAtPosition = getItemAtPosition(position)
 
-        // Set name of the item
-        if (itemForPosition.name.isNotEmpty()) {
-            binding.tvItemName.text = itemForPosition.name
-        }
-        val unit = itemForPosition.unit
-        binding.tvAmountUnit.text = context.resources.getString(unit.stringResId)
-        val numberInstance = getFormatterForUnit(itemForPosition.unit)
-        val amountText = numberInstance.format(itemForPosition.amount.toDouble())
-        binding.tvAmount.text = amountText
         val formatter = DateTimeFormat.longDate().withLocale(Locale.getDefault())
-        val bestBeforeDate = itemForPosition.bestBeforeDate
-        val bestBeforeFormatted = formatter.print(bestBeforeDate)
-        binding.tvBestBeforeDate.text = bestBeforeFormatted
-        val frozenDate = itemForPosition.frozenAtDate
-        if (frozenDate != null) {
-            binding.tvDateFrozen.visibility = View.VISIBLE
-            binding.tvFrozenDateTitle.visibility = View.VISIBLE
-            val frozenFormatted = formatter.print(frozenDate)
-            binding.tvDateFrozen.text = frozenFormatted
-        } else {
-            binding.tvFrozenDateTitle.visibility = View.GONE
-            binding.tvDateFrozen.visibility = View.GONE
+        val numberInstance = getFormatterForUnit(itemAtPosition.unit)
+        
+        binding.apply {
+            item = itemAtPosition
+
+            tvAmount.text = numberInstance.format(itemAtPosition.amount.toDouble())
+            tvBestBeforeDate.text = formatter.print(itemAtPosition.bestBeforeDate)
+            if (itemAtPosition.frozenAtDate != null) {
+                tvDateFrozen.text = formatter.print(itemAtPosition.frozenAtDate)
+            }
+            root.setOnClickListener { itemClickedCallback.onClick(itemAtPosition) }
+            listItemDeleteBackground.visibility = View.INVISIBLE
+            listItemTakeBackground.visibility = View.INVISIBLE
         }
-        binding.root.setOnClickListener { itemClickedCallback.onClick(itemForPosition) }
-        binding.listItemDeleteBackground.visibility = View.INVISIBLE
-        binding.listItemTakeBackground.visibility = View.INVISIBLE
     }
 
     override fun getItemCount(): Int {
         return mDiffer.currentList.size
     }
 
-    fun getItemAtPosition(position: Int): FrozenItem {
+    fun getItemAtPosition(position: Int): StorageItem {
         return mDiffer.currentList[position]
     }
 
@@ -78,13 +64,13 @@ class ItemListAdapter(
      * @param item The item to get the position for
      * @return The index of the item.
      */
-    fun getPositionOfItem(item: FrozenItem): Int {
+    fun getPositionOfItem(item: StorageItem): Int {
         return mDiffer.currentList.indexOf(item)
     }
 
-    override fun listOptionClicked(selectedSortingOption: SortingOption,
+    override fun listOptionClicked(sortingOption: SortingOption,
                                    sortingOrder: SortingOrder) {
-        mViewModel.sortingOption = selectedSortingOption
+        mViewModel.sortingOption = sortingOption
         mViewModel.sortingOrder = sortingOrder
         itemList = mDiffer.currentList
     }
@@ -95,10 +81,10 @@ class ItemListAdapter(
      *
      * @param items  The list of items to sort.
      */
-    private fun sortItems(items: MutableList<FrozenItem>) {
+    private fun sortItems(items: MutableList<StorageItem>) {
         if (items.isNotEmpty()) {
             when (mViewModel.sortingOption) {
-                SortingOption.DATE_CHANGED -> items.sortWith(Comparator { (_, _, _, _, _, _, _, lastChangedAtDate1), (_, _, _, _, _, _, _, lastChangedAtDate2) ->
+                SortingOption.DATE_CHANGED     -> items.sortWith(Comparator { (_, _, _, _, _, _, _, lastChangedAtDate1), (_, _, _, _, _, _, _, lastChangedAtDate2) ->
                     val result = lastChangedAtDate1.compareTo(lastChangedAtDate2)
                     if (mViewModel.sortingOrder == SortingOrder.ASCENDING) {
                         return@Comparator result
@@ -106,7 +92,7 @@ class ItemListAdapter(
                         return@Comparator result * -1
                     }
                 })
-                SortingOption.DATE_ADDED -> items.sortWith(Comparator { (_, _, _, _, _, _, itemCreationDate1), (_, _, _, _, _, _, itemCreationDate2) ->
+                SortingOption.DATE_ADDED       -> items.sortWith(Comparator { (_, _, _, _, _, _, itemCreationDate1), (_, _, _, _, _, _, itemCreationDate2) ->
                     val result = itemCreationDate1.compareTo(itemCreationDate2)
                     if (mViewModel.sortingOrder == SortingOrder.ASCENDING) {
                         return@Comparator result
@@ -114,7 +100,7 @@ class ItemListAdapter(
                         return@Comparator result * -1
                     }
                 })
-                SortingOption.DATE_FROZEN_AT -> items.sortWith(Comparator { (_, _, _, _, frozenAtDate1), (_, _, _, _, frozenAtDate2) ->
+                SortingOption.DATE_FROZEN_AT   -> items.sortWith(Comparator { (_, _, _, _, frozenAtDate1), (_, _, _, _, frozenAtDate2) ->
                     var result = 0
                     if (frozenAtDate1 != null && frozenAtDate2 != null) {
                         result = frozenAtDate1.compareTo(frozenAtDate2)
@@ -137,7 +123,7 @@ class ItemListAdapter(
                         return@Comparator result * -1
                     }
                 })
-                SortingOption.NAME -> items.sortWith(Comparator { (_, name), (_, name2) ->
+                SortingOption.NAME             -> items.sortWith(Comparator { (_, name), (_, name2) ->
                     val result =
                             name.toLowerCase(Locale.ROOT).compareTo(name2.toLowerCase(Locale.ROOT))
                     if (mViewModel.sortingOrder == SortingOrder.ASCENDING) {
@@ -150,7 +136,7 @@ class ItemListAdapter(
         }
     }
 
-    var itemList: List<FrozenItem>
+    var itemList: List<StorageItem>
         get() = mDiffer.currentList
         set(value) {
             val newItems = value.toMutableList()
@@ -161,27 +147,25 @@ class ItemListAdapter(
     /**
      * The view holder
      */
-    class ItemListAdapterViewHolder(val binding: ListItemBinding) :
+    class ItemListAdapterViewHolder(val binding: ItemOverviewItemBinding) :
             RecyclerView.ViewHolder(binding.root)
 
-    companion object {
-        /**
-         * The Callback for the DiffUtil.
-         */
-        private val DIFF_CALLBACK: DiffUtil.ItemCallback<FrozenItem> =
-                object : DiffUtil.ItemCallback<FrozenItem>() {
-                    override fun areItemsTheSame(
-                            oldFrozenItem: FrozenItem, newFrozenItem: FrozenItem): Boolean {
-                        // FrozenItem properties may have changed if reloaded from the DB, but ID is fixed
-                        return oldFrozenItem.id == newFrozenItem.id
-                    }
+    class DiffCallBack : DiffUtil.ItemCallback<StorageItem>() {
+        override fun areItemsTheSame(
+                oldStorageItem: StorageItem, newStorageItem: StorageItem): Boolean {
+            // FrozenItem properties may have changed if reloaded from the DB, but ID is fixed
+            return oldStorageItem.id == newStorageItem.id
+        }
 
-                    override fun areContentsTheSame(
-                            oldFrozenItem: FrozenItem, newFrozenItem: FrozenItem): Boolean {
-                        // NOTE: if you use equals, your object must properly override Object#equals()
-                        // Incorrectly returning false here will result in too many animations.
-                        return oldFrozenItem == newFrozenItem
-                    }
-                }
+        override fun areContentsTheSame(
+                oldStorageItem: StorageItem, newStorageItem: StorageItem): Boolean {
+            // NOTE: if you use equals, your object must properly override Object#equals()
+            // Incorrectly returning false here will result in too many animations.
+            return oldStorageItem == newStorageItem
+        }
+    }
+
+    companion object {
+        val LOG_TAG = ItemListAdapter::class.simpleName
     }
 }

@@ -1,9 +1,10 @@
 package com.mmutert.freshfreezer.data
 
+import androidx.annotation.StringRes
 import com.mmutert.freshfreezer.R
 import java.text.NumberFormat
 
-enum class AmountUnit(val stringResId: Int) {
+enum class AmountUnit(@StringRes val stringResId: Int) {
     GRAMS(R.string.unit_grams),
     KILOGRAMS(R.string.unit_kilograms),
     PIECES(R.string.unit_pieces),

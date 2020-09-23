@@ -1,4 +1,4 @@
-package com.mmutert.freshfreezer.ui
+package com.mmutert.freshfreezer.ui.dialogs
 
 import android.app.Dialog
 import android.content.DialogInterface

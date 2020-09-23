@@ -50,7 +50,7 @@
 
     <fragment
         android:id="@+id/addItemFragment"
-        android:name="com.mmutert.freshfreezer.ui.AddItemFragment"
+        android:name="com.mmutert.freshfreezer.ui.additem.AddItemFragment"
         android:label="{title}"
         tools:layout="@layout/fragment_add_item" >
         <action
@@ -69,10 +69,10 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.mmutert.freshfreezer.ui.SettingsFragment"
+        android:name="com.mmutert.freshfreezer.ui.settings.SettingsFragment"
         android:label="Settings" />
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="com.mmutert.freshfreezer.ui.AboutFragment"
+        android:name="com.mmutert.freshfreezer.ui.about.AboutFragment"
         android:label="About" />
 </navigation>
