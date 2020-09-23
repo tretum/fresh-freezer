@@ -13,7 +13,6 @@ import com.mmutert.freshfreezer.util.TimeHelper.currentDateLocalized
 import com.mmutert.freshfreezer.util.TimeHelper.currentDateTimeLocalized
 import org.junit.Before
 import org.junit.Test
-import java.util.concurrent.ExecutionException
 
 class NotificationTest {
     private var context: Context? = null
@@ -33,7 +32,6 @@ class NotificationTest {
     }
 
     @Test
-    @Throws(ExecutionException::class, InterruptedException::class)
     fun testNotificationDisplay() {
         val item = createTestItem()
         val testItemNotification = createTestItemNotification()
