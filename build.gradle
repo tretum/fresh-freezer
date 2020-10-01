@@ -39,7 +39,7 @@ ext {
     // App dependencies
     androidXVersion = '1.0.0'
     androidXTestCoreVersion = '1.2.0'
-    androidXTestExtKotlinRunnerVersion = '1.1.1'
+    androidXTestExtKotlinRunnerVersion = '1.1.2'
     androidXTestRulesVersion = '1.3.0'
     androidXAnnotations = '1.1.0'
     androidXLegacySupport = '1.0.0'
