@@ -57,7 +57,7 @@ ext {
     junitVersion = '4.13'
     jodaTimeVersion = '2.10.6'
     materialVersion = '1.2.1'
-    mockitoVersion = '2.19.0'
+    mockitoVersion = '3.5.13'
     preferenceVersion = '1.1.1'
     robolectricVersion = '4.3.1'
     roomVersion = '2.2.5'
