@@ -47,7 +47,7 @@ ext {
     archLifecycleVersion = '2.2.0-rc02'
     archTestingVersion = '2.1.0'
     cardVersion = '1.0.0'
-    constraintLayoutVersion = '2.0.1'
+    constraintLayoutVersion = '2.1.4'
     coroutinesVersion = '1.6.4'
     dexMakerVersion = '2.28.3'
     espressoVersion = '3.4.0'
