@@ -60,7 +60,7 @@ ext {
     mockitoVersion = '3.5.13'
     preferenceVersion = '1.1.1'
     robolectricVersion = '4.4'
-    roomVersion = '2.2.5'
+    roomVersion = '2.4.3'
     rulesVersion = '1.0.1'
     timberVersion = '4.7.1'
     truthVersion = '1.0'
