@@ -162,4 +162,7 @@
     <string name="undo_button_label">Undo</string>
     <string name="condition">Condition</string>
     <string name="error_string">Required field</string>
+    <string name="add_item_save_button_content_description">Save</string>
+    <string name="add_item_notes_icon_content_description">Icon for notes section</string>
+    <string name="add_item_notification_bell_content_description">Icon for notifications section</string>
 </resources>

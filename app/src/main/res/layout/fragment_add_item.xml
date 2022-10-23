@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
-        <import type="com.mmutert.freshfreezer.data.Condition"/>
+
+        <import type="android.view.View" />
+
+        <import type="com.mmutert.freshfreezer.data.Condition" />
 
         <variable
             name="viewModel"
@@ -77,13 +79,12 @@
                     app:layout_constraintTop_toBottomOf="@id/divider5"
                     app:layout_constraintStart_toStartOf="@id/guideline"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
                 <Spinner
                     android:id="@+id/sp_add_item_condition"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/add_item_margin_horizontal"
                     android:layout_marginEnd="@dimen/add_item_margin_horizontal"
                     android:entries="@array/conditions"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_condition_label"
@@ -124,7 +125,8 @@
                     android:onClick="@{() -> viewModel.bestBeforeButtonClicked()}"
                     android:layout_height="wrap_content">
 
-                    <TextView android:id="@+id/tv_add_best_before_date_title"
+                    <TextView
+                        android:id="@+id/tv_add_best_before_date_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -135,9 +137,10 @@
                         android:textSize="@dimen/add_item_label_text_size"
                         android:layout_alignParentStart="true"
                         android:layout_alignTop="@id/tv_add_item_best_before_date"
-                        android:layout_alignBottom="@id/tv_add_item_best_before_date"/>
+                        android:layout_alignBottom="@id/tv_add_item_best_before_date" />
 
-                    <TextView android:id="@+id/tv_add_item_best_before_date"
+                    <TextView
+                        android:id="@+id/tv_add_item_best_before_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/add_item_pad_horizontal"
@@ -150,7 +153,6 @@
                         android:layout_alignParentEnd="true"
                         tools:text="2020-06-01" />
                 </RelativeLayout>
-
 
 
                 <FrameLayout
@@ -171,7 +173,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <TextView android:id="@+id/tv_add_frozen_date_title"
+                        <TextView
+                            android:id="@+id/tv_add_frozen_date_title"
                             android:layout_alignParentStart="true"
                             android:layout_alignTop="@id/tv_add_item_frozen_date"
                             android:layout_alignBottom="@id/tv_add_item_frozen_date"
@@ -182,9 +185,10 @@
                             android:paddingStart="@dimen/add_item_pad_horizontal"
                             android:paddingEnd="@dimen/add_item_pad_horizontal"
                             android:text="@string/add_item_frozen_date_title"
-                            android:textSize="@dimen/add_item_label_text_size"/>
+                            android:textSize="@dimen/add_item_label_text_size" />
 
-                        <TextView android:id="@+id/tv_add_item_frozen_date"
+                        <TextView
+                            android:id="@+id/tv_add_item_frozen_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingStart="@dimen/add_item_pad_horizontal"
@@ -275,7 +279,8 @@
                     android:src="@drawable/ic_notifications_none_24px"
                     app:layout_constraintEnd_toStartOf="@+id/guideline"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider3" />
+                    app:layout_constraintTop_toBottomOf="@id/divider3"
+                    android:contentDescription="@string/add_item_notification_bell_content_description" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_add_item_notification_list"
@@ -286,7 +291,7 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toBottomOf="@id/divider3"
                     app:layout_constraintEnd_toEndOf="@+id/et_add_item_description"
-                    app:layout_constraintStart_toStartOf="@+id/guideline"/>
+                    app:layout_constraintStart_toStartOf="@+id/guideline" />
 
                 <TextView
                     android:id="@+id/tv_add_notification"
@@ -320,7 +325,8 @@
                     app:layout_constraintBottom_toBottomOf="@id/et_add_item_description"
                     app:layout_constraintEnd_toStartOf="@+id/guideline"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/et_add_item_description" />
+                    app:layout_constraintTop_toTopOf="@id/et_add_item_description"
+                    android:contentDescription="@string/add_item_notes_icon_content_description" />
 
                 <EditText
                     android:id="@+id/et_add_item_description"
@@ -331,6 +337,7 @@
                     android:ems="10"
                     android:hint="@string/add_item_description_hint"
                     android:inputType="textMultiLine"
+                    android:minHeight="48dp"
                     android:paddingStart="@dimen/add_item_pad_horizontal"
                     android:paddingLeft="@dimen/add_item_pad_horizontal"
                     android:paddingEnd="@dimen/add_item_pad_horizontal"
@@ -357,9 +364,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
-            android:clickable="true"
-            android:focusable="true"
             android:backgroundTint="@color/colorAccent"
+            android:clickable="true"
+            android:contentDescription="@string/add_item_save_button_content_description"
+            android:focusable="true"
             app:srcCompat="@drawable/ic_done_24px" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
