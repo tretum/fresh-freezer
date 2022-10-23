@@ -36,11 +36,11 @@ class MainActivity : AppCompatActivity() {
         mNavigationView = findViewById(R.id.nav_view)
 
         mAppBarConfiguration =
-                AppBarConfiguration.Builder(navController.graph).setOpenableLayout(drawer).build()
+            AppBarConfiguration.Builder(navController.graph).setOpenableLayout(drawer).build()
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration)
         NavigationUI.setupWithNavController(toolbar, navController, mAppBarConfiguration)
 
-        navController.addOnDestinationChangedListener { controller: NavController?, destination: NavDestination?, arguments: Bundle? ->
+        navController.addOnDestinationChangedListener { _: NavController?, _: NavDestination?, _: Bundle? ->
             val currentFocusTemp = currentFocus
             if (currentFocusTemp != null) {
                 Keyboard.hideKeyboardFrom(this, currentFocusTemp)
@@ -58,11 +58,12 @@ class MainActivity : AppCompatActivity() {
 
             when (id) {
                 R.id.aboutFragment, R.id.settingsFragment -> navController.navigate(
-                    id, null, optionsBuilder.build())
+                    id, null, optionsBuilder.build()
+                )
                 R.id.nav_drawer_all_items -> {
                     val direction =
-                            ItemListFragmentDirections.actionItemListFragmentFilter(NO_FILTER_ID)
-                                .setTitle(getString(R.string.app_name))
+                        ItemListFragmentDirections.actionItemListFragmentFilter(NO_FILTER_ID)
+                            .setTitle(getString(R.string.app_name))
                     navController.navigate(direction)
                 }
                 R.id.drawer_item_condition_frozen -> {
@@ -104,7 +105,8 @@ class MainActivity : AppCompatActivity() {
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             val notificationManager = getSystemService(
-                NotificationManager::class.java)
+                NotificationManager::class.java
+            )
             notificationManager?.createNotificationChannel(channel)
         }
     }
@@ -112,7 +114,8 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         return (NavigationUI.navigateUp(
-            navController, mAppBarConfiguration) || super.onSupportNavigateUp())
+            navController, mAppBarConfiguration
+        ) || super.onSupportNavigateUp())
     }
 
     companion object {

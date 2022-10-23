@@ -15,7 +15,7 @@ import com.mmutert.freshfreezer.databinding.DialogAddNotificationBinding
 import com.mmutert.freshfreezer.ui.databinding.IntStringConverter
 
 class NotificationOffsetDialogFragment(private val listener: NotificationOffsetDialogClickListener) :
-        DialogFragment() {
+    DialogFragment() {
     var offSetAmount = TimeOffsetUnit.DAYS
         private set
     private lateinit var dialogBinding: DialogAddNotificationBinding
@@ -39,71 +39,74 @@ class NotificationOffsetDialogFragment(private val listener: NotificationOffsetD
         dialogBinding.selectedOffset = 1
         return MaterialAlertDialogBuilder(requireContext())
             .setView(dialogBinding.root)
-            .setPositiveButton("Done") { dialog: DialogInterface?, which: Int ->
+            .setPositiveButton("Done") { _: DialogInterface?, _: Int ->
                 listener.onPositiveClick(
-                    this)
+                    this
+                )
             }
             .create()
     }
 
     private fun setupRadioButtons() {
         val daysButtonListener =
-                CompoundButton.OnCheckedChangeListener { buttonView: CompoundButton, isChecked: Boolean ->
-                    if (isChecked) {
-                        offSetAmount = TimeOffsetUnit.DAYS
-                        val quantityString = resources.getQuantityString(
-                            R.plurals.days_selected_capitalized,
-                            enteredOffset
-                        )
-                        buttonView.text = quantityString
-                    } else {
-                        val quantityString = resources.getQuantityString(
-                            R.plurals.days_capitalized,
-                            enteredOffset
-                        )
-                        buttonView.text = quantityString
-                    }
+            CompoundButton.OnCheckedChangeListener { buttonView: CompoundButton, isChecked: Boolean ->
+                if (isChecked) {
+                    offSetAmount = TimeOffsetUnit.DAYS
+                    val quantityString = resources.getQuantityString(
+                        R.plurals.days_selected_capitalized,
+                        enteredOffset
+                    )
+                    buttonView.text = quantityString
+                } else {
+                    val quantityString = resources.getQuantityString(
+                        R.plurals.days_capitalized,
+                        enteredOffset
+                    )
+                    buttonView.text = quantityString
                 }
+            }
         val weeksButtonListener =
-                CompoundButton.OnCheckedChangeListener { buttonView: CompoundButton, isChecked: Boolean ->
-                    if (isChecked) {
-                        offSetAmount = TimeOffsetUnit.WEEKS
-                        val quantityString = resources.getQuantityString(
-                            R.plurals.weeks_selected_capitalized,
-                            enteredOffset
-                        )
-                        buttonView.text = quantityString
-                    } else {
-                        val quantityString = resources.getQuantityString(
-                            R.plurals.weeks_capitalized,
-                            enteredOffset
-                        )
-                        buttonView.text = quantityString
-                    }
+            CompoundButton.OnCheckedChangeListener { buttonView: CompoundButton, isChecked: Boolean ->
+                if (isChecked) {
+                    offSetAmount = TimeOffsetUnit.WEEKS
+                    val quantityString = resources.getQuantityString(
+                        R.plurals.weeks_selected_capitalized,
+                        enteredOffset
+                    )
+                    buttonView.text = quantityString
+                } else {
+                    val quantityString = resources.getQuantityString(
+                        R.plurals.weeks_capitalized,
+                        enteredOffset
+                    )
+                    buttonView.text = quantityString
                 }
+            }
         val monthsButtonListener =
-                CompoundButton.OnCheckedChangeListener { buttonView: CompoundButton, isChecked: Boolean ->
-                    if (isChecked) {
-                        offSetAmount = TimeOffsetUnit.MONTHS
-                        val quantityString = resources.getQuantityString(
-                            R.plurals.months_selected_capitalized,
-                            enteredOffset
-                        )
-                        buttonView.text = quantityString
-                    } else {
-                        val quantityString = resources.getQuantityString(
-                            R.plurals.months_capitalized,
-                            enteredOffset
-                        )
-                        buttonView.text = quantityString
-                    }
+            CompoundButton.OnCheckedChangeListener { buttonView: CompoundButton, isChecked: Boolean ->
+                if (isChecked) {
+                    offSetAmount = TimeOffsetUnit.MONTHS
+                    val quantityString = resources.getQuantityString(
+                        R.plurals.months_selected_capitalized,
+                        enteredOffset
+                    )
+                    buttonView.text = quantityString
+                } else {
+                    val quantityString = resources.getQuantityString(
+                        R.plurals.months_capitalized,
+                        enteredOffset
+                    )
+                    buttonView.text = quantityString
                 }
+            }
         dialogBinding.etAddNotificationOffsetAmount.addTextChangedListener(
             object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence,
-                                               start: Int,
-                                               count: Int,
-                                               after: Int) {
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
                 }
 
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
@@ -114,13 +117,16 @@ class NotificationOffsetDialogFragment(private val listener: NotificationOffsetD
                     }
                     daysButtonListener.onCheckedChanged(
                         dialogBinding.radioButtonDays,
-                        dialogBinding.radioButtonDays.isChecked)
+                        dialogBinding.radioButtonDays.isChecked
+                    )
                     weeksButtonListener.onCheckedChanged(
                         dialogBinding.radioButtonWeeks,
-                        dialogBinding.radioButtonWeeks.isChecked)
+                        dialogBinding.radioButtonWeeks.isChecked
+                    )
                     monthsButtonListener.onCheckedChanged(
                         dialogBinding.radioButtonMonths,
-                        dialogBinding.radioButtonMonths.isChecked)
+                        dialogBinding.radioButtonMonths.isChecked
+                    )
                 }
             })
         dialogBinding.radioButtonDays.setOnCheckedChangeListener(daysButtonListener)

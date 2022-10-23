@@ -17,10 +17,11 @@ import org.joda.time.format.DateTimeFormat
 import java.util.*
 
 class ItemListAdapter(
-        private val mViewModel: ItemListViewModel,
-        private val itemClickedCallback: ListItemClickedCallback,
-        private val context: Context) :
-        RecyclerView.Adapter<ItemListAdapterViewHolder>(), ListSortingChangedListener {
+    private val mViewModel: ItemListViewModel,
+    private val itemClickedCallback: ListItemClickedCallback,
+    private val context: Context
+) :
+    RecyclerView.Adapter<ItemListAdapterViewHolder>(), ListSortingChangedListener {
 
     private val mDiffer = AsyncListDiffer(this, DiffCallBack())
 
@@ -36,7 +37,7 @@ class ItemListAdapter(
 
         val formatter = DateTimeFormat.longDate().withLocale(Locale.getDefault())
         val numberInstance = getFormatterForUnit(itemAtPosition.unit)
-        
+
         binding.apply {
             item = itemAtPosition
 
@@ -68,8 +69,10 @@ class ItemListAdapter(
         return mDiffer.currentList.indexOf(item)
     }
 
-    override fun listOptionClicked(sortingOption: SortingOption,
-                                   sortingOrder: SortingOrder) {
+    override fun listOptionClicked(
+        sortingOption: SortingOption,
+        sortingOrder: SortingOrder
+    ) {
         mViewModel.sortingOption = sortingOption
         mViewModel.sortingOrder = sortingOrder
         itemList = mDiffer.currentList
@@ -84,7 +87,7 @@ class ItemListAdapter(
     private fun sortItems(items: MutableList<StorageItem>) {
         if (items.isNotEmpty()) {
             when (mViewModel.sortingOption) {
-                SortingOption.DATE_CHANGED     -> items.sortWith(Comparator { (_, _, _, _, _, _, _, lastChangedAtDate1), (_, _, _, _, _, _, _, lastChangedAtDate2) ->
+                SortingOption.DATE_CHANGED -> items.sortWith(Comparator { (_, _, _, _, _, _, _, lastChangedAtDate1), (_, _, _, _, _, _, _, lastChangedAtDate2) ->
                     val result = lastChangedAtDate1.compareTo(lastChangedAtDate2)
                     if (mViewModel.sortingOrder == SortingOrder.ASCENDING) {
                         return@Comparator result
@@ -92,7 +95,7 @@ class ItemListAdapter(
                         return@Comparator result * -1
                     }
                 })
-                SortingOption.DATE_ADDED       -> items.sortWith(Comparator { (_, _, _, _, _, _, itemCreationDate1), (_, _, _, _, _, _, itemCreationDate2) ->
+                SortingOption.DATE_ADDED -> items.sortWith(Comparator { (_, _, _, _, _, _, itemCreationDate1), (_, _, _, _, _, _, itemCreationDate2) ->
                     val result = itemCreationDate1.compareTo(itemCreationDate2)
                     if (mViewModel.sortingOrder == SortingOrder.ASCENDING) {
                         return@Comparator result
@@ -100,7 +103,7 @@ class ItemListAdapter(
                         return@Comparator result * -1
                     }
                 })
-                SortingOption.DATE_FROZEN_AT   -> items.sortWith(Comparator { (_, _, _, _, frozenAtDate1), (_, _, _, _, frozenAtDate2) ->
+                SortingOption.DATE_FROZEN_AT -> items.sortWith(Comparator { (_, _, _, _, frozenAtDate1), (_, _, _, _, frozenAtDate2) ->
                     var result = 0
                     if (frozenAtDate1 != null && frozenAtDate2 != null) {
                         result = frozenAtDate1.compareTo(frozenAtDate2)
@@ -123,9 +126,9 @@ class ItemListAdapter(
                         return@Comparator result * -1
                     }
                 })
-                SortingOption.NAME             -> items.sortWith(Comparator { (_, name), (_, name2) ->
+                SortingOption.NAME -> items.sortWith(Comparator { (_, name), (_, name2) ->
                     val result =
-                            name.toLowerCase(Locale.ROOT).compareTo(name2.toLowerCase(Locale.ROOT))
+                        name.lowercase(Locale.ROOT).compareTo(name2.lowercase(Locale.ROOT))
                     if (mViewModel.sortingOrder == SortingOrder.ASCENDING) {
                         return@Comparator result
                     } else {
@@ -148,17 +151,19 @@ class ItemListAdapter(
      * The view holder
      */
     class ItemListAdapterViewHolder(val binding: ItemOverviewItemBinding) :
-            RecyclerView.ViewHolder(binding.root)
+        RecyclerView.ViewHolder(binding.root)
 
     class DiffCallBack : DiffUtil.ItemCallback<StorageItem>() {
         override fun areItemsTheSame(
-                oldStorageItem: StorageItem, newStorageItem: StorageItem): Boolean {
+            oldStorageItem: StorageItem, newStorageItem: StorageItem
+        ): Boolean {
             // FrozenItem properties may have changed if reloaded from the DB, but ID is fixed
             return oldStorageItem.id == newStorageItem.id
         }
 
         override fun areContentsTheSame(
-                oldStorageItem: StorageItem, newStorageItem: StorageItem): Boolean {
+            oldStorageItem: StorageItem, newStorageItem: StorageItem
+        ): Boolean {
             // NOTE: if you use equals, your object must properly override Object#equals()
             // Incorrectly returning false here will result in too many animations.
             return oldStorageItem == newStorageItem

@@ -40,9 +40,11 @@ class AddItemFragment : Fragment() {
     private lateinit var spinnerUnitAdapter: UnitArrayAdapter
     private lateinit var conditionSpinnerAdapter: ConditionArrayAdapter
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentAddItemBinding.inflate(inflater, container, false)
         setHasOptionsMenu(false)
 
@@ -99,19 +101,21 @@ class AddItemFragment : Fragment() {
         )
         binding.spAddItemsUnitSelection.adapter = spinnerUnitAdapter
         binding.spAddItemsUnitSelection.onItemSelectedListener =
-                object : OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>?,
-                                                view: View,
-                                                position: Int,
-                                                id: Long) {
-                        val selectedUnit = spinnerUnitAdapter.getSelectedUnit(position)
-                        viewModel.setAmountUnit(selectedUnit)
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>?) {
-                        viewModel.setAmountUnit(AmountUnit.GRAMS)
-                    }
+            object : OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedUnit = spinnerUnitAdapter.getSelectedUnit(position)
+                    viewModel.setAmountUnit(selectedUnit)
                 }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    viewModel.setAmountUnit(AmountUnit.GRAMS)
+                }
+            }
 
         viewModel.selectedUnit.observe(viewLifecycleOwner) {
             val indexOfUnit = spinnerUnitAdapter.getIndexOfUnit(it)
@@ -129,7 +133,8 @@ class AddItemFragment : Fragment() {
             spAddItemCondition.onItemSelectedListener = object : OnItemSelectedListener {
 
                 override fun onItemSelected(
-                        parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                    parent: AdapterView<*>?, view: View, position: Int, id: Long
+                ) {
                     val selectedCondition = conditionSpinnerAdapter.getSelectedUnit(position)
                     this@AddItemFragment.viewModel.setCondition(selectedCondition)
                 }
@@ -168,8 +173,8 @@ class AddItemFragment : Fragment() {
      * @return The date picker
      */
     private fun createDatePicker(
-            titleStringId: Int,
-            defaultSelectionDate: LocalDate
+        titleStringId: Int,
+        defaultSelectionDate: LocalDate
     ): MaterialDatePicker<Long> {
         return MaterialDatePicker.Builder
             .datePicker()
@@ -184,13 +189,14 @@ class AddItemFragment : Fragment() {
             .build()
     }
 
-    private lateinit var freezingDatePicker : MaterialDatePicker<Long>
+    private lateinit var freezingDatePicker: MaterialDatePicker<Long>
 
     /**
      * Sets up the date picker dialogs for the date of freezing the item and the best before date.
      */
     private fun setupFreezingDatePicker() {
-        freezingDatePicker = createDatePicker(R.string.add_item_frozen_at_date_picker_title_text, TimeHelper.currentDateLocalized)
+        freezingDatePicker =
+            createDatePicker(R.string.add_item_frozen_at_date_picker_title_text, TimeHelper.currentDateLocalized)
 
         viewModel.frozenDate.observe(viewLifecycleOwner) {
             // Set up the freezing date picker
@@ -204,7 +210,6 @@ class AddItemFragment : Fragment() {
             this@AddItemFragment.freezingDatePicker.addOnPositiveButtonClickListener { selection: Long ->
                 viewModel.setFrozenDate(convertSelectedDate(selection))
             }
-
         }
 
         viewModel.frozenDateButtonEvent.observe(viewLifecycleOwner, EventObserver {
@@ -218,7 +223,7 @@ class AddItemFragment : Fragment() {
         }
     }
 
-    private lateinit var bestBeforeDatePicker : MaterialDatePicker<Long>
+    private lateinit var bestBeforeDatePicker: MaterialDatePicker<Long>
     private fun setupBestBeforeDatePicker() {
         viewModel.bestBeforeDate.observe(viewLifecycleOwner) {
             bestBeforeDatePicker = createDatePicker(
