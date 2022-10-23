@@ -21,8 +21,8 @@ import java.util.*
  * The Adapter for the list of pending or created notifications.
  */
 class NotificationListAdapter(
-        private val context: Context,
-        private val viewModel: AddItemViewModel
+    private val context: Context,
+    private val viewModel: AddItemViewModel
 ) : ListAdapter<ItemNotification, NotificationListAdapterViewHolder>(DiffCallBack()) {
 
     fun setItems(notificationList: List<ItemNotification>) {
@@ -44,8 +44,9 @@ class NotificationListAdapter(
     }
 
     override fun onCreateViewHolder(
-            parent: ViewGroup,
-            viewType: Int): NotificationListAdapterViewHolder {
+        parent: ViewGroup,
+        viewType: Int
+    ): NotificationListAdapterViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemNotificationEntryBinding.inflate(layoutInflater, parent, false)
         return NotificationListAdapterViewHolder(binding)
@@ -69,30 +70,30 @@ class NotificationListAdapter(
      * The view holder for the notification list recycler view
      */
     inner class NotificationListAdapterViewHolder(val binding: ItemNotificationEntryBinding) :
-            RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(notification: ItemNotification) {
             val timeOffsetUnit = notification.timeOffsetUnit
             val offsetAmount = notification.offsetAmount
             when (timeOffsetUnit) {
                 TimeOffsetUnit.DAYS -> binding.tvNotificationEntry.text =
-                        context.resources.getQuantityString(
-                            R.plurals.notification_list_entry_days_before_capitalized,
-                            offsetAmount,
-                            offsetAmount
-                        )
+                    context.resources.getQuantityString(
+                        R.plurals.notification_list_entry_days_before_capitalized,
+                        offsetAmount,
+                        offsetAmount
+                    )
                 TimeOffsetUnit.WEEKS -> binding.tvNotificationEntry.text =
-                        context.resources.getQuantityString(
-                            R.plurals.notification_list_entry_weeks_before_capitalized,
-                            offsetAmount,
-                            offsetAmount
-                        )
+                    context.resources.getQuantityString(
+                        R.plurals.notification_list_entry_weeks_before_capitalized,
+                        offsetAmount,
+                        offsetAmount
+                    )
                 TimeOffsetUnit.MONTHS -> binding.tvNotificationEntry.text =
-                        context.resources.getQuantityString(
-                            R.plurals.notification_list_entry_months_before_capitalized,
-                            offsetAmount,
-                            offsetAmount
-                        )
+                    context.resources.getQuantityString(
+                        R.plurals.notification_list_entry_months_before_capitalized,
+                        offsetAmount,
+                        offsetAmount
+                    )
             }
 
             // Add the delete button for the notification in the list
@@ -104,9 +105,9 @@ class NotificationListAdapter(
                 if (event.action == MotionEvent.ACTION_DOWN) {
                     val rightDrawablePositionX = binding.tvNotificationEntry.right
                     val rightDrawableWidth =
-                            binding.tvNotificationEntry.compoundDrawables[DRAWABLE_RIGHT]
-                                .bounds
-                                .width()
+                        binding.tvNotificationEntry.compoundDrawables[DRAWABLE_RIGHT]
+                            .bounds
+                            .width()
                     if (event.rawX >= rightDrawablePositionX - rightDrawableWidth) {
                         // Remove notification from list
                         viewModel.addNotificationToDelete(notification)
@@ -123,8 +124,9 @@ class NotificationListAdapter(
 
     class DiffCallBack : DiffUtil.ItemCallback<ItemNotification>() {
         override fun areItemsTheSame(
-                oldNotification: ItemNotification,
-                newNotification: ItemNotification): Boolean {
+            oldNotification: ItemNotification,
+            newNotification: ItemNotification
+        ): Boolean {
             // Notification properties may have changed if reloaded from the DB, but ID is fixed
             // TODO Fix
             return oldNotification.offsetAmount == newNotification.offsetAmount
@@ -132,8 +134,9 @@ class NotificationListAdapter(
         }
 
         override fun areContentsTheSame(
-                oldNotification: ItemNotification,
-                newNotification: ItemNotification): Boolean {
+            oldNotification: ItemNotification,
+            newNotification: ItemNotification
+        ): Boolean {
             // NOTE: if you use equals, your object must properly override Object#equals()
             // Incorrectly returning false here will result in too many animations.
             return oldNotification == newNotification

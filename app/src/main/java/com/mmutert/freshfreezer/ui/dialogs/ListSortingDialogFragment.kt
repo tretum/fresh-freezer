@@ -13,9 +13,10 @@ import com.mmutert.freshfreezer.ui.itemlist.SortingOption
 import com.mmutert.freshfreezer.ui.itemlist.SortingOption.SortingOrder
 
 class ListSortingDialogFragment(
-        private var currentOption: SortingOption,
-        private var currentOrder: SortingOrder,
-        private val listener: ListSortingChangedListener) : DialogFragment() {
+    private var currentOption: SortingOption,
+    private var currentOrder: SortingOrder,
+    private val listener: ListSortingChangedListener
+) : DialogFragment() {
 
     interface ListSortingChangedListener {
         fun listOptionClicked(sortingOption: SortingOption, sortingOrder: SortingOrder)
@@ -35,11 +36,11 @@ class ListSortingDialogFragment(
             SortingOrder.DESCENDING -> mBinding.rbSortOrderDescending.isChecked = true
         }
         when (currentOption) {
-            SortingOption.DATE_ADDED       -> mBinding.rbSortOptionAddedDate.isChecked = true
-            SortingOption.DATE_CHANGED     -> mBinding.rbSortOptionLastChangedDate.isChecked = true
-            SortingOption.DATE_FROZEN_AT   -> mBinding.rbSortOptionFrozenAt.isChecked = true
+            SortingOption.DATE_ADDED -> mBinding.rbSortOptionAddedDate.isChecked = true
+            SortingOption.DATE_CHANGED -> mBinding.rbSortOptionLastChangedDate.isChecked = true
+            SortingOption.DATE_FROZEN_AT -> mBinding.rbSortOptionFrozenAt.isChecked = true
             SortingOption.DATE_BEST_BEFORE -> mBinding.rbSortOptionBestBefore.isChecked = true
-            SortingOption.NAME             -> mBinding.rbSortOptionName.isChecked = true
+            SortingOption.NAME -> mBinding.rbSortOptionName.isChecked = true
         }
         mBinding.rbSortOrderAscending.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {
@@ -81,7 +82,8 @@ class ListSortingDialogFragment(
             .setPositiveButton(R.string.dialog_sorting_options_select_button_label) { _: DialogInterface?, _: Int ->
                 listener.listOptionClicked(
                     currentOption,
-                    currentOrder)
+                    currentOrder
+                )
             }
             .setNegativeButton(R.string.dialog_sorting_options_close_button_label) { _: DialogInterface?, _: Int -> }
             .create()

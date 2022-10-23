@@ -3,10 +3,9 @@ package com.mmutert.freshfreezer.ui
 import android.content.Context
 import android.widget.ArrayAdapter
 import com.mmutert.freshfreezer.data.Condition
-import java.util.*
 
 class ConditionArrayAdapter(context: Context, resource: Int) :
-        ArrayAdapter<CharSequence?>(context, resource) {
+    ArrayAdapter<CharSequence?>(context, resource) {
 
     private val values: MutableList<CharSequence> = ArrayList()
 

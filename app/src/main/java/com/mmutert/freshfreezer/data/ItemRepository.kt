@@ -6,9 +6,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ItemRepository(private val mStoredItemDao: StoredItemDao,
-                     private val mNotificationDao: NotificationDao,
-                     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO) {
+class ItemRepository(
+    private val mStoredItemDao: StoredItemDao,
+    private val mNotificationDao: NotificationDao,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+) {
 
     /**
      * Get all the items that are not marked as archived.
@@ -16,14 +18,14 @@ class ItemRepository(private val mStoredItemDao: StoredItemDao,
      */
     private val mAllItems = mStoredItemDao.allItems
     val allActiveStorageItems: LiveData<List<StorageItem>> =
-            Transformations.map(mAllItems) { input: List<StorageItem> ->
-                input.filter { !it.isArchived }
-            }
+        Transformations.map(mAllItems) { input: List<StorageItem> ->
+            input.filter { !it.isArchived }
+        }
 
     val allArchivedStorageItems: LiveData<List<StorageItem>> =
-            Transformations.map(mAllItems) { input: List<StorageItem> ->
-                input.filter { it.isArchived }
-            }
+        Transformations.map(mAllItems) { input: List<StorageItem> ->
+            input.filter { it.isArchived }
+        }
     val notifications: LiveData<List<ItemNotification>> = mNotificationDao.allNotificationsLiveData
 
     suspend fun insertItem(itemToInsert: StorageItem) =
@@ -106,8 +108,8 @@ class ItemRepository(private val mStoredItemDao: StoredItemDao,
     }
 
     suspend fun getStorageItem(itemId: Long): StorageItem =
-            // TODO Check to see if there should be some error checking before the assertion
-            withContext(ioDispatcher) {
-                return@withContext mStoredItemDao.getStoredItem(itemId)!!
-            }
+        // TODO Check to see if there should be some error checking before the assertion
+        withContext(ioDispatcher) {
+            return@withContext mStoredItemDao.getStoredItem(itemId)!!
+        }
 }

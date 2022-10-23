@@ -11,8 +11,10 @@ import com.mmutert.freshfreezer.data.AmountUnit.Companion.getFormatterForUnit
 import com.mmutert.freshfreezer.data.StorageItem
 import com.mmutert.freshfreezer.databinding.DialogTakeItemBinding
 
-class TakeOutDialogFragment(private val listener: TakeOutDialogClickListener,
-                            val item: StorageItem) : DialogFragment() {
+class TakeOutDialogFragment(
+    private val listener: TakeOutDialogClickListener,
+    val item: StorageItem
+) : DialogFragment() {
     private lateinit var binding: DialogTakeItemBinding
 
     interface TakeOutDialogClickListener {
@@ -23,7 +25,8 @@ class TakeOutDialogFragment(private val listener: TakeOutDialogClickListener,
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DataBindingUtil.inflate(
-            layoutInflater, R.layout.dialog_take_item, null, false)
+            layoutInflater, R.layout.dialog_take_item, null, false
+        )
         binding.item = item
         val unitString = requireContext().resources.getString(item.unit.stringResId)
         binding.takeDialogUnit.text = unitString
@@ -35,15 +38,18 @@ class TakeOutDialogFragment(private val listener: TakeOutDialogClickListener,
             .setView(binding.root)
             .setPositiveButton(R.string.dialog_take_accept_button_label) { dialog: DialogInterface?, which: Int ->
                 listener.onPositiveClicked(
-                    this)
+                    this
+                )
             }
             .setNeutralButton(R.string.dialog_take_button_take_all_label) { dialog: DialogInterface?, which: Int ->
                 listener.onTakeAllClicked(
-                    this)
+                    this
+                )
             }
             .setNegativeButton(R.string.dialog_take_button_cancel_label) { dialog: DialogInterface?, which: Int ->
                 listener.onCancelClicked(
-                    this)
+                    this
+                )
             }.create()
     }
 

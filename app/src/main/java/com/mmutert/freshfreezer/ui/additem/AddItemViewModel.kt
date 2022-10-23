@@ -15,24 +15,22 @@ import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
-import java.lang.Exception
 import java.util.*
 import java.util.concurrent.Executors
-import kotlin.collections.ArrayList
 
 class AddItemViewModel(
-        private val application: Application,
-        private val savedStateHandle: SavedStateHandle,
-        private val repository: ItemRepository
+    private val application: Application,
+    private val savedStateHandle: SavedStateHandle,
+    private val repository: ItemRepository
 ) : ViewModel() {
 
     private var isNewItem: Boolean = true
 
     private val DATE_FORMATTER: DateTimeFormatter =
-            DateTimeFormat.longDate().withLocale(Locale.getDefault())
+        DateTimeFormat.longDate().withLocale(Locale.getDefault())
 
     private var _notifications: MutableLiveData<List<ItemNotification>> =
-            MutableLiveData(ArrayList())
+        MutableLiveData(ArrayList())
     val notifications: LiveData<List<ItemNotification>> = _notifications
 
     private var notificationsToDelete: MutableList<ItemNotification> = ArrayList()
@@ -54,7 +52,7 @@ class AddItemViewModel(
     val frozenDateFormatted = Transformations.map(_frozenDate) {
         it?.let {
             DATE_FORMATTER.print(it)
-        }?:""
+        } ?: ""
     }
     val frozenDate: LiveData<LocalDate> = _frozenDate
 
@@ -78,10 +76,10 @@ class AddItemViewModel(
     val snackbarTextId: LiveData<Event<Int>> = _snackbarTextId
 
     private val _bestBeforeButtonEvent = MutableLiveData<Event<Unit>>()
-    val bestBeforeButtonEvent : LiveData<Event<Unit>> = _bestBeforeButtonEvent
+    val bestBeforeButtonEvent: LiveData<Event<Unit>> = _bestBeforeButtonEvent
 
     private val _frozenDateButtonEvent = MutableLiveData<Event<Unit>>()
-    val frozenDateButtonEvent : LiveData<Event<Unit>> = _frozenDateButtonEvent
+    val frozenDateButtonEvent: LiveData<Event<Unit>> = _frozenDateButtonEvent
 
     // FUNCTIONS
     fun setNotifications(notifications: List<ItemNotification>) {
@@ -145,7 +143,8 @@ class AddItemViewModel(
                 operation.result.addListener({
                     Log.d(
                         TAG,
-                        "Cancelled the notification worker with uuid: " + notification.notificationId)
+                        "Cancelled the notification worker with uuid: " + notification.notificationId
+                    )
                     Log.d(
                         TAG,
                         "For notification with offset " + notification.timeOffsetUnit.toString()
@@ -225,7 +224,7 @@ class AddItemViewModel(
 
         // Always update the last changed at date
         val amount: Float = try {
-            storedAmountString.value?.toFloat()?:0f
+            storedAmountString.value?.toFloat() ?: 0f
         } catch (e: Exception) {
             0f
         }

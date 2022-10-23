@@ -25,8 +25,9 @@ class AboutFragment : Fragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         // Inflate the layout for this fragment
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_about, container, false)
@@ -51,12 +52,12 @@ class AboutFragment : Fragment() {
     private fun setUpFeedbackButton() {
         mBinding.tvAboutFeedback.setOnClickListener {
             val uri = Uri.fromParts(
-                    "mailto",
-                    "Alex <" + getString(R.string.support_email) + ">",
-                    null
+                "mailto",
+                "Alex <" + getString(R.string.support_email) + ">",
+                null
             )
             val intent = Intent(Intent.ACTION_SENDTO, uri)
-                    .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_email_subject))
+                .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_email_subject))
             requireActivity().startActivity(intent)
         }
     }

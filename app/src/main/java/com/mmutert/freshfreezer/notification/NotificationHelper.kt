@@ -31,9 +31,9 @@ object NotificationHelper {
      * @return The id of the work request
      */
     fun scheduleNotification(
-            context: Context,
-            item: StorageItem,
-            notification: ItemNotification
+        context: Context,
+        item: StorageItem,
+        notification: ItemNotification
     ): UUID? {
 
         // TODO Set notification time to the one saved in the pending notification object, otherwise used preference
@@ -49,7 +49,7 @@ object NotificationHelper {
         // Precondition: Notification should be shown after the current time and date
         if (TimeHelper.currentDateTimeLocalized.isAfter(goalDateTime)) {
             val name =
-                    if (item.name.isNotEmpty()) item.name else context.getString(R.string.empty_name_placeholder)
+                if (item.name.isNotEmpty()) item.name else context.getString(R.string.empty_name_placeholder)
             val formatter = DateTimeFormat.fullDate()
             Log.e(
                 TAG,
@@ -83,15 +83,18 @@ object NotificationHelper {
      * @param timeUnit   The unit for the offset.
      * @return The created [androidx.work.WorkRequest]
      */
-    private fun createWorkRequest(inputData: Data,
-                                  timeOffset: Long,
-                                  timeUnit: TimeUnit): OneTimeWorkRequest {
+    private fun createWorkRequest(
+        inputData: Data,
+        timeOffset: Long,
+        timeUnit: TimeUnit
+    ): OneTimeWorkRequest {
         return OneTimeWorkRequest.Builder(NotificationWorker::class.java)
             .setInputData(inputData)
             .setConstraints(
                 Constraints.Builder()
                     .setRequiresBatteryNotLow(true)
-                    .build())
+                    .build()
+            )
             .setInitialDelay(timeOffset, timeUnit)
             .build()
     }
@@ -105,9 +108,9 @@ object NotificationHelper {
      * @return The created data object.
      */
     fun createInputDataForItem(
-            context: Context,
-            item: StorageItem,
-            notification: ItemNotification
+        context: Context,
+        item: StorageItem,
+        notification: ItemNotification
     ): Data {
         val offsetAmount = notification.offsetAmount
         val offsetUnitFormatted = when (notification.timeOffsetUnit) {
@@ -129,7 +132,7 @@ object NotificationHelper {
         }
 
         val name =
-                if (item.name.isNotEmpty()) item.name else context.getString(R.string.empty_name_placeholder)
+            if (item.name.isNotEmpty()) item.name else context.getString(R.string.empty_name_placeholder)
 
         return Data.Builder()
             .putString(NotificationConstants.KEY_ITEM_NAME, name)
@@ -142,7 +145,8 @@ object NotificationHelper {
             )
             .putString(
                 NotificationConstants.KEY_NOTIFICATION_OFFSET_AMOUNT,
-                notification.offsetAmount.toString())
+                notification.offsetAmount.toString()
+            )
             .putString(NotificationConstants.KEY_NOTIFICATION_OFFSET_UNIT, offsetUnitFormatted)
             .build()
     }
@@ -155,9 +159,10 @@ object NotificationHelper {
      * @param goalDate  The end date that should be reached by adding the offset to the start date
      * @return The calculated offset
      */
-    fun calculateOffset(timeUnit: TimeUnit,
-                        startDate: LocalDateTime,
-                        goalDate: LocalDateTime
+    fun calculateOffset(
+        timeUnit: TimeUnit,
+        startDate: LocalDateTime,
+        goalDate: LocalDateTime
     ): Long {
         val goalDateInMillis = goalDate.toDate().time
         val startDateInMillis = startDate.toDate().time
@@ -177,10 +182,10 @@ object NotificationHelper {
      * @param notificationTime The actual time for the notification at the calculated notification date
      */
     private fun determineGoalDateTime(
-            item: StorageItem,
-            timeUnit: TimeOffsetUnit,
-            offsetAmount: Int,
-            notificationTime: LocalTime
+        item: StorageItem,
+        timeUnit: TimeOffsetUnit,
+        offsetAmount: Int,
+        notificationTime: LocalTime
     ): LocalDateTime {
 
         // TODO Check if still one day off

@@ -41,8 +41,8 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         mBinding = FragmentFrozenItemListBinding.inflate(inflater, container, false)
@@ -76,7 +76,7 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
         mBinding.rvFrozenItemList.apply {
 
             this.layoutManager =
-                    LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
+                LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
             adapter = mItemListAdapter
             val itemTouchHelper = createSwipeHelper()
             itemTouchHelper.attachToRecyclerView(this)
@@ -126,9 +126,10 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
             ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
         ) {
             override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder): Boolean {
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
                 return false
             }
 
@@ -141,7 +142,8 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
                 } else if (direction == ItemTouchHelper.LEFT) {
                     TakeOutDialogFragment(TakeListener(), item).show(
                         parentFragmentManager,
-                        "take out")
+                        "take out"
+                    )
                     mItemListAdapter.notifyItemChanged(pos)
                 }
             }
@@ -155,9 +157,10 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
             }
 
             override fun onChildDrawOver(
-                    c: Canvas, recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float,
-                    actionState: Int, isCurrentlyActive: Boolean) {
+                c: Canvas, recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float,
+                actionState: Int, isCurrentlyActive: Boolean
+            ) {
                 val binding = (viewHolder as ItemListAdapterViewHolder).binding
                 val deleteBackground: View = binding.listItemDeleteBackground
                 val takeBackground: View = binding.listItemTakeBackground
@@ -170,7 +173,7 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
                         deleteBackground.visibility = View.VISIBLE
                         takeBackground.visibility = View.INVISIBLE
                     }
-                    else   -> {
+                    else -> {
                         deleteBackground.visibility = View.INVISIBLE
                         takeBackground.visibility = View.INVISIBLE
                     }
@@ -183,20 +186,24 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
                     dX,
                     dY,
                     actionState,
-                    isCurrentlyActive)
+                    isCurrentlyActive
+                )
             }
 
-            override fun clearView(recyclerView: RecyclerView,
-                                   viewHolder: RecyclerView.ViewHolder) {
+            override fun clearView(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ) {
                 val binding = (viewHolder as ItemListAdapterViewHolder).binding
                 val foregroundView: View = binding.listItemForeground
                 getDefaultUIUtil().clearView(foregroundView)
             }
 
             override fun onChildDraw(
-                    c: Canvas, recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float,
-                    actionState: Int, isCurrentlyActive: Boolean) {
+                c: Canvas, recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float,
+                actionState: Int, isCurrentlyActive: Boolean
+            ) {
                 val binding = (viewHolder as ItemListAdapterViewHolder).binding
                 val foregroundView: View = binding.listItemForeground
                 getDefaultUIUtil().onDraw(
@@ -206,7 +213,8 @@ class ItemListFragment : Fragment(), ListItemClickedCallback {
                     dX,
                     dY,
                     actionState,
-                    isCurrentlyActive)
+                    isCurrentlyActive
+                )
             }
         })
     }

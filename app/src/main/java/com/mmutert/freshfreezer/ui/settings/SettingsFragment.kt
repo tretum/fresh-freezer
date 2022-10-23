@@ -13,10 +13,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val nightModePref = findPreference<ListPreference>(getString(R.string.pref_night_mode_key))
         if (nightModePref != null) {
             nightModePref.onPreferenceChangeListener =
-                    Preference.OnPreferenceChangeListener { _: Preference, newValue: Any ->
-                        ThemeHelper.applyTheme(newValue as String, requireContext())
-                        true
-                    }
+                Preference.OnPreferenceChangeListener { _: Preference, newValue: Any ->
+                    ThemeHelper.applyTheme(newValue as String, requireContext())
+                    true
+                }
         }
     }
 }

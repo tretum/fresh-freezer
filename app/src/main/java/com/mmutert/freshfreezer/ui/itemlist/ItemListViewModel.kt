@@ -9,16 +9,16 @@ import com.mmutert.freshfreezer.data.Condition
 import com.mmutert.freshfreezer.data.ItemNotification
 import com.mmutert.freshfreezer.data.ItemRepository
 import com.mmutert.freshfreezer.data.StorageItem
-import com.mmutert.freshfreezer.ui.itemlist.SortingOption.DATE_BEST_BEFORE
 import com.mmutert.freshfreezer.ui.itemlist.SortingOption.SortingOrder
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 import kotlin.math.max
 
 class ItemListViewModel(
-        private val application: Application,
-        private val savedStateHandle: SavedStateHandle,
-        private val repository: ItemRepository) : ViewModel() {
+    private val application: Application,
+    private val savedStateHandle: SavedStateHandle,
+    private val repository: ItemRepository
+) : ViewModel() {
 
     var storageItems: LiveData<List<StorageItem>> = repository.allActiveStorageItems
         private set

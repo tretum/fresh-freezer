@@ -3,10 +3,9 @@ package com.mmutert.freshfreezer.ui
 import android.content.Context
 import android.widget.ArrayAdapter
 import com.mmutert.freshfreezer.data.AmountUnit
-import java.util.*
 
 class UnitArrayAdapter(context: Context, resource: Int) :
-        ArrayAdapter<CharSequence?>(context, resource) {
+    ArrayAdapter<CharSequence?>(context, resource) {
 
     private val values: MutableList<CharSequence> = ArrayList()
 

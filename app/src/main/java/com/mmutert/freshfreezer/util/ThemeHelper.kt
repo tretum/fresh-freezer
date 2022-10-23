@@ -11,13 +11,17 @@ object ThemeHelper {
         val darkModeKey = context.getString(R.string.theme_value_dark)
         when {
             lightModeKey == preferenceValue -> AppCompatDelegate.setDefaultNightMode(
-                AppCompatDelegate.MODE_NIGHT_NO)
+                AppCompatDelegate.MODE_NIGHT_NO
+            )
             darkModeKey == preferenceValue -> AppCompatDelegate.setDefaultNightMode(
-                AppCompatDelegate.MODE_NIGHT_YES)
+                AppCompatDelegate.MODE_NIGHT_YES
+            )
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> AppCompatDelegate.setDefaultNightMode(
-                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            )
             else -> AppCompatDelegate.setDefaultNightMode(
-                AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
+                AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
+            )
         }
     }
 }

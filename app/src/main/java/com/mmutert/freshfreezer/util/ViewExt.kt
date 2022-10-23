@@ -14,9 +14,9 @@ fun View.showSnackbar(snackbarText: String, timeLength: Int) {
 }
 
 fun View.setupSnackbar(
-        lifecycleOwner: LifecycleOwner,
-        snackbarEvent: LiveData<Event<Int>>,
-        timeLength: Int
+    lifecycleOwner: LifecycleOwner,
+    snackbarEvent: LiveData<Event<Int>>,
+    timeLength: Int
 ) {
     snackbarEvent.observe(lifecycleOwner, EventObserver { event ->
         showSnackbar(context.getString(event), timeLength)

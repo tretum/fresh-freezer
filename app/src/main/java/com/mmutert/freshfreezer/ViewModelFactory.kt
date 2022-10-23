@@ -15,23 +15,23 @@ import com.mmutert.freshfreezer.ui.itemlist.ItemListViewModel
  */
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory constructor(
-        private val application: Application,
-        private val repository: ItemRepository,
-        owner: SavedStateRegistryOwner,
-        defaultArgs: Bundle? = null
+    private val application: Application,
+    private val repository: ItemRepository,
+    owner: SavedStateRegistryOwner,
+    defaultArgs: Bundle? = null
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
 
     override fun <T : ViewModel> create(
-            key: String,
-            modelClass: Class<T>,
-            handle: SavedStateHandle
+        key: String,
+        modelClass: Class<T>,
+        handle: SavedStateHandle
     ) = with(modelClass) {
         when {
-            isAssignableFrom(ItemListViewModel::class.java)     ->
+            isAssignableFrom(ItemListViewModel::class.java) ->
                 ItemListViewModel(application, handle, repository)
             isAssignableFrom(AddItemViewModel::class.java) ->
                 AddItemViewModel(application, handle, repository)
-            else                                                ->
+            else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     } as T
