@@ -194,9 +194,11 @@ class AddItemFragment : Fragment() {
 
         viewModel.frozenDate.observe(viewLifecycleOwner) {
             // Set up the freezing date picker
-            this@AddItemFragment.freezingDatePicker = createDatePicker(
-                R.string.add_item_frozen_at_date_picker_title_text, it
-            )
+            if (it != null) {
+                this@AddItemFragment.freezingDatePicker = createDatePicker(
+                    R.string.add_item_frozen_at_date_picker_title_text, it
+                )
+            }
 
             // Add the behavior for the positive button of the freezing date picker
             this@AddItemFragment.freezingDatePicker.addOnPositiveButtonClickListener { selection: Long ->
