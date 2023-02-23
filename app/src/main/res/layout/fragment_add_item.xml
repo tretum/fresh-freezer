@@ -89,7 +89,8 @@
                     android:entries="@array/conditions"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_condition_label"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tv_condition_label" />
+                    app:layout_constraintTop_toTopOf="@+id/tv_condition_label"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <View
                     android:id="@+id/divider"
