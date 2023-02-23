@@ -48,13 +48,13 @@ class AddItemViewModel(
     private val _selectedCondition = MutableLiveData(Condition.CHILLED)
     val selectedCondition: LiveData<Condition> = _selectedCondition
 
-    private val _frozenDate: MutableLiveData<LocalDate> = MutableLiveData()
+    private val _frozenDate: MutableLiveData<LocalDate?> = MutableLiveData()
     val frozenDateFormatted = Transformations.map(_frozenDate) {
         it?.let {
             DATE_FORMATTER.print(it)
         } ?: ""
     }
-    val frozenDate: LiveData<LocalDate> = _frozenDate
+    val frozenDate: MutableLiveData<LocalDate?> = _frozenDate
 
     private val _bestBeforeDate = MutableLiveData(TimeHelper.currentDateLocalized)
     val bestBeforeDateFormatted = Transformations.map(_bestBeforeDate) {

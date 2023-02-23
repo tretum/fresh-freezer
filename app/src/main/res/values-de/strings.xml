@@ -125,4 +125,7 @@
     <string name="undo_button_label">Rückgängig</string>
     <string name="condition">Zustand</string>
     <string name="error_string">Verpflichtende Angabe</string>
+    <string name="add_item_save_button_content_description">Speichern</string>
+    <string name="add_item_notes_icon_content_description">Icon des Notizabschnitts</string>
+    <string name="add_item_notification_bell_content_description">Icon des Benachrichtigungsabschnitts</string>
 </resources>

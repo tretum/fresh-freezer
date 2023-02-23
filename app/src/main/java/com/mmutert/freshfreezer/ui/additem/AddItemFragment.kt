@@ -44,7 +44,7 @@ class AddItemFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAddItemBinding.inflate(inflater, container, false)
         setHasOptionsMenu(false)
 
